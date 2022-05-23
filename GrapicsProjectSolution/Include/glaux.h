@@ -60,7 +60,6 @@ Abstract:
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 /*
 ** ToolKit Window Types
 ** In the future, AUX_RGBA may be a combination of both RGB and ALPHA
