@@ -1,4 +1,4 @@
-//#include "Includes.h"
+#include "Includes.h"
 #include "Scene.h"
 
 int main(int argc, char** argv) {

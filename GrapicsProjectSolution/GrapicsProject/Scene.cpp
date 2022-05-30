@@ -17,19 +17,19 @@ GLfloat light_specular[] = { 1, 1, 1, 1.0 };
 void InitLight()
 {
     GLfloat LightPosition[] = { 0.0, 2.0, 0.0, 1.0 };
-    glEnable(GL_LIGHTING);      //Á¶¸í È°¼ºÈ­
+    glEnable(GL_LIGHTING);      //ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
     glEnable(GL_LIGHT0);
 
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_amb); //ÁÖº¯±¤ ¼³Á¤
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse); //È®»ê±¤ ¼³Á¤
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular); //¹Ý»ç±¤ ¼³Á¤
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_amb); //ï¿½Öºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse); //È®ï¿½ê±¤ ï¿½ï¿½ï¿½ï¿½
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular); //ï¿½Ý»ç±¤ ï¿½ï¿½ï¿½ï¿½
     glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
 }
 
 void init() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glShadeModel(GL_SMOOTH);    //±¸·Î ¼ÎÀÌµù
-    glEnable(GL_DEPTH_TEST); // ±íÀÌ¹öÆÛ
+    glShadeModel(GL_SMOOTH);    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½
+    glEnable(GL_DEPTH_TEST); // ï¿½ï¿½ï¿½Ì¹ï¿½ï¿½ï¿½
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_FRONT);
 
@@ -52,7 +52,7 @@ void render() {
     //Draw here
     //DrawSurface(vertices, normals, faces);
     Model model = Model();
-    model.LoadObj("Data/bunny/bunny.obj", model.vertices, model.faces, model.uvs, model.normals);
+    model.LoadObj("Data/race-track/race-track.obj", model.vertices, model.faces, model.uvs, model.normals);
     model.DrawSurface();
     glutSwapBuffers();
 }
