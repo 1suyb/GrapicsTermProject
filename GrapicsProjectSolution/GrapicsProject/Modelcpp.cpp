@@ -49,8 +49,6 @@ bool Model::LoadObj(const char* path,
             out_faces.push_back(glm::ivec3(vertexIndex[0] - 1, vertexIndex[1] - 1, vertexIndex[2] - 1));
         }
     }
-
-
 }
 
 bool Model::LoadPly(const char* path,
@@ -126,4 +124,26 @@ void Model::DrawSurface() {
         }
     }
     glEnd();
+}
+
+void Model::Translate(glm::vec3 translate) {
+    this->position = translate;
+    glTranslatef((GLfloat)translate.x, (GLfloat)translate.y, (GLfloat)translate.z);
+}
+void Model::RotateAngle(GLfloat angle, glm::vec3 axis) {
+    this->angle = angle;
+    this->axis = axis;
+    glRotatef((GLfloat)angle, (GLfloat)axis.x, (GLfloat)axis.y, (GLfloat)axis.z);
+}
+
+//void Model::Move(bool front) {
+//    if (front) {
+//        glm::vec3 front = (this. -this->position)
+//
+//    }
+//}
+void Model::Rotate(GLfloat angle, glm::vec3 axis) {
+    this->angle += angle;
+    this->axis = axis;
+    RotateAngle(this->angle, this->axis);
 }

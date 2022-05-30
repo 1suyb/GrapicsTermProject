@@ -4,7 +4,9 @@
 */
 #ifndef __MODEL_INCLUDED__
 #define __MODEL_INCLUDED__
+
 #include "Includes.h"
+
 
 class Model {
 public:
@@ -13,9 +15,12 @@ public:
 	std::vector < glm::vec2 > uvs;
 	std::vector < glm::vec3 > normals;
 
+	glm::vec3 position;
+	GLfloat angle;
+	glm::vec3 axis;
+
 public:
 //	Model();
-
 	static bool LoadObj(const char* path,
 		std::vector < glm::vec3 >& out_vertices,
 		std::vector < glm::ivec3 >& out_faces,
@@ -31,7 +36,14 @@ public:
 
 	void Texturing();			/** 텍스쳐올리는게 여기에 있어야할지 따로있어야할지 잘모르겠어요 **/
 
+	void Translate(glm::vec3 translate);
+	void RotateAngle(GLfloat angle, glm::vec3 axis);
+
+	void Move(bool front);
+	void Rotate(GLfloat angle, glm::vec3 axis);
 };
+
+
 
 #endif // !MODELINCLUDED
 

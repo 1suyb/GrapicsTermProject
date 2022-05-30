@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 
+
 float g_fDistance = -4.5f;
 float g_fSpinX = 0.0f;
 float g_fSpinY = 0.0f;
@@ -13,6 +14,9 @@ static bool bMousing;
 GLfloat light_amb[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_specular[] = { 1, 1, 1, 1.0 };
+
+Model Car;
+camera Cam;
 
 void InitLight()
 {
@@ -32,27 +36,37 @@ void init() {
     glEnable(GL_DEPTH_TEST); // ±íÀÌ¹öÆÛ
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_FRONT);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45.0f, 640.0f / 480.0f, 0.1f, 100.0f);
     InitLight();
+
+    Car = Model();
+    Car.LoadObj("Data/bunny/bunny.obj", Car.vertices, Car.faces, Car.uvs, Car.normals);
+    printf("¸ðµ¨");
+
+    Cam.Start(glm::vec3(1, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+    Speed = 1;
 }
 
 void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    CameraSetting();
 
+    glPushMatrix();
+    Car.Translate(glm::vec3(0, 0, 0));
+    Car.DrawSurface();
+    glPopMatrix();
 
-    glTranslatef(0.0f, 0.0f, g_fDistance);
-    glRotatef(-g_fSpinY, 1.0f, 0.0f, 0.0f);
-    glRotatef(-g_fSpinX, 0.0f, 1.0f, 0.0f);
-
-    //Draw here
-    //DrawSurface(vertices, normals, faces);
-    Model model = Model();
-    model.LoadObj("Data/bunny/bunny.obj", model.vertices, model.faces, model.uvs, model.normals);
-    model.DrawSurface();
     glutSwapBuffers();
 }
+
+void PerspectiveSetting() {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0f, 640.0f / 480.0f, 0.1f, 1000.0f);
+}
+void CameraSetting() {
+    
+    gluLookAt(Cam.eye.x, Cam.eye.y, Cam.eye.z, Cam.at.x, Cam.at.y, Cam.at.z, Cam.up.x, Cam.up.y, Cam.up.z);
+}
+
