@@ -1,5 +1,7 @@
 //#include "Includes.h"
 #include "Scene.h"
+#include "Box.h"
+
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
@@ -8,8 +10,13 @@ int main(int argc, char** argv) {
 	glutInitWindowSize(800, 600);
 	glutCreateWindow("CarRacingGame");
 	
-	init();
-	glutDisplayFunc(render);
+	//init();
+	init2();
+	//glutDisplayFunc(render);
+	glutDisplayFunc(Render);
+	glutReshapeFunc(MyReshape);
+	glutTimerFunc(500, MyTimer, 1);
+
 
 	glutMainLoop();
 }
