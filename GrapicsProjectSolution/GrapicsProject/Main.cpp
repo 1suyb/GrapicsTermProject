@@ -10,10 +10,10 @@ int main(int argc, char** argv) {
 	glutInitWindowSize(800, 600);
 	glutCreateWindow("CarRacingGame");
 	
-	//init();
-	init2();
-	//glutDisplayFunc(render);
-	glutDisplayFunc(Render);
+	init();
+	//init2();
+	glutDisplayFunc(render);
+	//glutDisplayFunc(Render);
 	glutReshapeFunc(MyReshape);
 	glutTimerFunc(500, MyTimer, 1);
 

@@ -52,7 +52,8 @@ void render() {
     //Draw here
     //DrawSurface(vertices, normals, faces);
     Model model = Model();
-    model.LoadObj("Data/bunny/bunny.obj", model.vertices, model.faces, model.uvs, model.normals);
+
+    model.LoadObj("Data/Porsche/Porsche_911_GT2.obj", model.vertices, model.faces, model.uvs, model.normals);
     model.DrawSurface();
     glutSwapBuffers();
 }
