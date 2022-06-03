@@ -20,29 +20,29 @@ void Mouse(int button, int state, int x, int y) {
 
 }
 void Keyboard(unsigned char key, int x, int y) {
-	glm::vec3 front = glm::normalize(Cam.at - Cam.eye);
+	glm::vec3 front = Car.front;
 	GLfloat angle = 20.f;
 	glm::vec3 r(0, 1, 0);
 	switch(key)
 	{
 	case 'w':
 	case 'W' :
-		//Car.Move(m);
+		Car.Move(front*Speed);
 		Cam.Move(front*Speed);
 		break;
 	case 'a':
 	case 'A' :
-		//Car.Rotate(angle, r);
+		Car.Rotate(angle, r);
 		Cam.Rotate(angle, r);
 		break;
 	case 's' :
 	case 'S' :
-		//Car.Move(-m);
+		Car.Move(-front*Speed);
 		Cam.Move(-front * Speed);
 		break;
 	case 'd':
 	case 'D' :
-		//Car.Rotate(-angle,r);
+		Car.Rotate(-angle,r);
 		Cam.Rotate(-angle, r);
 		break;
 

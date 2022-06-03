@@ -1,5 +1,6 @@
 #include "Model.h"
 
+
 bool Model::LoadObj(const char* path,
 	std::vector < glm::vec3 >& out_vertices,
 	std::vector < glm::ivec3 >& out_faces,
@@ -126,6 +127,13 @@ void Model::DrawSurface() {
     glEnd();
 }
 
+void Model::Translate() {
+    glTranslatef(this->position.x,this->position.y,this->position.z);
+}
+void Model::RotateAngle() {
+    glRotatef(this->angle,this->axis.x,this->axis.y,this->axis.z);
+}
+
 void Model::Translate(glm::vec3 translate) {
     this->position = translate;
     glTranslatef((GLfloat)translate.x, (GLfloat)translate.y, (GLfloat)translate.z);
@@ -136,14 +144,21 @@ void Model::RotateAngle(GLfloat angle, glm::vec3 axis) {
     glRotatef((GLfloat)angle, (GLfloat)axis.x, (GLfloat)axis.y, (GLfloat)axis.z);
 }
 
-//void Model::Move(bool front) {
-//    if (front) {
-//        glm::vec3 front = (this. -this->position)
-//
-//    }
-//}
+void Model::Move(glm::vec3 move) {
+    this->position += move;
+}
 void Model::Rotate(GLfloat angle, glm::vec3 axis) {
     this->angle += angle;
     this->axis = axis;
-    RotateAngle(this->angle, this->axis);
+}
+
+void Model::SetFront(glm::vec3 dir) {
+    this->front = dir;
+}
+void Model::Scale(glm::vec3 scale) {
+    for (int i = 0; i < vertices.size(); i++) {
+        vertices[i].x *= scale.x;
+        vertices[i].y *= scale.y;
+        vertices[i].z *= scale.z;
+    }
 }

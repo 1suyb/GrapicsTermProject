@@ -17,7 +17,7 @@ GLfloat light_specular[] = { 1, 1, 1, 1.0 };
 
 Model Car;
 camera Cam;
-
+Model Bunny;
 void InitLight()
 {
     GLfloat LightPosition[] = { 0.0, 2.0, 0.0, 1.0 };
@@ -39,9 +39,13 @@ void init() {
     InitLight();
 
     Car = Model();
+    Car.Translate(glm::vec3(0, 0, 0));
     Car.LoadObj("Data/bunny/bunny.obj", Car.vertices, Car.faces, Car.uvs, Car.normals);
+    Car.Scale(glm::vec3(0.5,0.5,0.5));
     printf("¸ðµ¨");
-
+    Bunny = Model();
+    Bunny.LoadObj("Data/bunny/bunny.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.normals);
+    Bunny.Scale(glm::vec3(0.1, 0.1, 0.1));
     Cam.Start(glm::vec3(1, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     Speed = 1;
 }
@@ -53,10 +57,14 @@ void render() {
     CameraSetting();
 
     glPushMatrix();
-    Car.Translate(glm::vec3(0, 0, 0));
+    Car.Translate();
+    Car.RotateAngle();
     Car.DrawSurface();
     glPopMatrix();
-
+    glPushMatrix();
+    Bunny.Translate(glm::vec3(0, 0, 0));
+    Bunny.DrawSurface();
+    glPopMatrix();
     glutSwapBuffers();
 }
 
