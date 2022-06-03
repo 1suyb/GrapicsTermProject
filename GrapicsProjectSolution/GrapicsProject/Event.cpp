@@ -3,11 +3,8 @@
 #include "Model.h"
 
 float Speed;
+static bool InCarView = true;
 
-//Model Car = Model();
-//glm::vec3 Car_position = glm::vec3(0, 0, 0);
-//GLfloat Car_rotation_angle = 0;
-//glm::vec3 Car_rotation_axis = glm::vec3(0, 0, 0);
 
 void EventCall() {
 	//glutMouseFunc(Mouse);
@@ -27,23 +24,31 @@ void Keyboard(unsigned char key, int x, int y) {
 	{
 	case 'w':
 	case 'W' :
-		Car.Move(front*Speed);
-		Cam.Move(front*Speed);
+		if (InCarView) {
+			Car.Move(front * Speed);
+			Cam.Move(front * Speed);
+		}
 		break;
 	case 'a':
 	case 'A' :
-		Car.Rotate(angle, r);
-		Cam.Rotate(angle, r);
+		if (InCarView) {
+			Car.Rotate(angle, r);
+			Cam.Rotate(angle, r);
+		}
 		break;
 	case 's' :
 	case 'S' :
-		Car.Move(-front*Speed);
-		Cam.Move(-front * Speed);
+		if (InCarView) {
+			Car.Move(-front * Speed);
+			Cam.Move(-front * Speed);
+		}
 		break;
 	case 'd':
 	case 'D' :
-		Car.Rotate(-angle,r);
-		Cam.Rotate(-angle, r);
+		if (InCarView) {
+			Car.Rotate(-angle, r);
+			Cam.Rotate(-angle, r);
+		}
 		break;
 
 	default:

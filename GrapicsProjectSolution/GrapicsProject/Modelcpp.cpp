@@ -1,6 +1,13 @@
 #include "Model.h"
 
 
+Model::Model() {
+    position = glm::vec3(0, 0, 0);
+    angle = 0;
+    axis = glm::vec3(0, 1, 0);
+    front = glm::vec3(1, 0, 0);
+}
+
 bool Model::LoadObj(const char* path,
 	std::vector < glm::vec3 >& out_vertices,
 	std::vector < glm::ivec3 >& out_faces,
@@ -127,34 +134,37 @@ void Model::DrawSurface() {
     glEnd();
 }
 
+// 모델의 트랜스폼 행렬을 적용합니다.
 void Model::Translate() {
     glTranslatef(this->position.x,this->position.y,this->position.z);
 }
+// 모델의 회전 행렬을 적용합니다.
 void Model::RotateAngle() {
     glRotatef(this->angle,this->axis.x,this->axis.y,this->axis.z);
 }
-
-void Model::Translate(glm::vec3 translate) {
+// 모델의 트렌스폼 행렬을 변경합니다.
+void Model::SetPosition(glm::vec3 translate) {
     this->position = translate;
-    glTranslatef((GLfloat)translate.x, (GLfloat)translate.y, (GLfloat)translate.z);
 }
-void Model::RotateAngle(GLfloat angle, glm::vec3 axis) {
+// 모델의 회전 행렬을 변경합니다.
+void Model::SetRotation(GLfloat angle, glm::vec3 axis) {
     this->angle = angle;
     this->axis = axis;
-    glRotatef((GLfloat)angle, (GLfloat)axis.x, (GLfloat)axis.y, (GLfloat)axis.z);
 }
-
+// 모델의 이동
 void Model::Move(glm::vec3 move) {
     this->position += move;
 }
+// 모델의 회전
 void Model::Rotate(GLfloat angle, glm::vec3 axis) {
     this->angle += angle;
     this->axis = axis;
 }
-
+// 모델의 정면을 정의합니다.
 void Model::SetFront(glm::vec3 dir) {
     this->front = dir;
 }
+// 모델의 크기를 변경합니다.
 void Model::Scale(glm::vec3 scale) {
     for (int i = 0; i < vertices.size(); i++) {
         vertices[i].x *= scale.x;
