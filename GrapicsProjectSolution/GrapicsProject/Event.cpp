@@ -33,7 +33,7 @@ void Keyboard(unsigned char key, int x, int y) {
 	case 'a':
 	case 'A' :
 		//Car.Rotate(angle, r);
-		Cam.Rotate(-angle, r);
+		Cam.Rotate(angle, r);
 		break;
 	case 's' :
 	case 'S' :
@@ -43,7 +43,7 @@ void Keyboard(unsigned char key, int x, int y) {
 	case 'd':
 	case 'D' :
 		//Car.Rotate(-angle,r);
-		Cam.Rotate(angle, r);
+		Cam.Rotate(-angle, r);
 		break;
 
 	default:

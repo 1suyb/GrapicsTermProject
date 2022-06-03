@@ -23,7 +23,9 @@ void camera::Move(glm::vec3 move) {
 }
 void camera::Rotate(float angle, glm::vec3 axis) {
 	glm::mat4 rot = glm::rotate(glm::mat4(1), glm::radians(angle), axis);
-	this->at = (rot * glm::vec4(at, 0));
+	glm::vec3 atdir = this->at - this->eye;
+	atdir = rot * glm::vec4(atdir, 0);
+	this->at = atdir;
 	up = glm::normalize(rot * glm::vec4(up,0));
 }
 
