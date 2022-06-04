@@ -30,6 +30,8 @@ void init() {
     glEnable(GL_DEPTH_TEST); // ±Ì¿Ãπˆ∆€
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_FRONT);
+    Acceleration = 0;
+    Speed = 0;
     InitLight();
     modelinit();
     caminit();
@@ -59,7 +61,6 @@ void modelinit() {
 void caminit() {
     Cam.Start(glm::vec3(0, 0, 0), glm::vec3(-1, 0, 0), glm::vec3(0, 1, 0));
     Cam.InCar(Car.position);
-    Speed = 1;
 }
 
 void render() {
