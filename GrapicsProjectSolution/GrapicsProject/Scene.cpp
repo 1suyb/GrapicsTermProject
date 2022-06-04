@@ -47,6 +47,7 @@ void modelinit() {
     Car.SetPosition(glm::vec3(0, 0, 0));
     Car.LoadObj("Data/bunny/bunny.obj", Car.vertices, Car.faces, Car.uvs, Car.normals);
     Car.Scale(glm::vec3(0.5, 0.5, 0.5));
+    Car.SetCollider();
 
     printf("모델");
     Bunny = Model();
@@ -71,6 +72,20 @@ void render() {
     Car.Translate();
     Car.RotateAngle();
     Car.DrawSurface();
+    // 콜라이더 확인 
+    glPushMatrix();
+    glTranslatef(Car.colliderX, 0, 0);
+    glutSolidSphere(0.1f, 10, 10);
+    glPopMatrix();
+    glPushMatrix();
+    glTranslatef(0, Car.colliderY, 0);
+    glutSolidSphere(0.1f, 10, 10);
+    glPopMatrix();
+    glPushMatrix();
+    glTranslatef( 0, 0,Car.colliderX);
+    glutSolidSphere(0.1f, 10, 10);
+    glPopMatrix();
+    // 콜라이더 확인
     glPopMatrix();
     glPushMatrix();
     Bunny.SetPosition(glm::vec3(0, 0, 0));

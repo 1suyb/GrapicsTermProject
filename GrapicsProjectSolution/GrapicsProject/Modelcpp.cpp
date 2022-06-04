@@ -1,13 +1,28 @@
 #include "Model.h"
-
+#include<math.h>
 
 Model::Model() {
     position = glm::vec3(0, 0, 0);
     angle = 0;
     axis = glm::vec3(0, 1, 0);
     front = glm::vec3(1, 0, 0);
-}
 
+    hasCollision = false;
+    colliderX = 0;
+    colliderY = 0;
+    colliderZ = 0;
+}
+Model::Model(bool collision) {
+    position = glm::vec3(0, 0, 0);
+    angle = 0;
+    axis = glm::vec3(0, 1, 0);
+    front = glm::vec3(1, 0, 0);
+
+    hasCollision = true;
+    colliderX = 0;
+    colliderY = 0;
+    colliderZ = 0;
+}
 bool Model::LoadObj(const char* path,
 	std::vector < glm::vec3 >& out_vertices,
 	std::vector < glm::ivec3 >& out_faces,
@@ -164,11 +179,45 @@ void Model::Rotate(GLfloat angle, glm::vec3 axis) {
 void Model::SetFront(glm::vec3 dir) {
     this->front = dir;
 }
-// 모델의 크기를 변경합니다.
+// 모델의 크기를 변경합니다. 충돌범위도 함께 재설정 합니다.
 void Model::Scale(glm::vec3 scale) {
     for (int i = 0; i < vertices.size(); i++) {
         vertices[i].x *= scale.x;
         vertices[i].y *= scale.y;
         vertices[i].z *= scale.z;
     }
+    SetCollider();
+}
+// 충돌 범위 설정
+void Model::SetCollider() {
+    for (int i = 0; i < this->vertices.size(); i++) {
+        if (std::abs(vertices[i].x) > colliderX) {
+            colliderX = std::abs(vertices[i].x);
+        }
+        if (std::abs(vertices[i].y) > colliderY) {
+            colliderY = std::abs(vertices[i].y);
+        }
+        if (std::abs(vertices[i].z) > colliderZ) {
+            colliderZ = std::abs(vertices[i].z);
+        }
+    }
+}
+// 충돌범위 크기 설정
+void Model::SetColliderSize(glm::vec3 colscale) {
+    if (colscale.x > 0) {
+        colliderX *= colscale.x;
+    }
+    if (colscale.y > 0) {
+        colliderY *= colscale.y;
+    }
+    if (colscale.z > 0) {
+        colliderZ *= colscale.z;
+    }
+}
+void Model::OnEnterCollider() {
+
+}
+
+
+void Car::OnEnterCollider(){
 }
