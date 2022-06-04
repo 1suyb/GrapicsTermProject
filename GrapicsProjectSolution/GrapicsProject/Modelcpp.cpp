@@ -169,6 +169,7 @@ void Model::SetRotation(GLfloat angle, glm::vec3 axis) {
 // 모델의 이동
 void Model::Move(glm::vec3 move) {
     this->position += move;
+    printf("Car position : %f %f %f\n",this->position.x, this->position.y, this->position.z);
 }
 // 모델의 회전
 void Model::Rotate(GLfloat angle, glm::vec3 axis) {

@@ -60,7 +60,7 @@ void modelinit() {
 
 void caminit() {
     Cam.Start(glm::vec3(0, 0, 0), glm::vec3(-1, 0, 0), glm::vec3(0, 1, 0));
-    Cam.InCar(Car.position);
+    Cam.InCar(Car.position,glm::vec3(0,0,0));
 }
 
 void render() {

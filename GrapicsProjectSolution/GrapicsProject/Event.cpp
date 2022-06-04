@@ -40,20 +40,12 @@ void Keyboard(unsigned char key, int x, int y) {
 
 	switch(key)
 	{
-	case 'w':
-	case 'W' :
-		
-		break;
 	case 'a':
 	case 'A' :
 		if (InCarView) {
 			Car.Rotate(angle, r);
 			Cam.Rotate(angle, r);
 		}
-		break;
-	case 's' :
-	case 'S' :
-
 		break;
 	case 'd':
 	case 'D' :
@@ -84,47 +76,35 @@ void Idel() {
 }
 
 void CarMoveEvent() {
-	glm::vec3 front = Car.front;
-	if (Speed > 0) {
-		Speed -= 0.0001f;
-	}
-	else if (Speed < 0) {
-		Speed += 0.0001f;
-	}
+	glm::vec3 front = glm::normalize(Cam.at);
+	//if (Speed > 0) {
+	//	Speed -= 0.0001f;
+	//}
+	//else if (Speed < 0) {
+	//	Speed += 0.0001f;
+	//}
 
 	if (Accelerate) {
-		Acceleration += 0.0001f;
-		if (Acceleration < 0) {
-			Acceleration = -1 * Acceleration;
+		Acceleration = 0.05f;
+		if (Speed < 1.f) {
+			Speed += Acceleration;
 		}
 	}
 	else if (Decelerate) {
-		Acceleration -= 0.0001f;
-		if (Acceleration > 0) {
-			Acceleration = -1 * Acceleration;
+		Acceleration = -0.05f;
+		if (Speed > -1.f) {
+			Speed += Acceleration;
 		}
 	}
 	else {
-		if (Acceleration > 0) {
-			Acceleration -= 0.0001f;
-		}
-		else if (Acceleration < 0) {
-			Acceleration += 0.0001f;
-		}
-	}
-
-	if (Acceleration != 0) {
-		Speed += Acceleration;
-	}
-	else {
+		Acceleration = 0;
 		if (Speed > 0) {
-			Speed -= 0.0002f;
+			Speed *= 0.5f;
 		}
 		else if (Speed < 0) {
-			Speed += 0.0002f;
+			Speed *= 0.5f;
 		}
 	}
-
 	if (Speed > 0) {
 		Car.Move(front * Speed);
 		Cam.Move(front * Speed);

@@ -16,7 +16,7 @@ public :
 	void Move(glm::vec3 move);
 	void Rotate(float angle, glm::vec3 axis);
 	void OutCar(glm::vec3 carpositon);
-	void InCar(glm::vec3 carpostion);
+	void InCar(glm::vec3 carpostion,glm::vec3 offset);
 };
 
 #endif // 
