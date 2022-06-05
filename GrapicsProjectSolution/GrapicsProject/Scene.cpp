@@ -25,14 +25,22 @@ void InitLight()
 }
 // 각종 초기화 함수들의 모임
 void init() {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+    loadTexture();
+    srand(time(NULL));
+
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glEnable(GL_TEXTURE_2D);
     glShadeModel(GL_SMOOTH);    //구로 셰이딩
     glEnable(GL_DEPTH_TEST); // 깊이버퍼
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_FRONT);
-    InitLight();
+    //InitLight();
     modelinit();
     caminit();
+
+    addBox(glm::vec3(-10, -10, -5), glm::vec3(10, 10, 20));
+
 }
 // 모델들 초기화하는 함수
 void modelinit() {
@@ -45,12 +53,12 @@ void modelinit() {
 
     Car = Model();
     Car.SetPosition(glm::vec3(0, 0, 0));
-    Car.LoadObj("Data/bunny/bunny.obj", Car.vertices, Car.faces, Car.uvs, Car.normals);
+    Car.LoadObj("Data/Porsche/Porsche_911_GT2.obj", Car.vertices, Car.faces, Car.uvs, Car.normals);
     Car.Scale(glm::vec3(0.5, 0.5, 0.5));
 
     printf("모델");
     Bunny = Model();
-    Bunny.LoadObj("Data/bunny/bunny.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.normals);
+    Bunny.LoadObj("Data/Porsche/Porsche_911_GT2.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.normals);
     Bunny.Scale(glm::vec3(0.1, 0.1, 0.1));
     
 }
@@ -70,13 +78,26 @@ void render() {
     glPushMatrix();
     Car.Translate();
     Car.RotateAngle();
+    glBindTexture(GL_TEXTURE_2D, g_textureID[2]);
     Car.DrawSurface();
     glPopMatrix();
     glPushMatrix();
     Bunny.SetPosition(glm::vec3(0, 0, 0));
     Bunny.Translate();
+    glBindTexture(GL_TEXTURE_2D, g_textureID[2]);
     Bunny.DrawSurface();
     glPopMatrix();
+
+    for (int i = 0; i < boxes.size(); i++)
+    {
+        glPushMatrix();
+        glTranslatef(boxes[i].p[0], boxes[i].p[1], boxes[i].p[2]);
+        glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
+        texturedCube(boxes[i].r);
+        glPopMatrix();
+    }
+
+
     glutSwapBuffers();
 }
 

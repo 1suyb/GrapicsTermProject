@@ -1,4 +1,178 @@
 #include "Model.h"
+#include "glaux.h"
+
+
+GLuint g_textureID[4];
+std::vector<Box> boxes;
+
+void addBox(glm::vec3 leftBottom, glm::vec3 rightTop)
+{
+    int random = 0;
+    int randRange = 100;
+    Box newBox;
+
+    std::vector<Box> boxes;
+
+    glm::vec3 _pos(0, 0, 0);
+    glm::vec3 _vel(0, 0, 0);
+    float m = 1;
+
+    for (int i = 0; i < 3; i++)
+    {
+        float value = (float)(rand() % randRange) / (float)randRange;
+        _pos[i] = leftBottom[i] + (rightTop[i] - leftBottom[i]) * value;
+        _vel[i] = value * 2.f - 1.f;
+
+        m = 1 + value;
+    }
+    
+    newBox.p = _pos;
+    newBox.v = _vel;
+
+    newBox.force = glm::vec3(0, 0, 0);
+    newBox.m = m;
+    newBox.r = m / 2.f;
+
+    boxes.push_back(newBox);
+}
+
+// 박스 겹치면 밀어내게
+void Contact(float stiff) {
+    std::vector<Box> boxes;
+    for (int i = 0; i < boxes.size(); i++)
+    {
+        for (int j = i + 1; j < boxes.size(); j++) {
+            glm::vec3 dis = boxes[i].p - boxes[j].p;
+
+            float L = length(dis);
+            dis = normalize(dis);
+
+            if (L < boxes[i].r + boxes[j].r) {
+                glm::vec3 force = stiff * ((boxes[i].r + boxes[j].r) - L) * dis;
+                boxes[i].force += force;
+                boxes[j].force -= force;
+            }
+        }
+    }
+}
+
+void texturedCube(float size) {
+    //glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
+    //glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
+    //glEnable(GL_TEXTURE_GEN_S);
+    //glEnable(GL_TEXTURE_GEN_T);
+    //glutSolidCube(1);
+
+    glBegin(GL_QUADS);
+
+    //앞면;
+    glTexCoord2f(0, 0); glVertex3f(-1, -1, 1);
+    glTexCoord2f(1, 0); glVertex3f(1, -1, 1);
+    glTexCoord2f(1, 1); glVertex3f(1, 1, 1);
+    glTexCoord2f(0, 1); glVertex3f(-1, 1, 1);
+
+    //뒷면
+    glTexCoord2f(1, 0); glVertex3f(-1, -1, -1);
+    glTexCoord2f(1, 1); glVertex3f(-1, 1, -1);
+    glTexCoord2f(0, 1); glVertex3f(1, 1, -1);
+    glTexCoord2f(0, 0); glVertex3f(1, -1, -1);
+
+    //윗면
+    glTexCoord2f(0, 1); glVertex3f(-1, 1, -1);
+    glTexCoord2f(0, 0); glVertex3f(-1, 1, 1);
+    glTexCoord2f(1, 0); glVertex3f(1, 1, 1);
+    glTexCoord2f(1, 1); glVertex3f(1, 1, -1);
+
+    //오른쪽 옆면
+    glTexCoord2f(1, 1); glVertex3f(-1, -1, -1);
+    glTexCoord2f(0, 1); glVertex3f(1, -1, -1);
+    glTexCoord2f(0, 0); glVertex3f(1, -1, 1);
+    glTexCoord2f(1, 0); glVertex3f(-1, -1, 1);
+
+    //
+    glTexCoord2f(1, 0); glVertex3f(1, -1, -1);
+    glTexCoord2f(1, 1); glVertex3f(1, 1, -1);
+    glTexCoord2f(0, 1); glVertex3f(1, 1, 1);
+    glTexCoord2f(0, 0); glVertex3f(1, -1, 1);
+
+    //
+    glTexCoord2f(0, 0); glVertex3f(-1, -1, -1);
+    glTexCoord2f(1, 0); glVertex3f(-1, -1, 1);
+    glTexCoord2f(1, 1); glVertex3f(-1, 1, 1);
+    glTexCoord2f(0, 1); glVertex3f(-1, 1, -1);
+
+    glEnd();
+
+}
+
+void loadTexture() {
+    //경로로 부터 이미지 파일 불러오기
+    AUX_RGBImageRec* pBoxImage = auxDIBImageLoad("Data/woodBox.bmp");
+    AUX_RGBImageRec* pBoosterImage = auxDIBImageLoad("Data/booster.bmp");
+    AUX_RGBImageRec* pCarImage = auxDIBImageLoad("Data/Porsche/skin00/0000.bmp");
+
+    if (pBoxImage != NULL && pBoosterImage != NULL && pCarImage != NULL) {
+        //박스 장애물
+        //텍스쳐 생성 (텍스쳐수, 텍스쳐 ID 배열 주소)
+        glGenTextures(3, &g_textureID[0]);
+
+        //텍스쳐 파라미터 설정을 위한 부분 (0번 텍스쳐 ID 설정)
+        glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
+
+        //텍스쳐 파라미터 설정: 텍스쳐 확대 축소시 필터 처리 방법 설정
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        //불러온 이미지 파일을 위에 생성한 텍스쳐ID에 결합
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, pBoxImage->sizeX, pBoxImage->sizeY, 0,
+            GL_RGB, GL_UNSIGNED_BYTE, pBoxImage->data);
+
+        //부스터 아이템
+        //텍스쳐 파라미터 설정을 위한 부분 (1번 텍스쳐 ID 설정)
+        glBindTexture(GL_TEXTURE_2D, g_textureID[1]);
+
+        //텍스쳐 파라미터 설정: 텍스쳐 확대 축소시 필터 처리 방법 설정
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        //불러온 이미지 파일을 위에 생성한 텍스쳐ID에 결합
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, pBoosterImage->sizeX, pBoosterImage->sizeY, 0,
+            GL_RGB, GL_UNSIGNED_BYTE, pBoosterImage->data);
+
+        // 차
+        //텍스쳐 파라미터 설정을 위한 부분 (1번 텍스쳐 ID 설정)
+        glBindTexture(GL_TEXTURE_2D, g_textureID[2]);
+
+        //텍스쳐 파라미터 설정: 텍스쳐 확대 축소시 필터 처리 방법 설정
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+        glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+        glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+
+        glEnable(GL_TEXTURE_GEN_S);
+        glEnable(GL_TEXTURE_GEN_T);
+
+        //불러온 이미지 파일을 위에 생성한 텍스쳐ID에 결합
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, pCarImage->sizeX, pCarImage->sizeY, 0,
+            GL_RGB, GL_UNSIGNED_BYTE, pCarImage->data);
+
+        //불러온 텍스쳐 파일 데이터 삭제
+        if (pBoxImage->data)
+            free(pBoxImage->data);
+
+        if (pBoosterImage->data)
+            free(pBoosterImage->data);
+        if (pCarImage->data)
+            free(pCarImage->data);
+
+        free(pBoxImage);
+        free(pBoosterImage);
+        free(pCarImage);
+    }
+}
 
 
 Model::Model() {

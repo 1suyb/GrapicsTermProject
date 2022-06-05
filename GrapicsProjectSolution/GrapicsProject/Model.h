@@ -6,6 +6,8 @@
 #define __MODEL_INCLUDED__
 
 #include "Includes.h"
+#include <time.h>
+
 
 
 class Model {
@@ -28,6 +30,7 @@ public:
 		std::vector < glm::vec2 >& out_uvs,
 		std::vector < glm::vec3 >& out_normals);	// obj파일 import
 
+
 	static bool LoadPly(const char* path,
 		std::vector < glm::vec3 >& out_vertices,
 		std::vector < glm::ivec3 >& out_faces,
@@ -35,7 +38,7 @@ public:
 
 	void DrawSurface();		// 표면 그리기
 
-	void Texturing();			/** 텍스쳐올리는게 여기에 있어야할지 따로있어야할지 잘모르겠어요 **/
+	//void Texturing();			/** 텍스쳐올리는게 여기에 있어야할지 따로있어야할지 잘모르겠어요 **/
 
 	void Translate();
 	void RotateAngle();
@@ -51,6 +54,22 @@ public:
 
 };
 
+struct Box {
+    glm::vec3 p; //position
+    glm::vec3 v; //velocity
+    glm::vec3 force; //force
+    float r; //radius
+    float m; //mass
+
+};
+
+void addBox(glm::vec3 leftBottom, glm::vec3 rightTop);
+void Contact(float stiff);
+void texturedCube(float size);
+void loadTexture();
+
+extern GLuint g_textureID[4];
+extern std::vector<Box> boxes;
 
 
 #endif // !MODELINCLUDED
