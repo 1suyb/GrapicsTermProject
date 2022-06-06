@@ -59,7 +59,7 @@ void modelinit() {
     Bunny.Scale(glm::vec3(0.1, 0.1, 0.1));
     
     Track = Model();
-    Track.LoadObj("Data/race-track/race-track.obj", Track.vertices, Track.faces, Track.uvs, Track.normals);
+    Track.TrackObj("Data/race-track/race-track.obj", Track.vertices, Track.faces2, Track.uvs2, Track.normals);
 }
 
 void caminit() {

@@ -14,6 +14,8 @@ public:
 	std::vector < glm::ivec3 > faces;
 	std::vector < glm::vec2 > uvs;
 	std::vector < glm::vec3 > normals;
+	std::vector < glm::vec3> uvs2;
+	std::vector < glm::ivec4 > faces2;
 
 	glm::vec3 position;
 	GLfloat angle;
@@ -30,8 +32,8 @@ public:
 
 	static bool TrackObj(const char* path,
 		std::vector < glm::vec3 >& out_vertices,
-		std::vector < glm::ivec3 >& out_faces,
-		std::vector < glm::vec2 >& out_uvs,
+		std::vector < glm::ivec4 >& out_faces2,
+		std::vector < glm::vec3 >& out_uvs2,
 		std::vector < glm::vec3 >& out_normals);	// Track.obj∆ƒ¿œ import
 
 	static bool LoadPly(const char* path,
@@ -56,6 +58,7 @@ public:
 	void Scale(glm::vec3 scale);
 
 };
+
 
 
 

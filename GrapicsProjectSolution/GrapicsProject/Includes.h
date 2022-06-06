@@ -11,7 +11,8 @@
 
 #include <stdio.h>
 #include <string>
-
+#include <fstream>
+#include <iostream>
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -28,5 +29,5 @@
 //#include <glext.h>
 //#include <tga.h>
 #endif // !INCLUDEDS
-
+using namespace std;
 
