@@ -10,6 +10,7 @@ extern float Speed;
 extern float Acceleration;
 extern float Speed;
 
+
 void EventCall();
 
 void Mouse(int button, int state, int x, int y);
@@ -19,5 +20,8 @@ void Timer(int value);
 void Idel();
 
 void CarMoveEvent();
+void Motion(int x, int y);
+
+
 
 #endif // !__EVENET_INCLUDED__

@@ -9,8 +9,10 @@ camera Cam;
 #pragma region 모델선언부
 Model Car;
 Model Bunny;
+Model Track;
 #pragma endregion
 
+GLuint tex[7];   // Texture Mapping을 하기 위한 Texture 이미지의 개수를 위한 배열 변수
 
 void InitLight()
 {
@@ -56,6 +58,8 @@ void modelinit() {
     Bunny.LoadObj("Data/bunny/bunny.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.normals);
     Bunny.Scale(glm::vec3(0.1, 0.1, 0.1));
     
+    Track = Model();
+    Track.TrackObj("Data/race-track/race-track.obj", Track.vertices, Track.faces2, Track.uvs2, Track.normals);
 }
 
 void caminit() {
@@ -67,6 +71,9 @@ void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    glTranslatef(0.0f, 0.0f, g_fDistance);
+    glRotatef(-g_fSpinY, 1.0f, 0.0f, 0.0f);
+    glRotatef(-g_fSpinX, 0.0f, 1.0f, 0.0f);
     CameraSetting();
 
     glPushMatrix();
@@ -93,13 +100,18 @@ void render() {
     Bunny.Translate();
     Bunny.DrawSurface();
     glPopMatrix();
+    glPushMatrix();
+    Track.DrawSurface();
+    glPopMatrix();
+
+
     glutSwapBuffers();
 }
 
 void PerspectiveSetting() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45.0f, 640.0f / 480.0f, 0.1f, 1000.0f);
+    gluPerspective(45.0f, 640.0f / 480.0f, 0.1f, 100.0f);
 }
 void CameraSetting() {
     gluLookAt(Cam.eye.x, Cam.eye.y, Cam.eye.z, Cam.at.x, Cam.at.y, Cam.at.z, Cam.up.x, Cam.up.y, Cam.up.z);

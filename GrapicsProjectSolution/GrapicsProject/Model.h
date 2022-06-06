@@ -15,6 +15,8 @@ public:
 	std::vector < glm::ivec3 > faces;
 	std::vector < glm::vec2 > uvs;
 	std::vector < glm::vec3 > normals;
+	std::vector < glm::vec3> uvs2;
+	std::vector < glm::ivec4 > faces2;
 
 	/* Scene에서의 위치 정보 */
 	glm::vec3 position;
@@ -40,6 +42,12 @@ public:
 		std::vector < glm::ivec3 >& out_faces,
 		std::vector < glm::vec2 >& out_uvs,
 		std::vector < glm::vec3 >& out_normals);	// obj파일 import
+
+	static bool TrackObj(const char* path,
+		std::vector < glm::vec3 >& out_vertices,
+		std::vector < glm::ivec4 >& out_faces2,
+		std::vector < glm::vec3 >& out_uvs2,
+		std::vector < glm::vec3 >& out_normals);	// Track.obj파일 import
 
 	static bool LoadPly(const char* path,
 		std::vector < glm::vec3 >& out_vertices,
@@ -82,6 +90,7 @@ public :
 	Car(bool collider) :Model( collider) {};
 	void OnEnterCollider();
 };
+
 
 #endif // !MODELINCLUDED
 
