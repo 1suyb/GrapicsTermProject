@@ -5,32 +5,27 @@
 
 float Acceleration;
 float Speed;
-static bool Accelerate = false;
+bool InCarView;
+static bool Accelerate = true;
 static bool Decelerate = false;
-static bool InCarView = true;
+
 static POINT ptLastMousePosit;
 static POINT ptCurrentMousePosit;
 static bool bMousing;
 
 
-void EventCall() {
-	//glutMouseFunc(Mouse);
-	glutKeyboardFunc(Keyboard);
-	glutTimerFunc(30, Timer, 1);
-	//glutReshapeFunc(Reshape);
-	//glutTimerFunc();
-}
-
 void Mouse(int button, int state, int x, int y) {
 	switch (button) {
 	case GLUT_LEFT_BUTTON:
 		if (state == GLUT_DOWN) {
+			printf("hello");
 			ptLastMousePosit.x = ptCurrentMousePosit.x = x;
 			ptLastMousePosit.y = ptCurrentMousePosit.y = y;
 			bMousing = true;
 		}
-		else
+		else {
 			bMousing = false;
+		}
 		break;
 	case GLUT_MIDDLE_BUTTON:
 	case GLUT_RIGHT_BUTTON:
@@ -40,24 +35,23 @@ void Mouse(int button, int state, int x, int y) {
 	}
 }
 void Motion(int x, int y) {
-	ptCurrentMousePosit.x = x;
-	ptCurrentMousePosit.y = y;
-
-	if (bMousing)
-	{
-		g_fSpinX -= (ptCurrentMousePosit.x - ptLastMousePosit.x);
-		g_fSpinY -= (ptCurrentMousePosit.y - ptLastMousePosit.y);
+	printf("buy");
+	if (InCarView) {
+		return;
 	}
-
-	ptLastMousePosit.x = ptCurrentMousePosit.x;
-	ptLastMousePosit.y = ptCurrentMousePosit.y;
+	if (bMousing) {
+		printf("\n\n\n\n");
+		ptLastMousePosit.x = x;
+		ptLastMousePosit.y = y;
+		Cam.Rotate((float)ptCurrentMousePosit.x - (float)ptLastMousePosit.x, glm::vec3(0, 1, 0));
+	}
 
 	glutPostRedisplay();
 }
 
 void Keyboard(unsigned char key, int x, int y) {
 
-	GLfloat angle = 20.f;
+	GLfloat angle = 5.f;
 	glm::vec3 r(0, 1, 0);
 	if (key == 'w' || key == 'W') {
 		Accelerate = true;
@@ -76,17 +70,16 @@ void Keyboard(unsigned char key, int x, int y) {
 	{
 	case 'a':
 	case 'A' :
-		if (InCarView) {
-			Car.Rotate(angle, r);
-			Cam.Rotate(angle, r);
-		}
+		Car.Rotate(angle, r);
+
 		break;
 	case 'd':
 	case 'D' :
-		if (InCarView) {
-			Car.Rotate(-angle, r);
-			Cam.Rotate(-angle, r);
-		}
+		Car.Rotate(-angle, r);
+		break;
+	case 'f' :
+	case'F' :
+		InCarView = !InCarView;
 		break;
 
 	default:
@@ -110,13 +103,7 @@ void Idel() {
 }
 
 void CarMoveEvent() {
-	glm::vec3 front = glm::normalize(Cam.at);
-	//if (Speed > 0) {
-	//	Speed -= 0.0001f;
-	//}
-	//else if (Speed < 0) {
-	//	Speed += 0.0001f;
-	//}
+	glm::vec3 front = glm::normalize(Car.front-Car.position);
 
 	if (Accelerate) {
 		Acceleration = 0.05f;
@@ -132,21 +119,10 @@ void CarMoveEvent() {
 	}
 	else {
 		Acceleration = 0;
-		if (Speed > 0) {
-			Speed *= 0.5f;
-		}
-		else if (Speed < 0) {
-			Speed *= 0.5f;
-		}
+		Speed *= 0.5f;
 	}
-	if (Speed > 0) {
-		Car.Move(front * Speed);
-		Cam.Move(front * Speed);
-	}
-	else if (Speed < 0) {
-		Car.Move(front * Speed);
-		Cam.Move(front * Speed);
-	}
+	Car.Move(front * Speed);
+
 
 	printf("%f\n", Acceleration);
 	printf("%f\n", Speed);

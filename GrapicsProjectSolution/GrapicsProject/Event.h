@@ -9,9 +9,7 @@ extern int ClickMouseButton ;
 extern float Speed;
 extern float Acceleration;
 extern float Speed;
-
-
-void EventCall();
+extern bool InCarView;
 
 void Mouse(int button, int state, int x, int y);
 void Keyboard(unsigned char key, int x, int y);

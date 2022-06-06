@@ -1,15 +1,15 @@
 #include "Scene.h"
+#include <windows.h>
 
 GLfloat light_amb[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_specular[] = { 1, 1, 1, 1.0 };
-// 카메라
 
+// 카메라
 camera Cam;
 #pragma region 모델선언부
 Model Car;
 Model Bunny;
-Model Track;
 #pragma endregion
 
 GLuint tex[7];   // Texture Mapping을 하기 위한 Texture 이미지의 개수를 위한 배열 변수
@@ -50,70 +50,58 @@ void modelinit() {
     Car = Model();
     Car.SetPosition(glm::vec3(0, 0, 0));
     Car.LoadObj("Data/bunny/bunny.obj", Car.vertices, Car.faces, Car.uvs, Car.normals);
-    Car.Scale(glm::vec3(0.5, 0.5, 0.5));
+    Car.Scale(glm::vec3(0.1, 0.1, 0.1));
+    Car.SetRotation(180.f, glm::vec3(0, 1, 0));
     Car.SetCollider();
 
-    printf("모델");
     Bunny = Model();
     Bunny.LoadObj("Data/bunny/bunny.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.normals);
-    Bunny.Scale(glm::vec3(0.1, 0.1, 0.1));
-    
-    Track = Model();
-    Track.TrackObj("Data/race-track/race-track.obj", Track.vertices, Track.faces2, Track.uvs2, Track.normals);
+    Bunny.Scale(glm::vec3(0.01, 0.01, 0.01));
+
 }
 
 void caminit() {
-    Cam.Start(glm::vec3(0, 0, 0), glm::vec3(-1, 0, 0), glm::vec3(0, 1, 0));
-    Cam.InCar(Car.position,glm::vec3(0,0,0));
+    Cam.Start(glm::vec3(0, 1, 0), glm::vec3(1, -1, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0.05, 0));
+    InCarView = true;
+    //Cam.InCar(Car.position,glm::vec3(0,0.05,0),Car.front);
 }
 
 void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    PerspectiveSetting();
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, g_fDistance);
-    glRotatef(-g_fSpinY, 1.0f, 0.0f, 0.0f);
-    glRotatef(-g_fSpinX, 0.0f, 1.0f, 0.0f);
     CameraSetting();
 
     glPushMatrix();
     Car.Translate();
     Car.RotateAngle();
     Car.DrawSurface();
-    // 콜라이더 확인 
-    glPushMatrix();
-    glTranslatef(Car.colliderX, 0, 0);
-    glutSolidSphere(0.1f, 10, 10);
     glPopMatrix();
-    glPushMatrix();
-    glTranslatef(0, Car.colliderY, 0);
-    glutSolidSphere(0.1f, 10, 10);
-    glPopMatrix();
-    glPushMatrix();
-    glTranslatef( 0, 0,Car.colliderX);
-    glutSolidSphere(0.1f, 10, 10);
-    glPopMatrix();
-    // 콜라이더 확인
-    glPopMatrix();
+
     glPushMatrix();
     Bunny.SetPosition(glm::vec3(0, 0, 0));
     Bunny.Translate();
     Bunny.DrawSurface();
     glPopMatrix();
-    glPushMatrix();
-    Track.DrawSurface();
-    glPopMatrix();
-
-
+    system("cls");
     glutSwapBuffers();
 }
+
 
 void PerspectiveSetting() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45.0f, 640.0f / 480.0f, 0.1f, 100.0f);
+    gluPerspective(60.0f, 1000.0f / 600.0f, 0.1f, 100.0f);
 }
 void CameraSetting() {
-    gluLookAt(Cam.eye.x, Cam.eye.y, Cam.eye.z, Cam.at.x, Cam.at.y, Cam.at.z, Cam.up.x, Cam.up.y, Cam.up.z);
+    if (InCarView) {
+        Cam.InCar(Car.position, Car.front);
+    }
+    else {
+        Cam.OutCar(Car.position);
+    }
+    gluLookAt(Cam.eye.x, Cam.eye.y, Cam.eye.z,
+        Cam.at.x, Cam.at.y, Cam.at.z,
+        Cam.up.x, Cam.up.y, Cam.up.z);
 }
-

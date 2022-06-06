@@ -184,6 +184,7 @@ bool Model::LoadPly(const char* path,
 }
 
 void Model::DrawSurface() {
+    printf("=============================\n");
     glBegin(GL_TRIANGLES);
     for (int i = 0; i < faces.size(); i++) {
         for (int j = 0; j < 3; j++) {
@@ -207,11 +208,16 @@ void Model::Translate() {
 }
 // 모델의 회전 행렬을 적용합니다.
 void Model::RotateAngle() {
+    printf("Car Angle : %f\n", this->angle);
     glRotatef(this->angle,this->axis.x,this->axis.y,this->axis.z);
 }
 // 모델의 트렌스폼 행렬을 변경합니다.
 void Model::SetPosition(glm::vec3 translate) {
     this->position = translate;
+    glm::mat4 rot = glm::rotate(glm::mat4(1), glm::radians(angle), axis);
+    glm::vec3 atdir = this->front - this->position;
+    atdir = rot * glm::normalize(glm::vec4(atdir, 0));
+    this->front = atdir + this->position;
 }
 // 모델의 회전 행렬을 변경합니다.
 void Model::SetRotation(GLfloat angle, glm::vec3 axis) {
@@ -221,12 +227,17 @@ void Model::SetRotation(GLfloat angle, glm::vec3 axis) {
 // 모델의 이동
 void Model::Move(glm::vec3 move) {
     this->position += move;
+    this->front += move;
     printf("Car position : %f %f %f\n",this->position.x, this->position.y, this->position.z);
+    printf("Car at : %f %f %f \n", this->front.x, this->front.y, this->front.z);
 }
-// 모델의 회전
 void Model::Rotate(GLfloat angle, glm::vec3 axis) {
     this->angle += angle;
     this->axis = axis;
+    glm::mat4 rot = glm::rotate(glm::mat4(1), glm::radians(angle), axis);
+    glm::vec3 atdir = this->front - this->position;
+    atdir = rot * glm::normalize(glm::vec4(atdir, 0));
+    this->front = atdir + this->position;
 }
 // 모델의 정면을 정의합니다.
 void Model::SetFront(glm::vec3 dir) {

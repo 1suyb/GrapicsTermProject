@@ -23,10 +23,6 @@ public:
 	GLfloat angle;
 	glm::vec3 axis;
 	glm::vec3 front;	// 모델의 정면 방향 벡터.
-	/* 
-	 * 기본적으로 모델이 1,0,0의 방향을 바라보고 있다고 가정합니다. 그렇지 않은 모델만 SetFront함수로 한번만 변경해주면됩니다. 
-	 * ex) obj로드해서 불러왔더니 -1,0,0 이 정면인 모델 -> setFront(glm::vec3(-1,0,0))
-	 */
 
 	/* 물리처리에 대한 정보 */
 	bool hasCollision;
