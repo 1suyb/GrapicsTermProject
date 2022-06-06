@@ -11,5 +11,7 @@ int main(int argc, char** argv) {
 	init();
 	glutDisplayFunc(render);
 	glutKeyboardFunc(Keyboard);
+	glutMouseFunc(Mouse);
+	glutMotionFunc(Motion);
 	glutMainLoop();
 }

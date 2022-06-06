@@ -5,10 +5,6 @@ GLfloat light_diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_specular[] = { 1, 1, 1, 1.0 };
 // 카메라
 
-float g_fDistance = -4.5f;
-float g_fSpinX = 0.0f;
-float g_fSpinY = 0.0f;
-
 camera Cam;
 #pragma region 모델선언부
 Model Car;
@@ -16,6 +12,7 @@ Model Bunny;
 Model Track;
 #pragma endregion
 
+GLuint tex[7];   // Texture Mapping을 하기 위한 Texture 이미지의 개수를 위한 배열 변수
 
 void InitLight()
 {
@@ -72,6 +69,9 @@ void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    glTranslatef(0.0f, 0.0f, g_fDistance);
+    glRotatef(-g_fSpinY, 1.0f, 0.0f, 0.0f);
+    glRotatef(-g_fSpinX, 0.0f, 1.0f, 0.0f);
     CameraSetting();
 
     glPushMatrix();
@@ -86,10 +86,9 @@ void render() {
     glPopMatrix();
     glPushMatrix();
     Track.DrawSurface();
-    glTranslatef(0.0f, 0.0f, g_fDistance);
-    glRotatef(-g_fSpinY, 1.0f, 0.0f, 0.0f);
-    glRotatef(-g_fSpinX, 0.0f, 1.0f, 0.0f);
     glPopMatrix();
+
+
     glutSwapBuffers();
 }
 
