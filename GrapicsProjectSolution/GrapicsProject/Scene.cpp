@@ -53,12 +53,12 @@ void modelinit() {
 
     Car = Model();
     Car.SetPosition(glm::vec3(0, 0, 0));
-    Car.LoadObj("Data/Porsche/Porsche_911_GT2.obj", Car.vertices, Car.faces, Car.uvs, Car.normals);
+    Car.LoadObj("Data/Porsche/Porsche_911_GT2.obj", Car.vertices, Car.faces, Car.uvs, Car.uvindices, Car.normals, Car.normalindices);
     Car.Scale(glm::vec3(0.5, 0.5, 0.5));
 
     printf("¸ðµ¨");
     Bunny = Model();
-    Bunny.LoadObj("Data/Porsche/Porsche_911_GT2.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.normals);
+    Bunny.LoadObj("Data/Porsche/Porsche_911_GT2.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.uvindices, Bunny.normals, Bunny.normalindices);
     Bunny.Scale(glm::vec3(0.1, 0.1, 0.1));
     
 }
@@ -78,14 +78,18 @@ void render() {
     glPushMatrix();
     Car.Translate();
     Car.RotateAngle();
+    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, g_textureID[2]);
     Car.DrawSurface();
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
     glPushMatrix();
     Bunny.SetPosition(glm::vec3(0, 0, 0));
     Bunny.Translate();
+    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, g_textureID[2]);
     Bunny.DrawSurface();
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
     for (int i = 0; i < boxes.size(); i++)

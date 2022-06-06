@@ -186,13 +186,17 @@ bool Model::LoadObj(const char* path,
 	std::vector < glm::vec3 >& out_vertices,
 	std::vector < glm::ivec3 >& out_faces,
 	std::vector < glm::vec2 >& out_uvs,
-	std::vector < glm::vec3 >& out_normals) 
+    std::vector < glm::ivec3 >& uvindices,
+	std::vector < glm::vec3 >& out_normals,
+    std::vector < glm::ivec3 >& normalindices)
 {
 	out_vertices.clear();
 	out_faces.clear();
 	out_uvs.clear();
 	out_normals.clear();
-
+    uvindices.clear();
+    normalindices.clear();
+    
     FILE* file = fopen(path, "r");
     if (file == NULL) {
         printf("Impossible to open the file !\n");
@@ -230,6 +234,8 @@ bool Model::LoadObj(const char* path,
                 &vertexIndex[1], &uvIndex[1], &normalIndex[1],
                 &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
             out_faces.push_back(glm::ivec3(vertexIndex[0] - 1, vertexIndex[1] - 1, vertexIndex[2] - 1));
+            uvindices.push_back(glm::ivec3(uvIndex[0] - 1, uvIndex[1] - 1, uvIndex[2] - 1));
+            out_faces.push_back(glm::ivec3(normalIndex[0] - 1, normalIndex[1] - 1, normalIndex[2] - 1));
         }
     }
 }
@@ -291,6 +297,7 @@ bool Model::LoadPly(const char* path,
     return true;
 }
 
+//삼각형을 그리실때 각 삼각형 꼭지점에서 사용할 vt 좌표를 명시해 줘야하는데, vt 리스트 중에 참조해야할 vt 의 index를 나타내는게 unindex 입니다.
 void Model::DrawSurface() {
     glBegin(GL_TRIANGLES);
     for (int i = 0; i < faces.size(); i++) {
@@ -299,11 +306,19 @@ void Model::DrawSurface() {
             p.x = vertices[faces[i][j]].x;
             p.y = vertices[faces[i][j]].y;
             p.z = vertices[faces[i][j]].z;
-            if (normals.size() == vertices.size()) {
-                glm::vec3 n = normals[faces[i][j]];
-                glNormal3f(n[0], n[1], n[2]);
-            }
             glVertex3f(p[0], p[1], p[2]);
+        }
+    }
+    for (int i = 0; i < uvindices.size(); i++) {
+        for (int j = 0; j < 2; j++) {
+            glm::vec2 vt = uvs[uvindices[i][j]];
+            glTexCoord2f(vt[0], vt[1]);
+        }
+    }
+    for (int i = 0; i < normalindices.size(); i++) {
+        for (int j = 0; j < 3; j++) {
+            glm::vec3 n = normals[normalindices[i][j]];
+            glNormal3f(n[0], n[1], n[2]);
         }
     }
     glEnd();

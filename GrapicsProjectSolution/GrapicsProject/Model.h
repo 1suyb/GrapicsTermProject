@@ -15,7 +15,9 @@ public:
 	std::vector < glm::vec3 > vertices;
 	std::vector < glm::ivec3 > faces;
 	std::vector < glm::vec2 > uvs;
+	std::vector < glm::ivec3 > uvindices;
 	std::vector < glm::vec3 > normals;
+	std::vector < glm::ivec3 > normalindices;
 
 	glm::vec3 position;
 	GLfloat angle;
@@ -28,7 +30,9 @@ public:
 		std::vector < glm::vec3 >& out_vertices,
 		std::vector < glm::ivec3 >& out_faces,
 		std::vector < glm::vec2 >& out_uvs,
-		std::vector < glm::vec3 >& out_normals);	// obj파일 import
+		std::vector < glm::ivec3 >& uvindices,
+		std::vector < glm::vec3 >& out_normals,
+		std::vector < glm::ivec3 >& normalindices);	// obj파일 import
 
 
 	static bool LoadPly(const char* path,
