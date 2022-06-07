@@ -10,6 +10,7 @@ camera Cam;
 #pragma region �𵨼����
 Model Car;
 Model Bunny;
+Model Track;
 #pragma endregion
 
 void InitLight()
@@ -56,6 +57,8 @@ void modelinit() {
     Bunny.LoadObj("Data/bunny/bunny.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.normals);
     Bunny.Scale(glm::vec3(0.01, 0.01, 0.01));
 
+    Track = Model();
+    Track.TrackObj("Data/race-track/race-track.obj", Track.vertices, Track.faces2, Track.uvs2, Track.normals);
 }
 
 void caminit() {
