@@ -16,6 +16,8 @@ public:
 	std::vector < glm::vec3 > normals;
 	std::vector < glm::vec3> uvs2;
 	std::vector < glm::ivec4 > faces2;
+	std::vector < glm::vec4 > normals2;
+	std::vector < glm::vec4 > vertices2;
 
 	glm::vec3 position;
 	GLfloat angle;
@@ -45,8 +47,8 @@ public:
 		std::vector < glm::vec3 >& normals,
 		std::vector < glm::ivec3 >& faces);		// 표면 그리기
 
-	void DrawTrack(std::vector < glm::vec3 >& vectices,
-		std::vector < glm::vec3 >& normals,
+	void DrawTrack(std::vector < glm::vec4 >& vectices,
+		std::vector < glm::vec4 >& normals,
 		std::vector < glm::ivec4 >& faces);
 	
 	void Texturing();			/** 텍스쳐올리는게 여기에 있어야할지 따로있어야할지 잘모르겠어요 **/

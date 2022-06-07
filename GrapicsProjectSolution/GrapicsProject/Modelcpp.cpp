@@ -188,8 +188,8 @@ void Model::DrawSurface(std::vector < glm::vec3 >& vectices,
     glEnd();
 }
 
-void Model::DrawTrack(std::vector < glm::vec3 >& vectices,
-    std::vector < glm::vec3 >& normals,
+void Model::DrawTrack(std::vector < glm::vec4 >& vectices,
+    std::vector < glm::vec4 >& normals,
     std::vector < glm::ivec4 >& faces) {
     glBegin(GL_TRIANGLES);
     for (int i = 0; i < faces.size(); i++) {
