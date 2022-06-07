@@ -6,7 +6,7 @@
 #define __MODEL_INCLUDED__
 
 #include "Includes.h"
-
+extern GLuint g_textureID[4];
 
 class Model {
 public:
@@ -14,7 +14,9 @@ public:
 	std::vector < glm::vec3 > vertices;
 	std::vector < glm::ivec3 > faces;
 	std::vector < glm::vec2 > uvs;
+	std::vector < glm::ivec3 > uvindices; // LoadObj, DrawSurface
 	std::vector < glm::vec3 > normals;
+	std::vector < glm::ivec3 > normalindices; // LoadObj, DrawSurface
 	std::vector < glm::vec3> uvs2;
 	std::vector < glm::ivec4 > faces2;
 	std::vector < glm::vec4 > normals2;
@@ -39,7 +41,9 @@ public:
 		std::vector < glm::vec3 >& out_vertices,
 		std::vector < glm::ivec3 >& out_faces,
 		std::vector < glm::vec2 >& out_uvs,
-		std::vector < glm::vec3 >& out_normals);	// obj파일 import
+		std::vector < glm::ivec3 >& uvindices,
+		std::vector < glm::vec3 >& out_normals,
+		std::vector < glm::ivec3 >& normalindices);	// obj파일 import
 
 	static bool TrackObj(const char* path,
 		std::vector < glm::vec3 >& out_vertices,
@@ -54,6 +58,9 @@ public:
 
 	void DrawSurface(std::vector < glm::vec3 >& vectices,
 		std::vector < glm::vec3 >& normals,
+		std::vector < glm::vec2 >& uvs,
+		std::vector < glm::ivec3 >& uvindicies,
+		std::vector < glm::ivec3 >& normalindices,
 		std::vector < glm::ivec3 >& faces);		// 표면 그리기
 
 	void DrawTrack(std::vector < glm::vec4 >& vectices,
@@ -95,6 +102,7 @@ public :
 	void OnEnterCollider();
 };
 
+void loadTexture();
 
 #endif // !MODELINCLUDED
 
