@@ -3,6 +3,11 @@
 GLfloat light_amb[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_specular[] = { 1, 1, 1, 1.0 };
+
+GLfloat Car_mat_amb[] = { 0.2, 0 , 0, 1.0 }; // /주변 반사
+GLfloat Car_mat_diffuse[] = { 1, 0.5, 0.5, 1.0 }; // 확산 반사 
+GLfloat Car_mat_specular[] = { 0, 0, 0, 1 }; // 경면 반사
+
 // 카메라
 
 camera Cam;
@@ -78,18 +83,19 @@ void render() {
     glPushMatrix();
     Car.Translate();
     Car.RotateAngle();
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, g_textureID[2]);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, Car_mat_amb);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, Car_mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, Car_mat_specular);
+    //glColor3f(0.0, 0.0, 0.0);
     Car.DrawSurface();
-    glDisable(GL_TEXTURE_2D);
+    
     glPopMatrix();
     glPushMatrix();
     Bunny.SetPosition(glm::vec3(0, 0, 0));
     Bunny.Translate();
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, g_textureID[2]);
+    
     Bunny.DrawSurface();
-    glDisable(GL_TEXTURE_2D);
+    
     glPopMatrix();
 
     for (int i = 0; i < boxes.size(); i++)
