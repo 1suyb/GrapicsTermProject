@@ -1,75 +1,74 @@
 #include "Scene.h"
+#include <windows.h>
 
 GLfloat light_amb[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_specular[] = { 1, 1, 1, 1.0 };
-// Ä«¸Þ¶ó
 
+// Ä«ï¿½Þ¶ï¿½
 camera Cam;
-#pragma region ¸ðµ¨¼±¾ðºÎ
+#pragma region ï¿½ðµ¨¼ï¿½ï¿½ï¿½ï¿½
 Model Car;
 Model Bunny;
-Model Track;
 #pragma endregion
 
 void InitLight()
 {
     GLfloat LightPosition[] = { 0.0, 2.0, 0.0, 1.0 };
-    glEnable(GL_LIGHTING);      //Á¶¸í È°¼ºÈ­
+    glEnable(GL_LIGHTING);      //ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
     glEnable(GL_LIGHT0);
 
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_amb); //ÁÖº¯±¤ ¼³Á¤
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse); //È®»ê±¤ ¼³Á¤
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular); //¹Ý»ç±¤ ¼³Á¤
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_amb); //ï¿½Öºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse); //È®ï¿½ê±¤ ï¿½ï¿½ï¿½ï¿½
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular); //ï¿½Ý»ç±¤ ï¿½ï¿½ï¿½ï¿½
     glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
 }
-// °¢Á¾ ÃÊ±âÈ­ ÇÔ¼öµéÀÇ ¸ðÀÓ
+// ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 void init() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glShadeModel(GL_SMOOTH);    //±¸·Î ¼ÎÀÌµù
-    glEnable(GL_DEPTH_TEST); // ±íÀÌ¹öÆÛ
+    glShadeModel(GL_SMOOTH);    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½
+    glEnable(GL_DEPTH_TEST); // ï¿½ï¿½ï¿½Ì¹ï¿½ï¿½ï¿½
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_FRONT);
+    Acceleration = 0;
+    Speed = 0;
     InitLight();
     modelinit();
     caminit();
 }
-// ¸ðµ¨µé ÃÊ±âÈ­ÇÏ´Â ÇÔ¼ö
+// ï¿½ðµ¨µï¿½ ï¿½Ê±ï¿½È­ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½
 void modelinit() {
-    /* ¸ðµ¨ ¼±¾ð½Ã */
-    // ¸ðµ¨ Àü¿ªº¯¼ö·Î ¼±¾ð
-    // ¸ðµ¨¿¡ ¸ðµ¨ Å¬·¡½º ÇÒ´ç
-    // ¸ðµ¨ ¸ðµ¨ ÃÊ±â Æ÷Áö¼Ç ÇÒ´ç
-    // ¸ðµ¨ ·Îµå
-    // ¸ðµ¨ Å©±â Á¶Á¤
+    /* ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // ï¿½ðµ¨¿ï¿½ ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½
+    // ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½
+    // ï¿½ï¿½ ï¿½Îµï¿½
+    // ï¿½ï¿½ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     Car = Model();
     Car.SetPosition(glm::vec3(0, 0, 0));
     Car.LoadObj("Data/bunny/bunny.obj", Car.vertices, Car.faces, Car.uvs, Car.normals);
-    Car.Scale(glm::vec3(0.5, 0.5, 0.5));
+    Car.Scale(glm::vec3(0.1, 0.1, 0.1));
+    Car.SetRotation(180.f, glm::vec3(0, 1, 0));
+    Car.SetCollider();
 
-    printf("¸ðµ¨");
     Bunny = Model();
     Bunny.LoadObj("Data/bunny/bunny.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.normals);
-    Bunny.Scale(glm::vec3(0.1, 0.1, 0.1));
-    
-    Track = Model();
-    Track.TrackObj("Data/race-track/race-track.obj", Track.vertices, Track.faces2, Track.uvs2, Track.normals);
+    Bunny.Scale(glm::vec3(0.01, 0.01, 0.01));
+
 }
 
 void caminit() {
-    Cam.Start(glm::vec3(0, 0, 0), glm::vec3(-1, 0, 0), glm::vec3(0, 1, 0));
-    Cam.InCar(Car.position);
-    Speed = 1;
+    Cam.Start(glm::vec3(0, 1, 0), glm::vec3(1, -1, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0.05, 0));
+    InCarView = true;
+    //Cam.InCar(Car.position,glm::vec3(0,0.05,0),Car.front);
 }
 
 void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    PerspectiveSetting();
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    //glTranslatef(0.0f, 0.0f, g_fDistance);
-    //glRotatef(-g_fSpinY, 1.0f, 0.0f, 0.0f);
-    //glRotatef(-g_fSpinX, 0.0f, 1.0f, 0.0f);
     CameraSetting();
 
     glPushMatrix();
@@ -77,6 +76,7 @@ void render() {
     Car.RotateAngle();
     Car.DrawSurface(Car.vertices, Car.normals, Car.faces);
     glPopMatrix();
+
     glPushMatrix();
     Bunny.SetPosition(glm::vec3(0, 0, 0));
     Bunny.Translate();
@@ -86,17 +86,26 @@ void render() {
     glTranslatef(0, 0, -75);
     Track.DrawTrack(Track.vertices, Track.normals, Track.faces2);
     glPopMatrix();
+    system("cls");
 
 
     glutSwapBuffers();
 }
 
+
 void PerspectiveSetting() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45.0f, 640.0f / 480.0f, 0.1f, 100.0f);
+    gluPerspective(60.0f, 1000.0f / 600.0f, 0.1f, 100.0f);
 }
 void CameraSetting() {
-    gluLookAt(Cam.eye.x, Cam.eye.y, Cam.eye.z, Cam.at.x, Cam.at.y, Cam.at.z, Cam.up.x, Cam.up.y, Cam.up.z);
+    if (InCarView) {
+        Cam.InCar(Car.position, Car.front);
+    }
+    else {
+        Cam.OutCar(Car.position);
+    }
+    gluLookAt(Cam.eye.x, Cam.eye.y, Cam.eye.z,
+        Cam.at.x, Cam.at.y, Cam.at.z,
+        Cam.up.x, Cam.up.y, Cam.up.z);
 }
-

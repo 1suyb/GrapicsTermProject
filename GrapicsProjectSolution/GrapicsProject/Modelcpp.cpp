@@ -1,13 +1,28 @@
 #include "Model.h"
-
+#include<math.h>
 
 Model::Model() {
     position = glm::vec3(0, 0, 0);
     angle = 0;
     axis = glm::vec3(0, 1, 0);
     front = glm::vec3(1, 0, 0);
-}
 
+    hasCollision = false;
+    colliderX = 0;
+    colliderY = 0;
+    colliderZ = 0;
+}
+Model::Model(bool collision) {
+    position = glm::vec3(0, 0, 0);
+    angle = 0;
+    axis = glm::vec3(0, 1, 0);
+    front = glm::vec3(1, 0, 0);
+
+    hasCollision = true;
+    colliderX = 0;
+    colliderY = 0;
+    colliderZ = 0;
+}
 bool Model::LoadObj(const char* path,
 	std::vector < glm::vec3 >& out_vertices,
 	std::vector < glm::ivec3 >& out_faces,
@@ -252,41 +267,86 @@ void Model::DrawTrack(std::vector < glm::vec3 >& vectices,
     glEnd();
 }
 
-// ¸ðµ¨ÀÇ Æ®·£½ºÆû Çà·ÄÀ» Àû¿ëÇÕ´Ï´Ù.
+// ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 void Model::Translate() {
     glTranslatef(this->position.x,this->position.y,this->position.z);
 }
-// ¸ðµ¨ÀÇ È¸Àü Çà·ÄÀ» Àû¿ëÇÕ´Ï´Ù.
+// ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 void Model::RotateAngle() {
+    printf("Car Angle : %f\n", this->angle);
     glRotatef(this->angle,this->axis.x,this->axis.y,this->axis.z);
 }
-// ¸ðµ¨ÀÇ Æ®·»½ºÆû Çà·ÄÀ» º¯°æÇÕ´Ï´Ù.
+// ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 void Model::SetPosition(glm::vec3 translate) {
     this->position = translate;
+    glm::mat4 rot = glm::rotate(glm::mat4(1), glm::radians(angle), axis);
+    glm::vec3 atdir = this->front - this->position;
+    atdir = rot * glm::normalize(glm::vec4(atdir, 0));
+    this->front = atdir + this->position;
 }
-// ¸ðµ¨ÀÇ È¸Àü Çà·ÄÀ» º¯°æÇÕ´Ï´Ù.
+// ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 void Model::SetRotation(GLfloat angle, glm::vec3 axis) {
     this->angle = angle;
     this->axis = axis;
 }
-// ¸ðµ¨ÀÇ ÀÌµ¿
+// ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 void Model::Move(glm::vec3 move) {
     this->position += move;
+    this->front += move;
+    printf("Car position : %f %f %f\n",this->position.x, this->position.y, this->position.z);
+    printf("Car at : %f %f %f \n", this->front.x, this->front.y, this->front.z);
 }
-// ¸ðµ¨ÀÇ È¸Àü
 void Model::Rotate(GLfloat angle, glm::vec3 axis) {
     this->angle += angle;
     this->axis = axis;
+    glm::mat4 rot = glm::rotate(glm::mat4(1), glm::radians(angle), axis);
+    glm::vec3 atdir = this->front - this->position;
+    atdir = rot * glm::normalize(glm::vec4(atdir, 0));
+    this->front = atdir + this->position;
 }
-// ¸ðµ¨ÀÇ Á¤¸éÀ» Á¤ÀÇÇÕ´Ï´Ù.
+// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 void Model::SetFront(glm::vec3 dir) {
     this->front = dir;
 }
-// ¸ðµ¨ÀÇ Å©±â¸¦ º¯°æÇÕ´Ï´Ù.
+// ï¿½ï¿½ï¿½ï¿½ Å©ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½. ï¿½æµ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô²ï¿½ ï¿½ç¼³ï¿½ï¿½ ï¿½Õ´Ï´ï¿½.
 void Model::Scale(glm::vec3 scale) {
     for (int i = 0; i < vertices.size(); i++) {
         vertices[i].x *= scale.x;
         vertices[i].y *= scale.y;
         vertices[i].z *= scale.z;
     }
+    SetCollider();
+}
+// ï¿½æµ¹ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+void Model::SetCollider() {
+    for (int i = 0; i < this->vertices.size(); i++) {
+        if (std::abs(vertices[i].x) > colliderX) {
+            colliderX = std::abs(vertices[i].x);
+        }
+        if (std::abs(vertices[i].y) > colliderY) {
+            colliderY = std::abs(vertices[i].y);
+        }
+        if (std::abs(vertices[i].z) > colliderZ) {
+            colliderZ = std::abs(vertices[i].z);
+        }
+    }
+}
+// ï¿½æµ¹ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+void Model::SetColliderSize(glm::vec3 colscale) {
+    if (colscale.x > 0) {
+        colliderX *= colscale.x;
+    }
+    if (colscale.y > 0) {
+        colliderY *= colscale.y;
+    }
+    if (colscale.z > 0) {
+        colliderZ *= colscale.z;
+    }
+}
+void Model::OnEnterCollider() {
+
+}
+
+
+void Car::OnEnterCollider(){
 }

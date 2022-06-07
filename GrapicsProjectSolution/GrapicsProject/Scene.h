@@ -7,9 +7,8 @@
 
 #include "Includes.h"
 #include "Model.h"
-#include "Event.h"
 #include "Camera.h"
-
+#include "Event.h"
 static float g_fDistance = -2.5f;
 static float g_fSpinX = 0.0f;
 static float g_fSpinY = 0.0f;
