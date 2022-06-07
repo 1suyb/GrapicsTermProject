@@ -1,113 +1,129 @@
 #include "Event.h"
 #include "Includes.h"
 #include "Model.h"
+#include "Scene.h"
 
+float Acceleration;
 float Speed;
-static bool InCarView = true;
+bool InCarView;
+static bool Accelerate = true;
+static bool Decelerate = false;
 
-//장애물
-bool animate = false;
+static POINT ptLastMousePosit;
+static POINT ptCurrentMousePosit;
+static bool bMousing;
 
-void EventCall() {
-	//glutMouseFunc(Mouse);
-	glutKeyboardFunc(Keyboard);
-	//glutReshapeFunc(Reshape);
-	glutTimerFunc(500,Timer,1);
-}
 
 void Mouse(int button, int state, int x, int y) {
-
-}
-void Keyboard(unsigned char key, int x, int y) {
-	glm::vec3 front = Car.front;
-	GLfloat angle = 20.f;
-	glm::vec3 r(0, 1, 0);
-	switch(key)
-	{
-	//애니메이션 on/off
-	case 't':
-		animate = !animate;
-		if (animate) {
-			printf("animate\n");
+	switch (button) {
+	case GLUT_LEFT_BUTTON:
+		if (state == GLUT_DOWN) {
+			printf("hello");
+			ptLastMousePosit.x = ptCurrentMousePosit.x = x;
+			ptLastMousePosit.y = ptCurrentMousePosit.y = y;
+			bMousing = true;
 		}
 		else {
-			printf("!animate\n");
+			bMousing = false;
 		}
 		break;
-
-	case 'w':
-	case 'W' :
-		if (InCarView) {
-			Car.Move(front * Speed);
-			Cam.Move(front * Speed);
-		}
+	case GLUT_MIDDLE_BUTTON:
+	case GLUT_RIGHT_BUTTON:
 		break;
-	case 'a':
-	case 'A' :
-		if (InCarView) {
-			Car.Rotate(angle, r);
-			Cam.Rotate(angle, r);
-		}
-		break;
-	case 's' :
-	case 'S' :
-		if (InCarView) {
-			Car.Move(-front * Speed);
-			Cam.Move(-front * Speed);
-		}
-		break;
-	case 'd':
-	case 'D' :
-		if (InCarView) {
-			Car.Rotate(-angle, r);
-			Cam.Rotate(-angle, r);
-		}
-		break;
-
 	default:
 		break;
 	}
+}
+void Motion(int x, int y) {
+	printf("buy");
+	if (InCarView) {
+		return;
+	}
+	if (bMousing) {
+		printf("\n\n\n\n");
+		ptLastMousePosit.x = x;
+		ptLastMousePosit.y = y;
+		Cam.Rotate((float)ptCurrentMousePosit.x - (float)ptLastMousePosit.x, glm::vec3(0, 1, 0));
+	}
+
 	glutPostRedisplay();
 }
-//void Reshape(int w, int h) {
-//
-//}
 
+void Keyboard(unsigned char key, int x, int y) {
 
-void Timer(int Value) {
-	//update boxes
-	float dt = 0.1;
-	if (animate)
+	GLfloat angle = 5.f;
+	glm::vec3 r(0, 1, 0);
+	if (key == 'w' || key == 'W') {
+		Accelerate = true;
+	}
+	else {
+		Accelerate = false;
+	}
+	if (key == 's' || key == 'S') {
+		Decelerate = true;
+	}
+	else {
+		Decelerate = false;
+	}
+
+	switch(key)
 	{
-		for (int i = 0; i < boxes.size(); i++) {
+	case 'a':
+	case 'A' :
+		Car.Rotate(angle, r);
 
-			//add gradient force
-			glm::vec3 gravity(0, 0, -9.8);
-			boxes[i].force += gravity * boxes[i].m;
+		break;
+	case 'd':
+	case 'D' :
+		Car.Rotate(-angle, r);
+		break;
+	case 'f' :
+	case'F' :
+		InCarView = !InCarView;
+		break;
 
-			//update velocity
-			boxes[i].v += boxes[i].force / boxes[i].m * dt;
+	default:
+		
+		break;
+	}
+	glutPostRedisplay();
+}
+void Reshape(int w, int h) {
 
-			//update position
-			boxes[i].p += boxes[i].v * dt;
+}
+void Timer(int value) {
+	CarMoveEvent();
+	glutPostRedisplay();
+	glutTimerFunc(30, Timer, 1);
 
-			//바닥에서 안 튀어오르게
-			//modify position and velocity according to constraints
-			if (boxes[i].p[2] - boxes[i].r < -10) {
-				boxes[i].p[2] = -10; // + boxes[i].r;
-				/*boxes[i].v *= 0.9;
-				boxes[i].v[2] *= -1;*/
-			}
+}
+void Idel() {
+	Accelerate = false;
+	Decelerate = false;
+}
 
-			Contact(10.0);
+void CarMoveEvent() {
+	glm::vec3 front = glm::normalize(Car.front-Car.position);
 
-			//clear force
-			boxes[i].force = glm::vec3(0, 0, 0);
-
+	if (Accelerate) {
+		Acceleration = 0.05f;
+		if (Speed < 1.f) {
+			Speed += Acceleration;
 		}
 	}
-	addBox(glm::vec3(-10, -10, -5), glm::vec3(10, 10, 20));
+	else if (Decelerate) {
+		Acceleration = -0.05f;
+		if (Speed > -1.f) {
+			Speed += Acceleration;
+		}
+	}
+	else {
+		Acceleration = 0;
+		Speed *= 0.5f;
+	}
+	Car.Move(front * Speed);
 
-	glutPostRedisplay();
-	glutTimerFunc(500, Timer, 1);
+
+	printf("%f\n", Acceleration);
+	printf("%f\n", Speed);
 }
