@@ -84,7 +84,7 @@ void render() {
     glPopMatrix();
     glPushMatrix();
     glTranslatef(0, 0, -75);
-    Track.DrawTrack(Track.vertices2, Track.normals2, Track.faces2);
+    Track.DrawTrack(Track.vertices, Track.normals, Track.faces2);
     glPopMatrix();
 
 
