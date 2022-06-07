@@ -5,31 +5,29 @@ GLfloat light_amb[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_specular[] = { 1, 1, 1, 1.0 };
 
-// Ä«¸Þ¶ó
+// Ä«ï¿½Þ¶ï¿½
 camera Cam;
-#pragma region ¸ðµ¨¼±¾ðºÎ
+#pragma region ï¿½ðµ¨¼ï¿½ï¿½ï¿½ï¿½
 Model Car;
 Model Bunny;
 #pragma endregion
 
-GLuint tex[7];   // Texture MappingÀ» ÇÏ±â À§ÇÑ Texture ÀÌ¹ÌÁöÀÇ °³¼ö¸¦ À§ÇÑ ¹è¿­ º¯¼ö
-
 void InitLight()
 {
     GLfloat LightPosition[] = { 0.0, 2.0, 0.0, 1.0 };
-    glEnable(GL_LIGHTING);      //Á¶¸í È°¼ºÈ­
+    glEnable(GL_LIGHTING);      //ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
     glEnable(GL_LIGHT0);
 
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_amb); //ÁÖº¯±¤ ¼³Á¤
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse); //È®»ê±¤ ¼³Á¤
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular); //¹Ý»ç±¤ ¼³Á¤
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_amb); //ï¿½Öºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse); //È®ï¿½ê±¤ ï¿½ï¿½ï¿½ï¿½
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular); //ï¿½Ý»ç±¤ ï¿½ï¿½ï¿½ï¿½
     glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
 }
-// °¢Á¾ ÃÊ±âÈ­ ÇÔ¼öµéÀÇ ¸ðÀÓ
+// ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 void init() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glShadeModel(GL_SMOOTH);    //±¸·Î ¼ÎÀÌµù
-    glEnable(GL_DEPTH_TEST); // ±íÀÌ¹öÆÛ
+    glShadeModel(GL_SMOOTH);    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½
+    glEnable(GL_DEPTH_TEST); // ï¿½ï¿½ï¿½Ì¹ï¿½ï¿½ï¿½
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_FRONT);
     Acceleration = 0;
@@ -38,14 +36,14 @@ void init() {
     modelinit();
     caminit();
 }
-// ¸ðµ¨µé ÃÊ±âÈ­ÇÏ´Â ÇÔ¼ö
+// ï¿½ðµ¨µï¿½ ï¿½Ê±ï¿½È­ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½
 void modelinit() {
-    /* ¸ðµ¨ ¼±¾ð½Ã */
-    // ¸ðµ¨ Àü¿ªº¯¼ö·Î ¼±¾ð
-    // ¸ðµ¨¿¡ ¸ðµ¨ Å¬·¡½º ÇÒ´ç
-    // ¸ðµ¨ ¸ðµ¨ ÃÊ±â Æ÷Áö¼Ç ÇÒ´ç
-    // ¸ðµ¨ ·Îµå
-    // ¸ðµ¨ Å©±â Á¶Á¤
+    /* ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // ï¿½ðµ¨¿ï¿½ ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½
+    // ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½
+    // ï¿½ï¿½ ï¿½Îµï¿½
+    // ï¿½ï¿½ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     Car = Model();
     Car.SetPosition(glm::vec3(0, 0, 0));
@@ -76,15 +74,21 @@ void render() {
     glPushMatrix();
     Car.Translate();
     Car.RotateAngle();
-    Car.DrawSurface();
+    Car.DrawSurface(Car.vertices, Car.normals, Car.faces);
     glPopMatrix();
 
     glPushMatrix();
     Bunny.SetPosition(glm::vec3(0, 0, 0));
     Bunny.Translate();
-    Bunny.DrawSurface();
+    Bunny.DrawSurface(Bunny.vertices, Bunny.normals, Bunny.faces);
+    glPopMatrix();
+    glPushMatrix();
+    glTranslatef(0, 0, -75);
+    Track.DrawTrack(Track.vertices2, Track.normals2, Track.faces2);
     glPopMatrix();
     system("cls");
+
+
     glutSwapBuffers();
 }
 

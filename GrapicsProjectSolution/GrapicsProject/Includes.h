@@ -24,8 +24,10 @@
 #include <glm/gtc/matrix_transform.hpp> 
 #include <glm/gtc/type_ptr.hpp>
 
-
 //#include <bmp.h>
+//#include <bitmap_fonts.h>
+//#include <glaux.h>
+
 //#include <glext.h>
 //#include <tga.h>
 #endif // !INCLUDEDS

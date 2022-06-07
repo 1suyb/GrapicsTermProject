@@ -17,6 +17,8 @@ public:
 	std::vector < glm::vec3 > normals;
 	std::vector < glm::vec3> uvs2;
 	std::vector < glm::ivec4 > faces2;
+	std::vector < glm::vec4 > normals2;
+	std::vector < glm::vec4 > vertices2;
 
 	/* Scene에서의 위치 정보 */
 	glm::vec3 position;
@@ -50,8 +52,14 @@ public:
 		std::vector < glm::ivec3 >& out_faces,
 		std::vector < glm::vec3 >& out_normals);	// ply파일 import
 
-	void DrawSurface();		// 표면 그리기
+	void DrawSurface(std::vector < glm::vec3 >& vectices,
+		std::vector < glm::vec3 >& normals,
+		std::vector < glm::ivec3 >& faces);		// 표면 그리기
 
+	void DrawTrack(std::vector < glm::vec4 >& vectices,
+		std::vector < glm::vec4 >& normals,
+		std::vector < glm::ivec4 >& faces);
+	
 	void Texturing();			/** 텍스쳐올리는게 여기에 있어야할지 따로있어야할지 잘모르겠어요 **/
 
 	// 모델의 트랜스폼 행렬을 적용합니다.

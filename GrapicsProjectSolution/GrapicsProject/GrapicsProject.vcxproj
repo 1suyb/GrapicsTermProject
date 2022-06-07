@@ -125,7 +125,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\jyj75\OneDrive\문서\GitHub\GrapicsTermProject\GrapicsProjectSolution\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glaux.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -151,14 +151,14 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Modelcpp.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Skybox.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Include\bitmap_fonts.h" />
-    <ClInclude Include="..\Include\glaux.h" />
-    <ClInclude Include="..\Include\tga.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Includes.h" />

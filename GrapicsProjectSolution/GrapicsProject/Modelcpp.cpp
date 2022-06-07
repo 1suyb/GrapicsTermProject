@@ -183,8 +183,9 @@ bool Model::LoadPly(const char* path,
     return true;
 }
 
-void Model::DrawSurface() {
-    printf("=============================\n");
+void Model::DrawSurface(std::vector < glm::vec3 >& vectices,
+    std::vector < glm::vec3 >& normals,
+    std::vector < glm::ivec3 >& faces) {
     glBegin(GL_TRIANGLES);
     for (int i = 0; i < faces.size(); i++) {
         for (int j = 0; j < 3; j++) {
@@ -202,16 +203,80 @@ void Model::DrawSurface() {
     glEnd();
 }
 
-// ¸ðµ¨ÀÇ Æ®·£½ºÆû Çà·ÄÀ» Àû¿ëÇÕ´Ï´Ù.
+void Model::DrawTrack(std::vector < glm::vec4 >& vectices,
+    std::vector < glm::vec4 >& normals,
+    std::vector < glm::ivec4 >& faces) {
+    glBegin(GL_TRIANGLES);
+    for (int i = 0; i < faces.size(); i++) {
+        glm::ivec4 tempFace = faces[i];
+
+        int idx = 0;
+        idx = tempFace[0];
+        glm::vec3 p1 = vertices[idx];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p1[0], p1[1], p1[2]);
+
+        int idx1 = 0;
+        idx1 = tempFace[1];
+        glm::vec3 p2 = vertices[idx1];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx1];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p2[0], p2[1], p2[2]);
+
+        int idx2 = 0;
+        idx2 = tempFace[2];
+        glm::vec3 p3 = vertices[idx2];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx2];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p3[0], p3[1], p3[2]);
+
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p1[0], p1[1], p1[2]);
+
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx2];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p3[0], p3[1], p3[2]);
+
+        int idx3 = 0;
+        idx3 = tempFace[3];
+        glm::vec3 p4 = vertices[idx3];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx3];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p4[0], p4[1], p4[2]);
+    }
+    glEnd();
+}
+
+// ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 void Model::Translate() {
     glTranslatef(this->position.x,this->position.y,this->position.z);
 }
-// ¸ðµ¨ÀÇ È¸Àü Çà·ÄÀ» Àû¿ëÇÕ´Ï´Ù.
+// ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 void Model::RotateAngle() {
     printf("Car Angle : %f\n", this->angle);
     glRotatef(this->angle,this->axis.x,this->axis.y,this->axis.z);
 }
-// ¸ðµ¨ÀÇ Æ®·»½ºÆû Çà·ÄÀ» º¯°æÇÕ´Ï´Ù.
+// ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 void Model::SetPosition(glm::vec3 translate) {
     this->position = translate;
     glm::mat4 rot = glm::rotate(glm::mat4(1), glm::radians(angle), axis);
@@ -219,12 +284,12 @@ void Model::SetPosition(glm::vec3 translate) {
     atdir = rot * glm::normalize(glm::vec4(atdir, 0));
     this->front = atdir + this->position;
 }
-// ¸ðµ¨ÀÇ È¸Àü Çà·ÄÀ» º¯°æÇÕ´Ï´Ù.
+// ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 void Model::SetRotation(GLfloat angle, glm::vec3 axis) {
     this->angle = angle;
     this->axis = axis;
 }
-// ¸ðµ¨ÀÇ ÀÌµ¿
+// ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 void Model::Move(glm::vec3 move) {
     this->position += move;
     this->front += move;
@@ -239,11 +304,11 @@ void Model::Rotate(GLfloat angle, glm::vec3 axis) {
     atdir = rot * glm::normalize(glm::vec4(atdir, 0));
     this->front = atdir + this->position;
 }
-// ¸ðµ¨ÀÇ Á¤¸éÀ» Á¤ÀÇÇÕ´Ï´Ù.
+// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 void Model::SetFront(glm::vec3 dir) {
     this->front = dir;
 }
-// ¸ðµ¨ÀÇ Å©±â¸¦ º¯°æÇÕ´Ï´Ù. Ãæµ¹¹üÀ§µµ ÇÔ²² Àç¼³Á¤ ÇÕ´Ï´Ù.
+// ï¿½ï¿½ï¿½ï¿½ Å©ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½. ï¿½æµ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô²ï¿½ ï¿½ç¼³ï¿½ï¿½ ï¿½Õ´Ï´ï¿½.
 void Model::Scale(glm::vec3 scale) {
     for (int i = 0; i < vertices.size(); i++) {
         vertices[i].x *= scale.x;
@@ -252,7 +317,7 @@ void Model::Scale(glm::vec3 scale) {
     }
     SetCollider();
 }
-// Ãæµ¹ ¹üÀ§ ¼³Á¤
+// ï¿½æµ¹ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 void Model::SetCollider() {
     for (int i = 0; i < this->vertices.size(); i++) {
         if (std::abs(vertices[i].x) > colliderX) {
@@ -266,7 +331,7 @@ void Model::SetCollider() {
         }
     }
 }
-// Ãæµ¹¹üÀ§ Å©±â ¼³Á¤
+// ï¿½æµ¹ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 void Model::SetColliderSize(glm::vec3 colscale) {
     if (colscale.x > 0) {
         colliderX *= colscale.x;
