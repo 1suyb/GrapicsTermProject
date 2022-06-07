@@ -26,6 +26,9 @@ std::vector < glm::vec2 > uvs;
 std::vector < glm::vec3 > normals;
 std::vector < glm::vec3> uvs2;
 std::vector < glm::ivec4 > faces2;
+std::vector < glm::vec4 > vertices2;
+std::vector < glm::vec4 > normals2;
+
 
 // Α¶Έν
 GLfloat light_amb[] = { 0.5, 0.5, 0.5, 1.0 };
@@ -205,8 +208,8 @@ void init(void) {
 }
 
 
-void DrawS(std::vector < glm::vec3 >& vectices,
-    std::vector < glm::vec3 >& normals,
+void DrawS(std::vector < glm::vec4 >& vectices,
+    std::vector < glm::vec4 >& normals,
     std::vector < glm::ivec4 >& faces)
 {
     glBegin(GL_TRIANGLES);
@@ -349,7 +352,7 @@ void render(void) {
     //Draw here
     glTranslatef(0.0f, 0.0f,-75.0f);
    // glRotatef(45, 0.0f, 0.0f, 1.0f);
-    DrawS(vertices, normals, faces2);
+    DrawS(vertices2, normals2, faces2);
     //DrawSurface(vertices, normals, faces);
 	//DrawWireSurface(vertices, normals, faces);
     glutSwapBuffers();
