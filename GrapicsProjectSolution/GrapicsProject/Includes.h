@@ -9,9 +9,12 @@
 #ifndef __INCLUDEDS__
 #define __INCLUDEDS__
 
+#include <Windows.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string>
-
+#include <fstream>
+#include <iostream>
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -21,12 +24,12 @@
 #include <glm/gtc/matrix_transform.hpp> 
 #include <glm/gtc/type_ptr.hpp>
 
-
-//#include <bitmap_fonts.h>
 //#include <bmp.h>
+//#include <bitmap_fonts.h>
 //#include <glaux.h>
+
 //#include <glext.h>
 //#include <tga.h>
 #endif // !INCLUDEDS
-
+using namespace std;
 
