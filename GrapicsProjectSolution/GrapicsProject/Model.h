@@ -40,7 +40,12 @@ public:
 		std::vector < glm::ivec3 >& out_faces,
 		std::vector < glm::vec3 >& out_normals);	// ply파일 import
 
-	void DrawSurface();		// 표면 그리기
+	void DrawSurface(std::vector < glm::vec3 >& vectices,
+		std::vector < glm::vec3 >& normals,
+		std::vector < glm::vec2 >& uvs,
+		std::vector < glm::ivec3 >& uvindicies,
+		std::vector < glm::ivec3 >& normalindices,
+		std::vector < glm::ivec3 >& faces);		// 표면 그리기
 
 	//void Texturing();			/** 텍스쳐올리는게 여기에 있어야할지 따로있어야할지 잘모르겠어요 **/
 

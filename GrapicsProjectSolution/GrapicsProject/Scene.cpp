@@ -44,7 +44,7 @@ void init() {
     modelinit();
     caminit();
 
-    addBox(glm::vec3(-10, -10, -5), glm::vec3(10, 10, 20));
+    //addBox(glm::vec3(-10, -10, -5), glm::vec3(10, 10, 20));
 
 }
 // 모델들 초기화하는 함수
@@ -83,29 +83,36 @@ void render() {
     glPushMatrix();
     Car.Translate();
     Car.RotateAngle();
+    glEnable(GL_TEXTURE_2D);
     glMaterialfv(GL_FRONT, GL_AMBIENT, Car_mat_amb);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, Car_mat_diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR, Car_mat_specular);
-    //glColor3f(0.0, 0.0, 0.0);
-    Car.DrawSurface();
+    glBindTexture(GL_TEXTURE_2D, g_textureID[2]);
+    Car.DrawSurface(Car.vertices, Car.normals, Car.uvs, Car.uvindices, Car.normalindices, Car.faces);
+    glDisable(GL_TEXTURE_2D);
     
     glPopMatrix();
-    glPushMatrix();
+   /* glPushMatrix();
     Bunny.SetPosition(glm::vec3(0, 0, 0));
     Bunny.Translate();
+    glEnable(GL_TEXTURE_2D);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, Car_mat_amb);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, Car_mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, Car_mat_specular);
+    glBindTexture(GL_TEXTURE_2D, g_textureID[2]);
+    Bunny.DrawSurface(Car.vertices, Car.normals, Car.uvs, Car.uvindices, Car.normalindices, Car.faces);
+    glDisable(GL_TEXTURE_2D);
     
-    Bunny.DrawSurface();
-    
-    glPopMatrix();
+    glPopMatrix();*/
 
-    for (int i = 0; i < boxes.size(); i++)
-    {
-        glPushMatrix();
-        glTranslatef(boxes[i].p[0], boxes[i].p[1], boxes[i].p[2]);
-        glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
-        texturedCube(boxes[i].r);
-        glPopMatrix();
-    }
+    //for (int i = 0; i < boxes.size(); i++)
+    //{
+    //    glPushMatrix();
+    //    glTranslatef(boxes[i].p[0], boxes[i].p[1], boxes[i].p[2]);
+    //    //glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
+    //    texturedCube(boxes[i].r);
+    //    glPopMatrix();
+    //}
 
 
     glutSwapBuffers();

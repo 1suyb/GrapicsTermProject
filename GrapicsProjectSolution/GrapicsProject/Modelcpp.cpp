@@ -11,7 +11,6 @@ void addBox(glm::vec3 leftBottom, glm::vec3 rightTop)
     int randRange = 100;
     Box newBox;
 
-    std::vector<Box> boxes;
 
     glm::vec3 _pos(0, 0, 0);
     glm::vec3 _vel(0, 0, 0);
@@ -146,14 +145,14 @@ void loadTexture() {
         //텍스쳐 파라미터 설정: 텍스쳐 확대 축소시 필터 처리 방법 설정
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
         glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
         glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 
-        glEnable(GL_TEXTURE_GEN_S);
-        glEnable(GL_TEXTURE_GEN_T);
+        //glEnable(GL_TEXTURE_GEN_S);
+        //glEnable(GL_TEXTURE_GEN_T);
 
         //불러온 이미지 파일을 위에 생성한 텍스쳐ID에 결합
         glTexImage2D(GL_TEXTURE_2D, 0, 3, pCarImage->sizeX, pCarImage->sizeY, 0,
@@ -235,7 +234,7 @@ bool Model::LoadObj(const char* path,
                 &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
             out_faces.push_back(glm::ivec3(vertexIndex[0] - 1, vertexIndex[1] - 1, vertexIndex[2] - 1));
             uvindices.push_back(glm::ivec3(uvIndex[0] - 1, uvIndex[1] - 1, uvIndex[2] - 1));
-            out_faces.push_back(glm::ivec3(normalIndex[0] - 1, normalIndex[1] - 1, normalIndex[2] - 1));
+            normalindices.push_back(glm::ivec3(normalIndex[0] - 1, normalIndex[1] - 1, normalIndex[2] - 1));
         }
     }
 }
@@ -298,9 +297,22 @@ bool Model::LoadPly(const char* path,
 }
 
 //삼각형을 그리실때 각 삼각형 꼭지점에서 사용할 vt 좌표를 명시해 줘야하는데, vt 리스트 중에 참조해야할 vt 의 index를 나타내는게 unindex 입니다.
-void Model::DrawSurface() {
+void Model::DrawSurface(std::vector < glm::vec3 >& vertices,
+    std::vector < glm::vec3 >& normals,
+    std::vector < glm::vec2 >& uvs,
+    std::vector < glm::ivec3 >& uvindicies,
+    std::vector < glm::ivec3 >& normalindices,
+    std::vector < glm::ivec3 >& faces) {
     glBegin(GL_TRIANGLES);
     for (int i = 0; i < faces.size(); i++) {
+        for (int j = 0; j < 2; j++) {
+            glm::vec2 vt = uvs[uvindices[i][j]];
+            glTexCoord2f(vt[0], vt[1]);
+        }
+        for (int j = 0; j < 3; j++) {
+            glm::vec3 n = normals[normalindices[i][j]];
+            glNormal3f(n[0], n[1], n[2]);
+        }
         for (int j = 0; j < 3; j++) {
             glm::vec3 p = vertices[faces[i][j]];
             /*p.x = vertices[faces[i][j]].x;
@@ -309,18 +321,7 @@ void Model::DrawSurface() {
             glVertex3f(p[0], p[1], p[2]);
         }
     }
-    for (int i = 0; i < uvindices.size(); i++) {
-        for (int j = 0; j < 2; j++) {
-            glm::vec2 vt = uvs[uvindices[i][j]];
-            glTexCoord2f(vt[0], vt[1]);
-        }
-    }
-    for (int i = 0; i < normalindices.size(); i++) {
-        for (int j = 0; j < 3; j++) {
-            glm::vec3 n = normals[normalindices[i][j]];
-            glNormal3f(n[0], n[1], n[2]);
-        }
-    }
+    
     glEnd();
 }
 
