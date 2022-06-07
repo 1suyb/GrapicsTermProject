@@ -302,10 +302,10 @@ void Model::DrawSurface() {
     glBegin(GL_TRIANGLES);
     for (int i = 0; i < faces.size(); i++) {
         for (int j = 0; j < 3; j++) {
-            glm::vec3 p;
-            p.x = vertices[faces[i][j]].x;
+            glm::vec3 p = vertices[faces[i][j]];
+            /*p.x = vertices[faces[i][j]].x;
             p.y = vertices[faces[i][j]].y;
-            p.z = vertices[faces[i][j]].z;
+            p.z = vertices[faces[i][j]].z;*/
             glVertex3f(p[0], p[1], p[2]);
         }
     }
