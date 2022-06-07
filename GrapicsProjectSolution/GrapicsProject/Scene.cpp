@@ -83,7 +83,7 @@ void render() {
     Bunny.DrawSurface(Bunny.vertices, Bunny.normals, Bunny.faces);
     glPopMatrix();
     glPushMatrix();
-    Track.SetPosition(glm::vec3(0, 0, 0));
+    glTranslatef(0, 0, -75);
     Track.DrawTrack(Track.vertices, Track.normals, Track.faces2);
     glPopMatrix();
 
