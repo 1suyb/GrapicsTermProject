@@ -168,7 +168,9 @@ bool Model::LoadPly(const char* path,
     return true;
 }
 
-void Model::DrawSurface() {
+void Model::DrawSurface(std::vector < glm::vec3 >& vectices,
+    std::vector < glm::vec3 >& normals,
+    std::vector < glm::ivec3 >& faces) {
     glBegin(GL_TRIANGLES);
     for (int i = 0; i < faces.size(); i++) {
         for (int j = 0; j < 3; j++) {
@@ -182,6 +184,70 @@ void Model::DrawSurface() {
             }
             glVertex3f(p[0], p[1], p[2]);
         }
+    }
+    glEnd();
+}
+
+void Model::DrawTrack(std::vector < glm::vec3 >& vectices,
+    std::vector < glm::vec3 >& normals,
+    std::vector < glm::ivec4 >& faces) {
+    glBegin(GL_TRIANGLES);
+    for (int i = 0; i < faces.size(); i++) {
+        glm::ivec4 tempFace = faces[i];
+
+        int idx = 0;
+        idx = tempFace[0];
+        glm::vec3 p1 = vertices[idx];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p1[0], p1[1], p1[2]);
+
+        int idx1 = 0;
+        idx1 = tempFace[1];
+        glm::vec3 p2 = vertices[idx1];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx1];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p2[0], p2[1], p2[2]);
+
+        int idx2 = 0;
+        idx2 = tempFace[2];
+        glm::vec3 p3 = vertices[idx2];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx2];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p3[0], p3[1], p3[2]);
+
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p1[0], p1[1], p1[2]);
+
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx2];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p3[0], p3[1], p3[2]);
+
+        int idx3 = 0;
+        idx3 = tempFace[3];
+        glm::vec3 p4 = vertices[idx3];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx3];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p4[0], p4[1], p4[2]);
     }
     glEnd();
 }

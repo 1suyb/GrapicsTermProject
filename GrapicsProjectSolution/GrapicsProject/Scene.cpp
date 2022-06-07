@@ -12,8 +12,6 @@ Model Bunny;
 Model Track;
 #pragma endregion
 
-GLuint tex[7];   // Texture Mapping을 하기 위한 Texture 이미지의 개수를 위한 배열 변수
-
 void InitLight()
 {
     GLfloat LightPosition[] = { 0.0, 2.0, 0.0, 1.0 };
@@ -69,23 +67,24 @@ void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, g_fDistance);
-    glRotatef(-g_fSpinY, 1.0f, 0.0f, 0.0f);
-    glRotatef(-g_fSpinX, 0.0f, 1.0f, 0.0f);
+    //glTranslatef(0.0f, 0.0f, g_fDistance);
+    //glRotatef(-g_fSpinY, 1.0f, 0.0f, 0.0f);
+    //glRotatef(-g_fSpinX, 0.0f, 1.0f, 0.0f);
     CameraSetting();
 
     glPushMatrix();
     Car.Translate();
     Car.RotateAngle();
-    Car.DrawSurface();
+    Car.DrawSurface(Car.vertices, Car.normals, Car.faces);
     glPopMatrix();
     glPushMatrix();
     Bunny.SetPosition(glm::vec3(0, 0, 0));
     Bunny.Translate();
-    Bunny.DrawSurface();
+    Bunny.DrawSurface(Bunny.vertices, Bunny.normals, Bunny.faces);
     glPopMatrix();
     glPushMatrix();
-    Track.DrawSurface();
+    Track.SetPosition(glm::vec3(0, 0, 0));
+    Track.DrawTrack(Track.vertices, Track.normals, Track.faces2);
     glPopMatrix();
 
 
