@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
 	glutCreateWindow("CarRacingGame");
 
 	init();
-	glutDisplayFunc(render);
+	glutDisplayFunc(render);	
 	glutKeyboardFunc(Keyboard);
 	glutMouseFunc(Mouse);
 	glutPassiveMotionFunc(Motion);

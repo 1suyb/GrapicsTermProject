@@ -113,7 +113,7 @@ void Timer(int value) {
 		for (int i = 0; i < boxes.size(); i++) {
 
 			//add gradient force
-			glm::vec3 gravity(0, 0, -9.8);
+			glm::vec3 gravity(0, -10, 0);
 			boxes[i].force += gravity * boxes[i].m;
 
 			//update velocity
@@ -121,13 +121,12 @@ void Timer(int value) {
 
 			//update position
 			boxes[i].p += boxes[i].v * dt;
-
-			//바닥에서 안 튀어오르게
+						
 			//modify position and velocity according to constraints
-			if (boxes[i].p[2] - boxes[i].r < -10) {
-				boxes[i].p[2] = -10; // + boxes[i].r;
-				/*boxes[i].v *= 0.9;
-				boxes[i].v[2] *= -1;*/
+			if (boxes[i].p[1] - boxes[i].r < -10) {
+				boxes[i].p[1] = -30;
+				
+				
 			}
 
 			Contact(10.0);
@@ -137,7 +136,8 @@ void Timer(int value) {
 
 		}
 	}
-	addBox(glm::vec3(-10, -10, -5), glm::vec3(10, 10, 20));
+	//장애물 생성
+	//addBox(glm::vec3(-10, -10, -5), glm::vec3(10, 10, 20));
 
 
 	glutPostRedisplay();

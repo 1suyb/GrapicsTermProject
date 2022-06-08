@@ -408,6 +408,11 @@ void Model::Scale(glm::vec3 scale) {
         vertices[i].x *= scale.x;
         vertices[i].y *= scale.y;
         vertices[i].z *= scale.z;
+        /*uvs[i].x *= scale.x;
+        uvs[i].y *= scale.y;
+        normals[i].x *= scale.x;
+        normals[i].y *= scale.y;
+        normals[i].z *= scale.z;*/
     }
     SetCollider();
 }
