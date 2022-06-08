@@ -128,14 +128,14 @@ bool Model::LoadObj(const char* path,
         if (strcmp(lineHeader, "v") == 0) {
             glm::vec3 vertex;
             fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-            out_vertices.push_back(vertex);
+            out_vertices.push_back(vertex);  
         }
         else if (strcmp(lineHeader, "vt") == 0) {
             glm::vec2 uv;
-            fscanf(file, "&f, &f\n", &uv.x, &uv.y);
+            fscanf(file, "&f &f\n", &uv.x, &uv.y);
             out_uvs.push_back(uv);
         }
-        // %d/%d/%d %d/%d/%d %d/%d/%d로 수정, &uvIndex[] 추가
+       
         else if (strcmp(lineHeader, "vn") == 0) {
             glm::vec3 normal;
             fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
