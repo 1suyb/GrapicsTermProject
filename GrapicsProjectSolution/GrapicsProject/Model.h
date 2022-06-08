@@ -15,16 +15,12 @@ public:
 	std::vector < glm::ivec3 > faces;
 	std::vector < glm::vec2 > uvs;
 	std::vector < glm::vec3 > normals;
-	std::vector < glm::vec3> uvs2;
-	//std::vector < glm::ivec4 > faces2;
-	//std::vector < glm::vec4 > normals2;
-	//std::vector < glm::vec4 > vertices2;
 
 	/* Scene에서의 위치 정보 */
 	glm::vec3 position;
 	GLfloat angle;
 	glm::vec3 axis;
-	glm::vec3 front;	// 모델의 정면 방향 벡터.
+	glm::vec3 front;
 
 	/* 물리처리에 대한 정보 */
 	bool hasCollision;
@@ -35,11 +31,6 @@ public:
 public:
 	Model();
 	Model(bool collision);
-	static bool LoadObj_Rabbit(const char* path,
-		std::vector < glm::vec3 >& out_vertices,
-		std::vector < glm::ivec3 >& out_faces,
-		std::vector < glm::vec2 >& out_uvs,
-		std::vector < glm::vec3 >& out_normals);	// obj파일 import
 
 	static bool LoadObj(const char* path,
 		std::vector < glm::vec3 >& out_vertices,
@@ -53,10 +44,6 @@ public:
 		std::vector < glm::vec3 >& out_normals);	// ply파일 import
 
 	void Model::DrawSurface();
-
-	void DrawTrack(std::vector < glm::vec3 >& vectices,
-		std::vector < glm::vec3 >& normals,
-		std::vector < glm::ivec4 >& faces);
 	
 	void Texturing();			/** 텍스쳐올리는게 여기에 있어야할지 따로있어야할지 잘모르겠어요 **/
 

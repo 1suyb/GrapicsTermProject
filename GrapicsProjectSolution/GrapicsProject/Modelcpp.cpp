@@ -24,57 +24,6 @@ Model::Model(bool collision) {
     colliderZ = 0;
 }
 
-bool Model::LoadObj_Rabbit(const char* path,
-	std::vector < glm::vec3 >& out_vertices,
-	std::vector < glm::ivec3 >& out_faces,
-	std::vector < glm::vec2 >& out_uvs,
-	std::vector < glm::vec3 >& out_normals) 
-{
-	out_vertices.clear();
-	out_faces.clear();
-	out_uvs.clear();
-	out_normals.clear();
-
-    FILE* file = fopen(path, "r");
-    if (file == NULL) {
-        printf("Impossible to open the file !\n");
-        return false;
-    }
-
-    while (1) {
-        char lineHeader[128];
-        // read the first word of the line
-        int res = fscanf(file, "%s", lineHeader);
-        if (res == -1)
-            break;
-
-        if (strcmp(lineHeader, "v") == 0) {
-            glm::vec3 vertex;
-            fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-            out_vertices.push_back(vertex);
-        }
-        else if (strcmp(lineHeader, "vt") == 0) {
-            glm::vec2 uv;
-            fscanf(file, "&f, &f\n", &uv.x, &uv.y);
-            out_uvs.push_back(uv);
-        }
-        else if (strcmp(lineHeader, "vn") == 0) {
-            glm::vec3 normal;
-            fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
-            out_normals.push_back(normal);
-        }
-        else if (strcmp(lineHeader, "f") == 0) {
-            std::string vertex1, vertex2, vertex3;
-            unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-            int matches = fscanf(file, "%d//%d %d//%d %d//%d\n",
-                &vertexIndex[0], &normalIndex[0],
-                &vertexIndex[1], &normalIndex[1],
-                &vertexIndex[2], &normalIndex[2]);
-            out_faces.push_back(glm::ivec3(vertexIndex[0] - 1, vertexIndex[1] - 1, vertexIndex[2] - 1));
-        }
-    }
-}
-
 bool Model::LoadObj(const char* path,
     std::vector < glm::vec3 >& out_vertices,
     std::vector < glm::ivec3 >& out_faces,
@@ -201,70 +150,6 @@ void Model::DrawSurface() {
     glEnd();
 }
 
-void Model::DrawTrack(std::vector < glm::vec3 >& vectices,
-    std::vector < glm::vec3 >& normals,
-    std::vector < glm::ivec4 >& faces) {
-    glBegin(GL_LINES);
-    for (int i = 0; i < faces.size(); i++) {
-        glm::ivec4 tempFace = faces[i];
-
-        int idx = 0;
-        idx = tempFace[0];
-        glm::vec3 p1 = vertices[idx];
-        if (normals.size() == vertices.size())
-        {
-            glm::vec3 n = normals[idx];
-            glNormal3f(n[0], n[1], n[2]);
-        }
-        glVertex3f(p1[0], p1[1], p1[2]);
-
-        int idx1 = 0;
-        idx1 = tempFace[1];
-        glm::vec3 p2 = vertices[idx1];
-        if (normals.size() == vertices.size())
-        {
-            glm::vec3 n = normals[idx1];
-            glNormal3f(n[0], n[1], n[2]);
-        }
-        glVertex3f(p2[0], p2[1], p2[2]);
-
-        int idx2 = 0;
-        idx2 = tempFace[2];
-        glm::vec3 p3 = vertices[idx2];
-        if (normals.size() == vertices.size())
-        {
-            glm::vec3 n = normals[idx2];
-            glNormal3f(n[0], n[1], n[2]);
-        }
-        glVertex3f(p3[0], p3[1], p3[2]);
-
-        if (normals.size() == vertices.size())
-        {
-            glm::vec3 n = normals[idx];
-            glNormal3f(n[0], n[1], n[2]);
-        }
-        glVertex3f(p1[0], p1[1], p1[2]);
-
-        if (normals.size() == vertices.size())
-        {
-            glm::vec3 n = normals[idx2];
-            glNormal3f(n[0], n[1], n[2]);
-        }
-        glVertex3f(p3[0], p3[1], p3[2]);
-
-        int idx3 = 0;
-        idx3 = tempFace[3];
-        glm::vec3 p4 = vertices[idx3];
-        if (normals.size() == vertices.size())
-        {
-            glm::vec3 n = normals[idx3];
-            glNormal3f(n[0], n[1], n[2]);
-        }
-        glVertex3f(p4[0], p4[1], p4[2]);
-    }
-    glEnd();
-}
-
 // ���� Ʈ������ ����� �����մϴ�.
 void Model::Translate() {
     glTranslatef(this->position.x,this->position.y,this->position.z);
@@ -302,11 +187,9 @@ void Model::Rotate(GLfloat angle, glm::vec3 axis) {
     atdir = rot * glm::normalize(glm::vec4(atdir, 0));
     this->front = atdir + this->position;
 }
-// ���� ������ �����մϴ�.
 void Model::SetFront(glm::vec3 dir) {
     this->front = dir;
 }
-// ���� ũ�⸦ �����մϴ�. �浹������ �Բ� �缳�� �մϴ�.
 void Model::Scale(glm::vec3 scale) {
     for (int i = 0; i < vertices.size(); i++) {
         vertices[i].x *= scale.x;
@@ -315,7 +198,6 @@ void Model::Scale(glm::vec3 scale) {
     }
     SetCollider();
 }
-// �浹 ���� ����
 void Model::SetCollider() {
     for (int i = 0; i < this->vertices.size(); i++) {
         if (std::abs(vertices[i].x) > colliderX) {
@@ -329,7 +211,6 @@ void Model::SetCollider() {
         }
     }
 }
-// �浹���� ũ�� ����
 void Model::SetColliderSize(glm::vec3 colscale) {
     if (colscale.x > 0) {
         colliderX *= colscale.x;
@@ -342,9 +223,6 @@ void Model::SetColliderSize(glm::vec3 colscale) {
     }
 }
 void Model::OnEnterCollider() {
-
 }
-
-
 void Car::OnEnterCollider(){
 }
