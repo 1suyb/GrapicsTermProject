@@ -86,3 +86,6 @@ void CarMoveEvent() {
 	printf("%f\n", Acceleration);
 	printf("%f\n", Speed);
 }
+void CollisionDetection() {
+
+}

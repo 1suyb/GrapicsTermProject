@@ -31,10 +31,9 @@ void init() {
     Speed = 0;
     InitLight();
     modelinit();
-    Cam.Init(glm::vec3(0, 1, 0));
+    Cam.Init(glm::vec3(0.5, 1.5, 0));
 }
 void modelinit() {
-
     Car = Model();
     Car.SetPosition(glm::vec3(-20, 0, 0));
     Car.SetRotation(90, glm::vec3(0, 1, 0));
