@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include <glaux.h>
 #include <windows.h>
 
 GLfloat light_amb[] = { 0.5, 0.5, 0.5, 1.0 };
@@ -9,21 +10,12 @@ GLfloat Car_mat_amb[] = { 0.2, 0 , 0, 1.0 }; // /주변 반사
 GLfloat Car_mat_diffuse[] = { 1, 0.5, 0.5, 1.0 }; // 확산 반사 
 GLfloat Car_mat_specular[] = { 0, 0, 0, 1 }; // 경면 반사
 
-// ī�޶�
 Camera Cam;
 #pragma region �𵨼����
 Model Car;
 Model Bunny;
 Model Track;
 #pragma endregion
-
-//test
-//std::vector < glm::vec3 > vertices;
-//std::vector < glm::ivec3 > faces;
-//std::vector < glm::ivec3 > uvindices;
-//std::vector < glm::ivec3 > normalindices;
-//std::vector < glm::vec2 > uvs;
-//std::vector < glm::vec3 > normals;
 
 bool TestLoadObj(const char* path,
     std::vector < glm::vec3 >& out_vertices,
@@ -83,8 +75,6 @@ bool TestLoadObj(const char* path,
                 &vertexIndex[1], &uvIndex[1], &normalIndex[1],
                 &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
 
-
-
             out_faces.push_back(glm::ivec3(vertexIndex[0] - 1, vertexIndex[1] - 1, vertexIndex[2] - 1));
             uvindices.push_back(glm::ivec3(uvIndex[0] - 1, uvIndex[1] - 1, uvIndex[2] - 1));
             normalindices.push_back(glm::ivec3(normalIndex[0] - 1, normalIndex[1] - 1, normalIndex[2] - 1));
@@ -116,23 +106,10 @@ void TestDrawSurface(
             glm::vec3 p = vertices[faces[i][j]];
             glVertex3f(p[0], p[1], p[2]);
         }
-
-
     }
     glEnd();
 }
 
-void InitLight()
-{
-    GLfloat LightPosition[] = { 0.0, 2.0, 0.0, 1.0 };
-    glEnable(GL_LIGHTING);      //���� Ȱ��ȭ
-    glEnable(GL_LIGHT0);
-
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_amb); //�ֺ��� ����
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse); //Ȯ�걤 ����
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular); //�ݻ籤 ����
-    glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
-}
 void init() {
     loadTexture();
 
@@ -142,36 +119,23 @@ void init() {
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_FRONT);
     Speed = 0;
-    //InitLight();
     modelinit();
     Cam.Init(glm::vec3(0.5, 1.5, 0));
-    caminit();
-
     addBox(glm::vec3(-10, -10, -5), glm::vec3(10, 10, 20));
 
 }
 void modelinit() {
     Car = Model();
     Car.SetPosition(glm::vec3(0, 0, 0));
-    //Car.LoadObj("Data/Porsche/Porsche_911_GT2.obj", Car.vertices, Car.faces, Car.uvs, Car.uvindices, Car.normals, Car.normalindices);
-    TestLoadObj("Data/Porsche/Porsche_911_GT2.obj", Car.vertices, Car.faces, Car.uvs, Car.uvindices, Car.normals, Car.normalindices);
+    Car.LoadObj("Data/Porsche/Porsche_911_GT2.obj", Car.vertices, Car.faces, Car.uvs, Car.uvindices, Car.normals, Car.normalindices);
+   // TestLoadObj("Data/Porsche/Porsche_911_GT2.obj", Car.vertices, Car.faces, Car.uvs, Car.uvindices, Car.normals, Car.normalindices);
     Car.Scale(glm::vec3(0.1, 0.1, 0.1)); 
     Car.SetRotation(180.f, glm::vec3(0, 1, 0));
-    Car.LoadObj("Data/Car/Car.obj", Car.vertices, Car.faces, Car.uvs, Car.normals);
     Car.Scale(glm::vec3(0.1, 0.1, 0.1));
     Car.SetCollider();
 
-    Bunny = Model();
-    //Bunny.LoadObj("Data/Porsche/Porsche_911_GT2.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.uvindices, Bunny.normals, Bunny.normalindices);
-    TestLoadObj("Data/Porsche/Porsche_911_GT2.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.uvindices, Bunny.normals, Bunny.normalindices);
-    Bunny.Scale(glm::vec3(0.01, 0.01, 0.01));
-
-}
-
-void caminit() {
-    Cam.Start(glm::vec3(0, 1, 0), glm::vec3(1, -1, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0.05, 0));
-    InCarView = true;
-    //Cam.InCar(Car.position,glm::vec3(0,0.05,0),Car.front);
+    Track = Model();
+    Track.LoadObj("Data/Track/")
 }
 
 void render() {
@@ -185,50 +149,17 @@ void render() {
     glPushMatrix();
     Car.Translate();
     Car.RotateAngle();
-
-    /*glMaterialfv(GL_FRONT, GL_AMBIENT, Car_mat_amb);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, Car_mat_diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, Car_mat_specular);*/
-    
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
     glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
     glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-    //glEnable(GL_TEXTURE_GEN_S);
-    //glEnable(GL_TEXTURE_GEN_T);
-        
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, g_textureID[2]);  
-    Car.DrawSurface(Car.vertices, Car.normals, Car.uvs, Car.uvindices, Car.normalindices, Car.faces);
-    //glDisable(GL_TEXTURE_GEN_S);
-    //glDisable(GL_TEXTURE_GEN_T);
+    Car.DrawSurface();
     glPopMatrix();
 
-    //Track
-    glPushMatrix();
-    Bunny.SetPosition(glm::vec3(0, 0, 0));
-    Bunny.Translate();
-    glBindTexture(GL_TEXTURE_2D, g_textureID[2]);
-    Bunny.DrawSurface(Bunny.vertices, Bunny.normals, Bunny.uvs,Bunny.uvindices,Bunny.normalindices, Bunny.faces);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0, 0, -75);
-    Track.DrawTrack(Track.vertices2, Track.normals2, Track.faces2);
-    glPopMatrix();
-
-    //장애물 생성
-    for (int i = 0; i < boxes.size(); i++)
-    {
-        glPushMatrix();
-        glTranslatef(boxes[i].p[0], boxes[i].p[1], boxes[i].p[2]);        
-        glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
-        texturedCube(boxes[i].r);
-        glPopMatrix();
-    }
     system("cls");
     glutSwapBuffers();
 }
@@ -250,4 +181,73 @@ void CameraSetting() {
     gluLookAt(Cam.eye.x, Cam.eye.y, Cam.eye.z,
         Cam.at.x, Cam.at.y, Cam.at.z,
         Cam.up.x, Cam.up.y, Cam.up.z);
+}
+
+void loadTexture() {
+    //경로로 부터 이미지 파일 불러오기
+    AUX_RGBImageRec* pBoxImage = auxDIBImageLoad("Data/woodBox.bmp");
+    AUX_RGBImageRec* pBoosterImage = auxDIBImageLoad("Data/booster.bmp");
+    AUX_RGBImageRec* pCarImage = auxDIBImageLoad("Data/Porsche/skin00/0000.bmp");
+
+    if (pBoxImage != NULL && pBoosterImage != NULL && pCarImage != NULL) {
+        //박스 장애물
+        //텍스쳐 생성 (텍스쳐수, 텍스쳐 ID 배열 주소)
+        glGenTextures(3, &g_textureID[0]);
+
+        //텍스쳐 파라미터 설정을 위한 부분 (0번 텍스쳐 ID 설정)
+        glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
+
+        //텍스쳐 파라미터 설정: 텍스쳐 확대 축소시 필터 처리 방법 설정
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        //불러온 이미지 파일을 위에 생성한 텍스쳐ID에 결합
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, pBoxImage->sizeX, pBoxImage->sizeY, 0,
+            GL_RGB, GL_UNSIGNED_BYTE, pBoxImage->data);
+
+        //부스터 아이템
+        //텍스쳐 파라미터 설정을 위한 부분 (1번 텍스쳐 ID 설정)
+        glBindTexture(GL_TEXTURE_2D, g_textureID[1]);
+
+        //텍스쳐 파라미터 설정: 텍스쳐 확대 축소시 필터 처리 방법 설정
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        //불러온 이미지 파일을 위에 생성한 텍스쳐ID에 결합
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, pBoosterImage->sizeX, pBoosterImage->sizeY, 0,
+            GL_RGB, GL_UNSIGNED_BYTE, pBoosterImage->data);
+
+        // 차
+        //텍스쳐 파라미터 설정을 위한 부분 (1번 텍스쳐 ID 설정)
+        glBindTexture(GL_TEXTURE_2D, g_textureID[2]);
+
+        //텍스쳐 파라미터 설정: 텍스쳐 확대 축소시 필터 처리 방법 설정
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+        glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+        glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+
+        //glEnable(GL_TEXTURE_GEN_S);
+        //glEnable(GL_TEXTURE_GEN_T);
+
+        //불러온 이미지 파일을 위에 생성한 텍스쳐ID에 결합
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, pCarImage->sizeX, pCarImage->sizeY, 0,
+            GL_RGB, GL_UNSIGNED_BYTE, pCarImage->data);
+
+        //불러온 텍스쳐 파일 데이터 삭제
+        if (pBoxImage->data)
+            free(pBoxImage->data);
+
+        if (pBoosterImage->data)
+            free(pBoosterImage->data);
+        if (pCarImage->data)
+            free(pCarImage->data);
+
+        free(pBoxImage);
+        free(pBoosterImage);
+        free(pCarImage);
+    }
 }

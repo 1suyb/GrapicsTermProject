@@ -10,28 +10,23 @@
 
 class Model {
 public:
-	/* obj������ ���� */
 	std::vector < glm::vec3 > vertices;
 	std::vector < glm::ivec3 > faces;
 	std::vector < glm::vec2 > uvs;
-	std::vector < glm::ivec3 > uvindices; // LoadObj, DrawSurface
+	std::vector < glm::ivec3 > uvindices;
 	std::vector < glm::vec3 > normals;
-	std::vector < glm::ivec3 > normalindices; // LoadObj, DrawSurface
+	std::vector < glm::ivec3 > normalindices; 
 
-
-	/* Scene������ ��ġ ���� */
 	glm::vec3 position;
 	GLfloat angle;
 	glm::vec3 axis;
 	glm::vec3 front;
 
-	/* ����ó���� ���� ���� */
 	bool hasCollision;
 	float colliderX;
 	float colliderY;
 	float colliderZ;
 
-public:
 	Model();
 	Model(bool collision);
 
@@ -41,7 +36,7 @@ public:
 		std::vector < glm::vec2 >& out_uvs,
 		std::vector < glm::ivec3 >& uvindices,
 		std::vector < glm::vec3 >& out_normals,
-		std::vector < glm::ivec3 >& normalindices);	// obj���� import
+		std::vector < glm::ivec3 >& normalindices);	
 
 	static bool LoadPly(const char* path,
 		std::vector < glm::vec3 >& out_vertices,
@@ -49,20 +44,9 @@ public:
 		std::vector < glm::vec3 >& out_normals);	// ply���� import
 
 	void Model::DrawSurface();
-	void DrawSurface(std::vector < glm::vec3 >& vectices,
-		std::vector < glm::vec3 >& normals,
-		std::vector < glm::vec2 >& uvs,
-		std::vector < glm::ivec3 >& uvindicies,
-		std::vector < glm::ivec3 >& normalindices,
-		std::vector < glm::ivec3 >& faces);		// ǥ�� �׸���
 
-	void DrawTrack(std::vector < glm::vec4 >& vectices,
-		std::vector < glm::vec4 >& normals,
-		std::vector < glm::ivec4 >& faces);
 	
-	void Texturing();			/** �ؽ��Ŀø��°� ���⿡ �־������ �����־������ �߸𸣰ھ�� **/
-
-	// ���� Ʈ������ ����� �����մϴ�.
+	void Texturing();
 
 	void Translate();
 	// ���� ȸ�� ����� �����մϴ�.
