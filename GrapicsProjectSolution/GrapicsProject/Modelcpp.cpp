@@ -23,7 +23,8 @@ Model::Model(bool collision) {
     colliderY = 0;
     colliderZ = 0;
 }
-bool Model::LoadObj(const char* path,
+
+bool Model::LoadObj_Rabbit(const char* path,
 	std::vector < glm::vec3 >& out_vertices,
 	std::vector < glm::ivec3 >& out_faces,
 	std::vector < glm::vec2 >& out_uvs,
@@ -74,15 +75,15 @@ bool Model::LoadObj(const char* path,
     }
 }
 
-bool Model::TrackObj(const char* path,
+bool Model::LoadObj(const char* path,
     std::vector < glm::vec3 >& out_vertices,
-    std::vector < glm::ivec4 >& out_faces2,
-    std::vector < glm::vec3 >& out_uvs2,
+    std::vector < glm::ivec3 >& out_faces,
+    std::vector < glm::vec2 >& out_uvs,
     std::vector < glm::vec3 >& out_normals)
 {
     out_vertices.clear();
-    out_faces2.clear();
-    out_uvs2.clear();
+    out_faces.clear();
+    out_uvs.clear();
     out_normals.clear();
 
     FILE* file = fopen(path, "r");
@@ -104,9 +105,9 @@ bool Model::TrackObj(const char* path,
             out_vertices.push_back(vertex);
         }
         else if (strcmp(lineHeader, "vt") == 0) {
-            glm::vec3 uv2;
-            fscanf(file, "&f &f &f\n", &uv2.x, &uv2.y, &uv2.z);
-            out_uvs2.push_back(uv2);
+            glm::vec2 uv;
+            fscanf(file, "&f, &f\n", &uv.x, &uv.y);
+            out_uvs.push_back(uv);
         }
         else if (strcmp(lineHeader, "vn") == 0) {
             glm::vec3 normal;
@@ -115,13 +116,12 @@ bool Model::TrackObj(const char* path,
         }
         else if (strcmp(lineHeader, "f") == 0) {
             std::string vertex1, vertex2, vertex3;
-            unsigned int vertexIndex[4], uvIndex[4], normalIndex[4];
-            int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d\n",
+            unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+            int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
                 &vertexIndex[0], &uvIndex[0], &normalIndex[0],
                 &vertexIndex[1], &uvIndex[1], &normalIndex[1],
-                &vertexIndex[2], &uvIndex[2], &normalIndex[2],
-                &vertexIndex[3], &uvIndex[3], &normalIndex[3]);
-            out_faces2.push_back(glm::ivec4(vertexIndex[0] - 1, vertexIndex[1] - 1, vertexIndex[2] - 1, vertexIndex[3] - 1));
+                &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+            out_faces.push_back(glm::ivec3(vertexIndex[0] - 1, vertexIndex[1] - 1, vertexIndex[2] - 1));
         }
     }
 }
@@ -183,9 +183,7 @@ bool Model::LoadPly(const char* path,
     return true;
 }
 
-void Model::DrawSurface(std::vector < glm::vec3 >& vectices,
-    std::vector < glm::vec3 >& normals,
-    std::vector < glm::ivec3 >& faces) {
+void Model::DrawSurface() {
     glBegin(GL_TRIANGLES);
     for (int i = 0; i < faces.size(); i++) {
         for (int j = 0; j < 3; j++) {
@@ -203,10 +201,10 @@ void Model::DrawSurface(std::vector < glm::vec3 >& vectices,
     glEnd();
 }
 
-void Model::DrawTrack(std::vector < glm::vec4 >& vectices,
-    std::vector < glm::vec4 >& normals,
+void Model::DrawTrack(std::vector < glm::vec3 >& vectices,
+    std::vector < glm::vec3 >& normals,
     std::vector < glm::ivec4 >& faces) {
-    glBegin(GL_TRIANGLES);
+    glBegin(GL_LINES);
     for (int i = 0; i < faces.size(); i++) {
         glm::ivec4 tempFace = faces[i];
 

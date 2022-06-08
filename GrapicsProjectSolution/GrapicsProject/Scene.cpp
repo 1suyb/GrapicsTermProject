@@ -5,11 +5,11 @@ GLfloat light_amb[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat light_specular[] = { 1, 1, 1, 1.0 };
 
-// ī�޶�
 camera Cam;
 #pragma region �𵨼����
 Model Car;
 Model Bunny;
+Model Track;
 #pragma endregion
 
 void InitLight()
@@ -30,32 +30,27 @@ void init() {
     glEnable(GL_DEPTH_TEST); // ���̹���
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_FRONT);
-    Acceleration = 0;
     Speed = 0;
     InitLight();
     modelinit();
     caminit();
 }
-// �𵨵� �ʱ�ȭ�ϴ� �Լ�
 void modelinit() {
-    /* �� ����� */
-    // �� ���������� ����
-    // �𵨿� �� Ŭ���� �Ҵ�
-    // �� �� �ʱ� ������ �Ҵ�
-    // �� �ε�
-    // �� ũ�� ����
-
     Car = Model();
-    Car.SetPosition(glm::vec3(0, 0, 0));
-    Car.LoadObj("Data/bunny/bunny.obj", Car.vertices, Car.faces, Car.uvs, Car.normals);
-    Car.Scale(glm::vec3(0.1, 0.1, 0.1));
+    Car.SetPosition(glm::vec3(-20, 0, 0));
+    Car.SetRotation(90, glm::vec3(0, 1, 0));
+    Car.LoadObj("Data/Car/Car.obj", Car.vertices, Car.faces, Car.uvs, Car.normals);
+   Car.Scale(glm::vec3(0.1, 0.1, 0.1));
     Car.SetRotation(180.f, glm::vec3(0, 1, 0));
     Car.SetCollider();
 
     Bunny = Model();
-    Bunny.LoadObj("Data/bunny/bunny.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.normals);
+    Bunny.LoadObj_Rabbit("Data/bunny/bunny.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.normals);
     Bunny.Scale(glm::vec3(0.01, 0.01, 0.01));
 
+    Track = Model();
+    Track.LoadObj("Data/Track/Track.obj", Track.vertices, Track.faces, Track.uvs, Track.normals);
+    Track.SetPosition(glm::vec3(0, -2, 0));
 }
 
 void caminit() {
@@ -74,17 +69,16 @@ void render() {
     glPushMatrix();
     Car.Translate();
     Car.RotateAngle();
-    Car.DrawSurface(Car.vertices, Car.normals, Car.faces);
+    Car.DrawSurface();
     glPopMatrix();
 
     glPushMatrix();
     Bunny.SetPosition(glm::vec3(0, 0, 0));
     Bunny.Translate();
-    Bunny.DrawSurface(Bunny.vertices, Bunny.normals, Bunny.faces);
+    Bunny.DrawSurface();
     glPopMatrix();
-    glPushMatrix();
-    glTranslatef(0, 0, -75);
-    Track.DrawTrack(Track.vertices2, Track.normals2, Track.faces2);
+    Track.Translate();
+    Track.DrawSurface();
     glPopMatrix();
     system("cls");
 

@@ -20,7 +20,6 @@ public:
 	void OutCar(glm::vec3 carpositon);
 	void InCar(glm::vec3 carpostion, glm::vec3 at);
 	
-
 };
 
 #endif // 

@@ -6,7 +6,7 @@
 float Acceleration;
 float Speed;
 bool InCarView;
-static bool Accelerate = true;
+static bool Accelerate = false;
 static bool Decelerate = false;
 
 static POINT ptLastMousePosit;
@@ -51,21 +51,9 @@ void Motion(int x, int y) {
 
 void Keyboard(unsigned char key, int x, int y) {
 
-	GLfloat angle = 5.f;
+	GLfloat angle = 10.f;
 	glm::vec3 r(0, 1, 0);
-	if (key == 'w' || key == 'W') {
-		Accelerate = true;
-	}
-	else {
-		Accelerate = false;
-	}
-	if (key == 's' || key == 'S') {
-		Decelerate = true;
-	}
-	else {
-		Decelerate = false;
-	}
-
+	
 	switch(key)
 	{
 	case 'a':
@@ -86,6 +74,12 @@ void Keyboard(unsigned char key, int x, int y) {
 		
 		break;
 	}
+	if (key == 'w' || key == 'W') {
+		Accelerate = true;
+	}
+	if (key == 's' || key == 'S') {
+		Decelerate = true;
+	}
 	glutPostRedisplay();
 }
 void Reshape(int w, int h) {
@@ -102,24 +96,34 @@ void Idel() {
 	Decelerate = false;
 }
 
+void UpKeyboard(unsigned char key, int x, int y) {
+	if (key == 'w' || key == 'W') {
+		Accelerate = false;
+	}
+	if (key == 's' || key == 'S') {
+		Decelerate = false;
+	}
+}
+
+
 void CarMoveEvent() {
 	glm::vec3 front = glm::normalize(Car.front-Car.position);
 
 	if (Accelerate) {
 		Acceleration = 0.05f;
-		if (Speed < 1.f) {
+		if (Speed < 2.f) {
 			Speed += Acceleration;
 		}
 	}
 	else if (Decelerate) {
 		Acceleration = -0.05f;
-		if (Speed > -1.f) {
+		if (Speed > -2.f) {
 			Speed += Acceleration;
 		}
 	}
 	else {
 		Acceleration = 0;
-		Speed *= 0.5f;
+		Speed *= 0.7f;
 	}
 	Car.Move(front * Speed);
 
