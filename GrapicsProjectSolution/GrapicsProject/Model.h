@@ -6,7 +6,7 @@
 #define __MODEL_INCLUDED__
 
 #include "Includes.h"
-extern GLuint g_textureID[4];
+
 
 class Model {
 public:
@@ -102,7 +102,22 @@ public :
 	void OnEnterCollider();
 };
 
+struct Box {
+	glm::vec3 p; //position
+	glm::vec3 v; //velocity
+	glm::vec3 force; //force
+	float r; //radius
+	float m; //mass
+
+};
+
+void addBox(glm::vec3 leftBottom, glm::vec3 rightTop);
+void Contact(float stiff);
+void texturedCube(float size);
 void loadTexture();
+
+extern GLuint g_textureID[4];
+extern std::vector<Box> boxes;
 
 #endif // !MODELINCLUDED
 

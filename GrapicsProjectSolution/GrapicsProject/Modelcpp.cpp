@@ -4,6 +4,7 @@
 
 
 GLuint g_textureID[4];
+std::vector<Box> boxes;
 
 Model::Model() {
     position = glm::vec3(0, 0, 0);
@@ -296,69 +297,69 @@ void Model::DrawSurface(std::vector < glm::vec3 >& vertices,
     glEnd();
 }
 
-//void Model::DrawTrack(std::vector < glm::vec4 >& vectices,
-//    std::vector < glm::vec4 >& normals,
-//    std::vector < glm::ivec4 >& faces) {
-//    glBegin(GL_TRIANGLES);
-//    for (int i = 0; i < faces.size(); i++) {
-//        glm::ivec4 tempFace = faces[i];
-//
-//        int idx = 0;
-//        idx = tempFace[0];
-//        glm::vec3 p1 = vertices[idx];
-//        if (normals.size() == vertices.size())
-//        {
-//            glm::vec3 n = normals[idx];
-//            glNormal3f(n[0], n[1], n[2]);
-//        }
-//        glVertex3f(p1[0], p1[1], p1[2]);
-//
-//        int idx1 = 0;
-//        idx1 = tempFace[1];
-//        glm::vec3 p2 = vertices[idx1];
-//        if (normals.size() == vertices.size())
-//        {
-//            glm::vec3 n = normals[idx1];
-//            glNormal3f(n[0], n[1], n[2]);
-//        }
-//        glVertex3f(p2[0], p2[1], p2[2]);
-//
-//        int idx2 = 0;
-//        idx2 = tempFace[2];
-//        glm::vec3 p3 = vertices[idx2];
-//        if (normals.size() == vertices.size())
-//        {
-//            glm::vec3 n = normals[idx2];
-//            glNormal3f(n[0], n[1], n[2]);
-//        }
-//        glVertex3f(p3[0], p3[1], p3[2]);
-//
-//        if (normals.size() == vertices.size())
-//        {
-//            glm::vec3 n = normals[idx];
-//            glNormal3f(n[0], n[1], n[2]);
-//        }
-//        glVertex3f(p1[0], p1[1], p1[2]);
-//
-//        if (normals.size() == vertices.size())
-//        {
-//            glm::vec3 n = normals[idx2];
-//            glNormal3f(n[0], n[1], n[2]);
-//        }
-//        glVertex3f(p3[0], p3[1], p3[2]);
-//
-//        int idx3 = 0;
-//        idx3 = tempFace[3];
-//        glm::vec3 p4 = vertices[idx3];
-//        if (normals.size() == vertices.size())
-//        {
-//            glm::vec3 n = normals[idx3];
-//            glNormal3f(n[0], n[1], n[2]);
-//        }
-//        glVertex3f(p4[0], p4[1], p4[2]);
-//    }
-//    glEnd();
-//}
+void Model::DrawTrack(std::vector < glm::vec4 >& vectices,
+    std::vector < glm::vec4 >& normals,
+    std::vector < glm::ivec4 >& faces) {
+    glBegin(GL_TRIANGLES);
+    for (int i = 0; i < faces.size(); i++) {
+        glm::ivec4 tempFace = faces[i];
+
+        int idx = 0;
+        idx = tempFace[0];
+        glm::vec3 p1 = vertices[idx];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p1[0], p1[1], p1[2]);
+
+        int idx1 = 0;
+        idx1 = tempFace[1];
+        glm::vec3 p2 = vertices[idx1];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx1];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p2[0], p2[1], p2[2]);
+
+        int idx2 = 0;
+        idx2 = tempFace[2];
+        glm::vec3 p3 = vertices[idx2];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx2];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p3[0], p3[1], p3[2]);
+
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p1[0], p1[1], p1[2]);
+
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx2];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p3[0], p3[1], p3[2]);
+
+        int idx3 = 0;
+        idx3 = tempFace[3];
+        glm::vec3 p4 = vertices[idx3];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx3];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p4[0], p4[1], p4[2]);
+    }
+    glEnd();
+}
 
 // ���� Ʈ������ ����� �����մϴ�.
 void Model::Translate() {
@@ -442,4 +443,103 @@ void Model::OnEnterCollider() {
 
 
 void Car::OnEnterCollider() {
+}
+
+void addBox(glm::vec3 leftBottom, glm::vec3 rightTop)
+{
+    int random = 0;
+    int randRange = 100;
+    Box newBox;
+
+
+    glm::vec3 _pos(0, 0, 0);
+    glm::vec3 _vel(0, 0, 0);
+    float m = 1;
+
+    for (int i = 0; i < 3; i++)
+    {
+        float value = (float)(rand() % randRange) / (float)randRange;
+        _pos[i] = leftBottom[i] + (rightTop[i] - leftBottom[i]) * value;
+        _vel[i] = value * 2.f - 1.f;
+
+        m = 1 + value;
+    }
+
+    newBox.p = _pos;
+    newBox.v = _vel;
+
+    newBox.force = glm::vec3(0, 0, 0);
+    newBox.m = m;
+    newBox.r = m / 2.f;
+
+    boxes.push_back(newBox);
+}
+
+// 박스 겹치면 밀어내게
+void Contact(float stiff) {
+    std::vector<Box> boxes;
+    for (int i = 0; i < boxes.size(); i++)
+    {
+        for (int j = i + 1; j < boxes.size(); j++) {
+            glm::vec3 dis = boxes[i].p - boxes[j].p;
+
+            float L = length(dis);
+            dis = normalize(dis);
+
+            if (L < boxes[i].r + boxes[j].r) {
+                glm::vec3 force = stiff * ((boxes[i].r + boxes[j].r) - L) * dis;
+                boxes[i].force += force;
+                boxes[j].force -= force;
+            }
+        }
+    }
+}
+
+void texturedCube(float size) {
+    //glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
+    //glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
+    //glEnable(GL_TEXTURE_GEN_S);
+    //glEnable(GL_TEXTURE_GEN_T);
+    //glutSolidCube(1);
+
+    glBegin(GL_QUADS);
+
+    //앞면;
+    glTexCoord2f(0, 0); glVertex3f(-1, -1, 1);
+    glTexCoord2f(1, 0); glVertex3f(1, -1, 1);
+    glTexCoord2f(1, 1); glVertex3f(1, 1, 1);
+    glTexCoord2f(0, 1); glVertex3f(-1, 1, 1);
+
+    //뒷면
+    glTexCoord2f(1, 0); glVertex3f(-1, -1, -1);
+    glTexCoord2f(1, 1); glVertex3f(-1, 1, -1);
+    glTexCoord2f(0, 1); glVertex3f(1, 1, -1);
+    glTexCoord2f(0, 0); glVertex3f(1, -1, -1);
+
+    //윗면
+    glTexCoord2f(0, 1); glVertex3f(-1, 1, -1);
+    glTexCoord2f(0, 0); glVertex3f(-1, 1, 1);
+    glTexCoord2f(1, 0); glVertex3f(1, 1, 1);
+    glTexCoord2f(1, 1); glVertex3f(1, 1, -1);
+
+    //오른쪽 옆면
+    glTexCoord2f(1, 1); glVertex3f(-1, -1, -1);
+    glTexCoord2f(0, 1); glVertex3f(1, -1, -1);
+    glTexCoord2f(0, 0); glVertex3f(1, -1, 1);
+    glTexCoord2f(1, 0); glVertex3f(-1, -1, 1);
+
+    //
+    glTexCoord2f(1, 0); glVertex3f(1, -1, -1);
+    glTexCoord2f(1, 1); glVertex3f(1, 1, -1);
+    glTexCoord2f(0, 1); glVertex3f(1, 1, 1);
+    glTexCoord2f(0, 0); glVertex3f(1, -1, 1);
+
+    //
+    glTexCoord2f(0, 0); glVertex3f(-1, -1, -1);
+    glTexCoord2f(1, 0); glVertex3f(-1, -1, 1);
+    glTexCoord2f(1, 1); glVertex3f(-1, 1, 1);
+    glTexCoord2f(0, 1); glVertex3f(-1, 1, -1);
+
+    glEnd();
+
 }
