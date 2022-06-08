@@ -31,23 +31,15 @@ void init() {
     glEnable(GL_DEPTH_TEST); // ���̹���
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_FRONT);
-    Acceleration = 0;
     Speed = 0;
     InitLight();
     modelinit();
     caminit();
 }
-// �𵨵� �ʱ�ȭ�ϴ� �Լ�
 void modelinit() {
-    /* �� ����� */
-    // �� ���������� ����
-    // �𵨿� �� Ŭ���� �Ҵ�
-    // �� �� �ʱ� ������ �Ҵ�
-    // �� �ε�
-    // �� ũ�� ����
-
     Car = Model();
-    Car.SetPosition(glm::vec3(0, 0, 0));
+    Car.SetPosition(glm::vec3(-20, 0, 0));
+    Car.SetRotation(90, glm::vec3(0, 1, 0));
     Car.LoadObj("Data/bunny/bunny.obj", Car.vertices, Car.faces, Car.uvs, Car.normals);
     Car.Scale(glm::vec3(0.1, 0.1, 0.1));
     Car.SetRotation(180.f, glm::vec3(0, 1, 0));
@@ -85,8 +77,8 @@ void render() {
     Bunny.Translate();
     Bunny.DrawSurface(Bunny.vertices, Bunny.normals, Bunny.faces);
     glPopMatrix();
-    glPushMatrix();
-    glTranslatef(0, 0, -75);
+    Track.SetRotation(90, glm::vec3(1, 0, 0));
+    Track.RotateAngle();
     Track.DrawTrack(Track.vertices, Track.normals, Track.faces2);
     glPopMatrix();
     system("cls");

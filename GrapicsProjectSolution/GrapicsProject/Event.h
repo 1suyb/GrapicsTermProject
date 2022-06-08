@@ -6,7 +6,6 @@
 #include "Scene.h"
 
 extern int ClickMouseButton ;
-extern float Speed;
 extern float Acceleration;
 extern float Speed;
 extern bool InCarView;
@@ -16,6 +15,7 @@ void Keyboard(unsigned char key, int x, int y);
 void Reshape(int w, int h);
 void Timer(int value);
 void Idel();
+void UpKeyboard(unsigned char key, int x, int y);
 
 void CarMoveEvent();
 void Motion(int x, int y);
