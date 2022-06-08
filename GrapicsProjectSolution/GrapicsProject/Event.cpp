@@ -85,6 +85,7 @@ void Keyboard(unsigned char key, int x, int y) {
 		break;
 	//애니메이션 on/off
 	case 't':
+	case 'T':
 		animate = !animate;
 		if (animate) {
 			printf("animate\n");

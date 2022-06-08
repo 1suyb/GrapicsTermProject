@@ -111,7 +111,7 @@ void render() {
     for (int i = 0; i < boxes.size(); i++)
     {
         glPushMatrix();
-        glTranslatef(boxes[i].p[0], boxes[i].p[1], boxes[i].p[2]);
+        glTranslatef(boxes[i].p[0], boxes[i].p[1], boxes[i].p[2]);        
         //glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
         texturedCube(boxes[i].r);
         glPopMatrix();
