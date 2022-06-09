@@ -14,7 +14,6 @@ Camera Cam;
 #pragma region �𵨼����
 Model Car;
 Model Bunny;
-Model Track;
 #pragma endregion
 
 
@@ -40,8 +39,21 @@ void modelinit() {
     Car.SetRotation(180.f, glm::vec3(0, 1, 0));
     Car.SetCollider();
 
+<<<<<<< HEAD
     Track = Model();
-    Track.LoadObj("Data/Track/Track.obj", Track.vertices, Track.faces, Track.uvs, Track.uvindices, Track.normals, Track.normalindices);
+    Track.TrackObj("Data/Track/Track.obj", Track.vertices, Track.faces2, Track.uvs2, Track.normals);
+=======
+    Bunny = Model();
+    Bunny.LoadObj("Data/bunny/bunny.obj", Bunny.vertices, Bunny.faces, Bunny.uvs, Bunny.normals);
+    Bunny.Scale(glm::vec3(0.01, 0.01, 0.01));
+
+}
+
+void caminit() {
+    Cam.Start(glm::vec3(0, 1, 0), glm::vec3(1, -1, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0.05, 0));
+    InCarView = true;
+    //Cam.InCar(Car.position,glm::vec3(0,0.05,0),Car.front);
+>>>>>>> parent of 4bb1cb2 (Track 빠진 부분 다시 추가)
 }
 
 void render() {
@@ -64,6 +76,13 @@ void render() {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, g_textureID[2]);  
     Car.DrawSurface();
+    glPopMatrix();
+
+    //Track
+    glPushMatrix();
+    Track.Translate();
+    Track.RotateAngle();
+    Track.DrawTrack();
     glPopMatrix();
 
     system("cls");
