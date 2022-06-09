@@ -287,56 +287,56 @@ void Model::OnEnterCollider() {
 void Car::OnEnterCollider() {
 }
 
-void Box::addBox(glm::vec3 leftBottom, glm::vec3 rightTop)
-{
-    int random = 0;
-    int randRange = 100;
-    Box newBox;
-
-    glm::vec3 _pos(0, 0, 0);
-    glm::vec3 _vel(0, 0, 0);
-    float m = 1;
-
-    for (int i = 0; i < 3; i++)
-    {
-        float value = (float)(rand() % randRange) / (float)randRange;
-        _pos[i] = leftBottom[i] + (rightTop[i] - leftBottom[i]) * value;
-        _vel[i] = value * 2.f - 1.f;
-
-        m = 1 + value;
-    }
-
-    newBox.p = _pos;
-    newBox.v = _vel;
-
-    newBox.force = glm::vec3(0, 0, 0);
-    newBox.m = m;
-    newBox.r = m / 2.f;
-
-    boxes.push_back(newBox);
-}
+//void Box::addBox(glm::vec3 leftBottom, glm::vec3 rightTop)
+//{
+//    int random = 0;
+//    int randRange = 100;
+//    Box newBox;
+//
+//    glm::vec3 _pos(0, 0, 0);
+//    glm::vec3 _vel(0, 0, 0);
+//    float m = 1;
+//
+//    for (int i = 0; i < 3; i++)
+//    {
+//        float value = (float)(rand() % randRange) / (float)randRange;
+//        _pos[i] = leftBottom[i] + (rightTop[i] - leftBottom[i]) * value;
+//        _vel[i] = value * 2.f - 1.f;
+//
+//        m = 1 + value;
+//    }
+//
+//    newBox.p = _pos;
+//    newBox.v = _vel;
+//
+//    newBox.force = glm::vec3(0, 0, 0);
+//    newBox.m = m;
+//    newBox.r = m / 2.f;
+//
+//    boxes.push_back(newBox);
+//}
 
 // 박스 겹치면 밀어내게
-void Box::Contact(float stiff) {
-    std::vector<Box> boxes;
-    for (int i = 0; i < boxes.size(); i++)
-    {
-        for (int j = i + 1; j < boxes.size(); j++) {
-            glm::vec3 dis = boxes[i].p - boxes[j].p;
+//void Box::Contact(float stiff) {
+//    std::vector<Box> boxes;
+//    for (int i = 0; i < boxes.size(); i++)
+//    {
+//        for (int j = i + 1; j < boxes.size(); j++) {
+//            glm::vec3 dis = boxes[i].p - boxes[j].p;
+//
+//            float L = length(dis);
+//            dis = normalize(dis);
+//
+//            if (L < boxes[i].r + boxes[j].r) {
+//                glm::vec3 force = stiff * ((boxes[i].r + boxes[j].r) - L) * dis;
+//                boxes[i].force += force;
+//                boxes[j].force -= force;
+//            }
+//        }
+//    }
+//}
 
-            float L = length(dis);
-            dis = normalize(dis);
-
-            if (L < boxes[i].r + boxes[j].r) {
-                glm::vec3 force = stiff * ((boxes[i].r + boxes[j].r) - L) * dis;
-                boxes[i].force += force;
-                boxes[j].force -= force;
-            }
-        }
-    }
-}
-
-void Box::texturedCube(float size) {
+void Model::texturedCube(float size) {
     //glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
     //glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
     //glEnable(GL_TEXTURE_GEN_S);

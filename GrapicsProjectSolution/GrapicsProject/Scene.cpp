@@ -30,7 +30,7 @@ void init() {
     Speed = 0;
     modelinit();
     Cam.Init(glm::vec3(0.5, 1.5, 0));
-    addBox(glm::vec3(-10, -10, -5), glm::vec3(10, 10, 20));
+    //addBox(glm::vec3(-10, -10, -5), glm::vec3(10, 10, 20));
 
 }
 void modelinit() {
@@ -66,6 +66,9 @@ void render() {
     glBindTexture(GL_TEXTURE_2D, g_textureID[2]);  
     Car.DrawSurface();
     glPopMatrix();
+
+    glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
+    Box.texturedCube(0.01);
 
     system("cls");
     glutSwapBuffers();

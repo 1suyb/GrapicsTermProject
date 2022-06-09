@@ -16,8 +16,10 @@ void Keyboard(unsigned char key, int x, int y) {
 	
 	switch(key)
 	{
-	case GLUT_RIGHT_BUTTON:
+	case 'e':
+	case 'E':
 		
+		Box.newExplosion();
 		break;
 	case 'a':
 	case 'A' :

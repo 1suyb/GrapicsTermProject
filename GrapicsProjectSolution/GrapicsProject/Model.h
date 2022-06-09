@@ -71,7 +71,9 @@ public:
 	// �浹�� �൹
 	void OnEnterCollider();
 
-
+	void texturedCube(float size);
+	
+	
 };
 
 class Car : Model {
@@ -120,18 +122,16 @@ class Box : Model {
 	void newSpeed(float dest[3]);
 	void newExplosion(void); //폭발시 파티클 및 파편 생성
 	void MyIdle(void); //파티클 및 파편 업데이트
-	void addBox(glm::vec3 leftBottom, glm::vec3 rightTop);
-	void Contact(float stiff);
-	void texturedCube(float size);
 
 };
 
 
-
+void addBox(glm::vec3 leftBottom, glm::vec3 rightTop);
+void Contact(float stiff);
 void loadTexture();
 
 extern GLuint g_textureID[4];
-extern std::vector<Box> boxes;
+//extern std::vector<Box> boxes;
 
 #endif // !MODELINCLUDED
 
