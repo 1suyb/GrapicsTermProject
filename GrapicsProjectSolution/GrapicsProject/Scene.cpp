@@ -63,6 +63,9 @@ void render() {
     glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
     glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
     glEnable(GL_TEXTURE_2D);
+    /*glMaterialfv(GL_FRONT, GL_AMBIENT, Car_mat_amb);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, Car_mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, Car_mat_specular);*/
     glBindTexture(GL_TEXTURE_2D, g_textureID[2]);  
     Car.DrawSurface();
     glPopMatrix();
@@ -93,7 +96,7 @@ void render() {
 
         for (int i = 0; i < NUM_DEBRIS; i++) {
             glColor3fv(box.debris[i].color);
-
+            
             glPushMatrix();
             glTranslatef(box.debris[i].position[0],
                 box.debris[i].position[1],
@@ -145,7 +148,7 @@ void loadTexture() {
     //경로로 부터 이미지 파일 불러오기
     AUX_RGBImageRec* pBoxImage = auxDIBImageLoad("Data/woodBox.bmp");
     AUX_RGBImageRec* pBoosterImage = auxDIBImageLoad("Data/booster.bmp");
-    AUX_RGBImageRec* pCarImage = auxDIBImageLoad("Data/Porsche/skin00/0000.bmp");
+    AUX_RGBImageRec* pCarImage = auxDIBImageLoad("Data/Porsche/skin03/0000.bmp");
 
     if (pBoxImage != NULL && pBoosterImage != NULL && pCarImage != NULL) {
         //박스 장애물

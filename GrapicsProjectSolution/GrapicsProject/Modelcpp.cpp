@@ -432,7 +432,7 @@ void Box::newExplosion(void) {
 
         debris[i].color[0] = 0.2;
         debris[i].color[1] = 0.2;
-        debris[i].color[2] = 0.1;
+        debris[i].color[2] = 0.7;
 
         debris[i].scale[0] = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
         debris[i].scale[1] = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
