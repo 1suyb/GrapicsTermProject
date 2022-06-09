@@ -36,6 +36,9 @@ bool Model::LoadObj(const char* path,
     std::vector < glm::vec3 >& out_normals,
     std::vector < glm::ivec3 >& normalindices)
 {
+    std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
+
+    //init variables
     out_vertices.clear();
     out_faces.clear();
     out_uvs.clear();
@@ -58,20 +61,23 @@ bool Model::LoadObj(const char* path,
 
         if (strcmp(lineHeader, "v") == 0) {
             glm::vec3 vertex;
-            int matches = fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-            out_vertices.push_back(vertex);  
+            fscanf(file, " %f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
+            out_vertices.push_back(vertex);
+
         }
+
         else if (strcmp(lineHeader, "vt") == 0) {
             glm::vec2 uv;
-            int matches = fscanf(file, "&f &f\n", &uv.x, &uv.y);
+            fscanf(file, "%f %f\n", &uv.x, &uv.y);
             out_uvs.push_back(uv);
         }
-       
+
         else if (strcmp(lineHeader, "vn") == 0) {
             glm::vec3 normal;
-            int matches = fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
+            fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
             out_normals.push_back(normal);
         }
+
         else if (strcmp(lineHeader, "f") == 0) {
             std::string vertex1, vertex2, vertex3;
             unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
@@ -84,6 +90,7 @@ bool Model::LoadObj(const char* path,
             uvindices.push_back(glm::ivec3(uvIndex[0] - 1, uvIndex[1] - 1, uvIndex[2] - 1));
             normalindices.push_back(glm::ivec3(normalIndex[0] - 1, normalIndex[1] - 1, normalIndex[2] - 1));
         }
+
     }
 }
 
@@ -166,35 +173,35 @@ void Model::DrawSurface() {
     glEnd();
 }
 
-void Model::DrawSurface(std::vector < glm::vec3 >& vertices,
-    std::vector < glm::vec3 >& normals,
-    std::vector < glm::vec2 >& uvs,
-    std::vector < glm::ivec3 >& uvindicies,
-    std::vector < glm::ivec3 >& normalindices,
-    std::vector < glm::ivec3 >& faces)
-{
-    glBegin(GL_TRIANGLES);
-    for (int i = 0; i < faces.size(); i++) {
-        for (int j = 0; j < 2; j++) {
-            glm::vec2 vt = uvs[uvindices[i][j]];
-            glTexCoord2f(vt[0], vt[1]);
-        }
-        for (int j = 0; j < 3; j++) {
-
-            glm::vec3 n = normals[normalindices[i][j]];
-            glNormal3f(n[0], n[1], n[2]);
-        }
-        for (int j = 0; j < 3; j++) {
-            glm::vec3 p = vertices[faces[i][j]];
-            /*p.x = vertices[faces[i][j]].x;
-            p.y = vertices[faces[i][j]].y;
-            p.z = vertices[faces[i][j]].z;*/
-            glVertex3f(p[0], p[1], p[2]);
-        }
-    }
-
-    glEnd();
-}
+//void Model::DrawSurface(std::vector < glm::vec3 >& vertices,
+//    std::vector < glm::vec3 >& normals,
+//    std::vector < glm::vec2 >& uvs,
+//    std::vector < glm::ivec3 >& uvindicies,
+//    std::vector < glm::ivec3 >& normalindices,
+//    std::vector < glm::ivec3 >& faces)
+//{
+//    glBegin(GL_TRIANGLES);
+//    for (int i = 0; i < faces.size(); i++) {
+//        for (int j = 0; j < 2; j++) {
+//            glm::vec2 vt = uvs[uvindices[i][j]];
+//            glTexCoord2f(vt[0], vt[1]);
+//        }
+//        for (int j = 0; j < 3; j++) {
+//
+//            glm::vec3 n = normals[normalindices[i][j]];
+//            glNormal3f(n[0], n[1], n[2]);
+//        }
+//        for (int j = 0; j < 3; j++) {
+//            glm::vec3 p = vertices[faces[i][j]];
+//            /*p.x = vertices[faces[i][j]].x;
+//            p.y = vertices[faces[i][j]].y;
+//            p.z = vertices[faces[i][j]].z;*/
+//            glVertex3f(p[0], p[1], p[2]);
+//        }
+//    }
+//
+//    glEnd();
+//}
 
 // ���� Ʈ������ ����� �����մϴ�.
 void Model::Translate() {

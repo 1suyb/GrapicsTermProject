@@ -17,98 +17,6 @@ Model Bunny;
 Model Track;
 #pragma endregion
 
-bool TestLoadObj(const char* path,
-    std::vector < glm::vec3 >& out_vertices,
-    std::vector < glm::ivec3 >& out_faces,
-    std::vector < glm::vec2 >& out_uvs,
-    std::vector < glm::ivec3 >& uvindices,
-    std::vector < glm::vec3 >& out_normals,
-    std::vector < glm::ivec3 >& normalindices)
-{
-    std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
-
-    //init variables
-    out_vertices.clear();
-    out_faces.clear();
-    out_uvs.clear();
-    out_normals.clear();
-    uvindices.clear();
-    normalindices.clear();
-
-    FILE* file = fopen(path, "r");
-    if (file == NULL) {
-        printf("Impossible to open the file !\n");
-        return false;
-    }
-
-    while (1) {
-        char lineHeader[128];
-        // read the first word of the line
-        int res = fscanf(file, "%s", lineHeader);
-        if (res == -1)
-            break;
-
-        if (strcmp(lineHeader, "v") == 0) {
-            glm::vec3 vertex;
-            fscanf(file, " %f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-            out_vertices.push_back(vertex);
-
-        }
-
-        else if (strcmp(lineHeader, "vt") == 0) {
-            glm::vec2 uv;
-            fscanf(file, "%f %f\n", &uv.x, &uv.y);
-            out_uvs.push_back(uv);
-        }
-
-        else if (strcmp(lineHeader, "vn") == 0) {
-            glm::vec3 normal;
-            fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
-            out_normals.push_back(normal);
-        }
-
-        else if (strcmp(lineHeader, "f") == 0) {
-            std::string vertex1, vertex2, vertex3;
-            unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-            int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
-                &vertexIndex[0], &uvIndex[0], &normalIndex[0],
-                &vertexIndex[1], &uvIndex[1], &normalIndex[1],
-                &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
-
-            out_faces.push_back(glm::ivec3(vertexIndex[0] - 1, vertexIndex[1] - 1, vertexIndex[2] - 1));
-            uvindices.push_back(glm::ivec3(uvIndex[0] - 1, uvIndex[1] - 1, uvIndex[2] - 1));
-            normalindices.push_back(glm::ivec3(normalIndex[0] - 1, normalIndex[1] - 1, normalIndex[2] - 1));
-        }
-
-    }
-}
-
-void TestDrawSurface(
-    std::vector < glm::vec3 >& vertices,
-    std::vector < glm::vec3 >& normals,
-    std::vector < glm::vec2 >& uvs,
-    std::vector < glm::ivec3 >& uvindices,
-    std::vector < glm::ivec3 >& normalindices,
-    std::vector < glm::ivec3 >& faces)
-{
-    glBegin(GL_TRIANGLES);
-    for (int i = 0; i < faces.size(); i++) {
-        for (int j = 0; j < 2; j++) {
-            glm::vec2 vt = uvs[uvindices[i][j]];
-            glTexCoord2f(vt[0], vt[1]);
-        }
-        for (int j = 0; j < 3; j++) {
-            glm::vec3 vn = normals[normalindices[i][j]];
-            glNormal3f(vn[0], vn[1], vn[2]);
-        }
-
-        for (int j = 0; j < 3; j++) {
-            glm::vec3 p = vertices[faces[i][j]];
-            glVertex3f(p[0], p[1], p[2]);
-        }
-    }
-    glEnd();
-}
 
 void init() {
     loadTexture();
@@ -128,14 +36,12 @@ void modelinit() {
     Car = Model();
     Car.SetPosition(glm::vec3(0, 0, 0));
     Car.LoadObj("Data/Porsche/Porsche_911_GT2.obj", Car.vertices, Car.faces, Car.uvs, Car.uvindices, Car.normals, Car.normalindices);
-   // TestLoadObj("Data/Porsche/Porsche_911_GT2.obj", Car.vertices, Car.faces, Car.uvs, Car.uvindices, Car.normals, Car.normalindices);
     Car.Scale(glm::vec3(0.1, 0.1, 0.1)); 
     Car.SetRotation(180.f, glm::vec3(0, 1, 0));
-    Car.Scale(glm::vec3(0.1, 0.1, 0.1));
     Car.SetCollider();
 
     Track = Model();
-    Track.LoadObj("Data/Track/")
+    Track.LoadObj("Data/Track/Track.obj", Track.vertices, Track.faces, Track.uvs, Track.uvindices, Track.normals, Track.normalindices);
 }
 
 void render() {
