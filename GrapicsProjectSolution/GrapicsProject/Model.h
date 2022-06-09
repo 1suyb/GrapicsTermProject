@@ -1,96 +1,73 @@
 #pragma once
 /*
-	¸ðµ¨À» ºÒ·¯¿À°í µå·ÎÀ×ÇÏ´Â Å¬·¡½º¸¦ Á¤ÀÇÇÏ´Â Çì´õÆÄÀÏÀÔ´Ï´Ù.
+	ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.
 */
 #ifndef __MODEL_INCLUDED__
 #define __MODEL_INCLUDED__
 
 #include "Includes.h"
-extern GLuint g_textureID[4];
+
 
 class Model {
 public:
-	/* objÆÄÀÏÀÇ Á¤º¸ */
 	std::vector < glm::vec3 > vertices;
 	std::vector < glm::ivec3 > faces;
 	std::vector < glm::vec2 > uvs;
-	std::vector < glm::ivec3 > uvindices; // LoadObj, DrawSurface
+	std::vector < glm::ivec3 > uvindices;
 	std::vector < glm::vec3 > normals;
-	std::vector < glm::ivec3 > normalindices; // LoadObj, DrawSurface
-	std::vector < glm::vec3> uvs2;
-	std::vector < glm::ivec4 > faces2;
-	std::vector < glm::vec4 > normals2;
-	std::vector < glm::vec4 > vertices2;
+	std::vector < glm::ivec3 > normalindices; 
 
-	/* Scene¿¡¼­ÀÇ À§Ä¡ Á¤º¸ */
 	glm::vec3 position;
 	GLfloat angle;
 	glm::vec3 axis;
-	glm::vec3 front;	// ¸ðµ¨ÀÇ Á¤¸é ¹æÇâ º¤ÅÍ.
+	glm::vec3 front;
 
-	/* ¹°¸®Ã³¸®¿¡ ´ëÇÑ Á¤º¸ */
 	bool hasCollision;
 	float colliderX;
 	float colliderY;
 	float colliderZ;
 
-public:
 	Model();
 	Model(bool collision);
+
 	static bool LoadObj(const char* path,
 		std::vector < glm::vec3 >& out_vertices,
 		std::vector < glm::ivec3 >& out_faces,
 		std::vector < glm::vec2 >& out_uvs,
 		std::vector < glm::ivec3 >& uvindices,
 		std::vector < glm::vec3 >& out_normals,
-		std::vector < glm::ivec3 >& normalindices);	// objÆÄÀÏ import
-
-	static bool TrackObj(const char* path,
-		std::vector < glm::vec3 >& out_vertices,
-		std::vector < glm::ivec4 >& out_faces2,
-		std::vector < glm::vec3 >& out_uvs2,
-		std::vector < glm::vec3 >& out_normals);	// Track.objÆÄÀÏ import
+		std::vector < glm::ivec3 >& normalindices);	
 
 	static bool LoadPly(const char* path,
 		std::vector < glm::vec3 >& out_vertices,
 		std::vector < glm::ivec3 >& out_faces,
-		std::vector < glm::vec3 >& out_normals);	// plyÆÄÀÏ import
+		std::vector < glm::vec3 >& out_normals);	// plyï¿½ï¿½ï¿½ï¿½ import
 
-	void DrawSurface(std::vector < glm::vec3 >& vectices,
-		std::vector < glm::vec3 >& normals,
-		std::vector < glm::vec2 >& uvs,
-		std::vector < glm::ivec3 >& uvindicies,
-		std::vector < glm::ivec3 >& normalindices,
-		std::vector < glm::ivec3 >& faces);		// Ç¥¸é ±×¸®±â
+	void Model::DrawSurface();
 
-	void DrawTrack(std::vector < glm::vec4 >& vectices,
-		std::vector < glm::vec4 >& normals,
-		std::vector < glm::ivec4 >& faces);
 	
-	void Texturing();			/** ÅØ½ºÃÄ¿Ã¸®´Â°Ô ¿©±â¿¡ ÀÖ¾î¾ßÇÒÁö µû·ÎÀÖ¾î¾ßÇÒÁö Àß¸ð¸£°Ú¾î¿ä **/
-
-	// ¸ðµ¨ÀÇ Æ®·£½ºÆû Çà·ÄÀ» Àû¿ëÇÕ´Ï´Ù.
+	void Texturing();
 
 	void Translate();
-	// ¸ðµ¨ÀÇ È¸Àü Çà·ÄÀ» Àû¿ëÇÕ´Ï´Ù.
+	// ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 	void RotateAngle();
-	// ¸ðµ¨ÀÇ Æ®·»½ºÆû Çà·ÄÀ» º¯°æÇÕ´Ï´Ù.
+	// ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 	void SetPosition(glm::vec3 translate);
-	// ¸ðµ¨ÀÇ È¸Àü Çà·ÄÀ» º¯°æÇÕ´Ï´Ù.
+	// ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 	void SetRotation(GLfloat angle, glm::vec3 axis);
-	// ¸ðµ¨ÀÇ ÀÌµ¿
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 	void Move(glm::vec3 move);
-	// ¸ðµ¨ÀÇ È¸Àü
+	// ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
 	void Rotate(GLfloat angle, glm::vec3 axis);
-	// ¸ðµ¨ÀÇ Á¤¸éÀ» Á¤ÀÇÇÕ´Ï´Ù.
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 	void SetFront(glm::vec3 dir);
-	// ¸ðµ¨ÀÇ Å©±â¸¦ º¯°æÇÕ´Ï´Ù. Ãæµ¹¹üÀ§µµ ÇÔ²² Àç¼³Á¤ ÇÕ´Ï´Ù.
+	// ï¿½ï¿½ï¿½ï¿½ Å©ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½. ï¿½æµ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô²ï¿½ ï¿½ç¼³ï¿½ï¿½ ï¿½Õ´Ï´ï¿½.
 	void Scale(glm::vec3 scale);
-	// Ãæµ¹ ¹üÀ§ ¼³Á¤
+	// ï¿½æµ¹ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	void SetCollider();
-	// Ãæµ¹¹üÀ§ Å©±â ¼³Á¤
+	// ï¿½æµ¹ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	void SetColliderSize(glm::vec3 colscale);
-	// Ãæµ¹½Ã Çàµ¹
+	// ï¿½æµ¹ï¿½ï¿½ ï¿½àµ¹
 	void OnEnterCollider();
 
 };
@@ -102,7 +79,22 @@ public :
 	void OnEnterCollider();
 };
 
+struct Box {
+	glm::vec3 p; //position
+	glm::vec3 v; //velocity
+	glm::vec3 force; //force
+	float r; //radius
+	float m; //mass
+
+};
+
+void addBox(glm::vec3 leftBottom, glm::vec3 rightTop);
+void Contact(float stiff);
+void texturedCube(float size);
 void loadTexture();
+
+extern GLuint g_textureID[4];
+extern std::vector<Box> boxes;
 
 #endif // !MODELINCLUDED
 

@@ -9,46 +9,6 @@ bool InCarView;
 static bool Accelerate = false;
 static bool Decelerate = false;
 
-static POINT ptLastMousePosit;
-static POINT ptCurrentMousePosit;
-static bool bMousing;
-
-
-void Mouse(int button, int state, int x, int y) {
-	switch (button) {
-	case GLUT_LEFT_BUTTON:
-		if (state == GLUT_DOWN) {
-			printf("hello");
-			ptLastMousePosit.x = ptCurrentMousePosit.x = x;
-			ptLastMousePosit.y = ptCurrentMousePosit.y = y;
-			bMousing = true;
-		}
-		else {
-			bMousing = false;
-		}
-		break;
-	case GLUT_MIDDLE_BUTTON:
-	case GLUT_RIGHT_BUTTON:
-		break;
-	default:
-		break;
-	}
-}
-void Motion(int x, int y) {
-	printf("buy");
-	if (InCarView) {
-		return;
-	}
-	if (bMousing) {
-		printf("\n\n\n\n");
-		ptLastMousePosit.x = x;
-		ptLastMousePosit.y = y;
-		Cam.Rotate((float)ptCurrentMousePosit.x - (float)ptLastMousePosit.x, glm::vec3(0, 1, 0));
-	}
-
-	glutPostRedisplay();
-}
-
 void Keyboard(unsigned char key, int x, int y) {
 
 	GLfloat angle = 10.f;
@@ -67,9 +27,8 @@ void Keyboard(unsigned char key, int x, int y) {
 		break;
 	case 'f' :
 	case'F' :
-		InCarView = !InCarView;
+		Cam.is_CarView = !Cam.is_CarView;
 		break;
-
 	default:
 		
 		break;
@@ -88,14 +47,9 @@ void Reshape(int w, int h) {
 void Timer(int value) {
 	CarMoveEvent();
 	glutPostRedisplay();
-	glutTimerFunc(30, Timer, 1);
+	glutTimerFunc(50, Timer, 1);
 
 }
-void Idel() {
-	Accelerate = false;
-	Decelerate = false;
-}
-
 void UpKeyboard(unsigned char key, int x, int y) {
 	if (key == 'w' || key == 'W') {
 		Accelerate = false;
@@ -130,4 +84,7 @@ void CarMoveEvent() {
 
 	printf("%f\n", Acceleration);
 	printf("%f\n", Speed);
+}
+void CollisionDetection() {
+
 }
