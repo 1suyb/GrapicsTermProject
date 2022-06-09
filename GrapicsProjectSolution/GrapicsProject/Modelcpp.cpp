@@ -94,60 +94,6 @@ bool Model::LoadObj(const char* path,
     }
 }
 
-bool Model::TrackObj(const char* path,
-    std::vector < glm::vec3 >& out_vertices,
-    std::vector < glm::ivec4 >& out_faces2,
-    std::vector < glm::vec3 >& out_uvs2,
-    std::vector < glm::vec3 >& out_normals)
-{
-    out_vertices.clear();
-    out_faces2.clear();
-    out_uvs2.clear();
-    out_normals.clear();
-
-    FILE* file = fopen(path, "r");
-    if (file == NULL) {
-        printf("Impossible to open the file !\n");
-        return false;
-    }
-
-    while (1) {
-        char lineHeader[128];
-        // read the first word of the line
-        int res = fscanf(file, "%s", lineHeader);
-        if (res == -1)
-            break;
-
-        if (strcmp(lineHeader, "v") == 0) {
-            glm::vec3 vertex;
-            fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-            out_vertices.push_back(vertex);
-        }
-        else if (strcmp(lineHeader, "vt") == 0) {
-            glm::vec3 uv2;
-            fscanf(file, "&f &f &f\n", &uv2.x, &uv2.y, &uv2.z);
-            out_uvs2.push_back(uv2);
-        }
-        else if (strcmp(lineHeader, "vn") == 0) {
-            glm::vec3 normal;
-            fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
-            out_normals.push_back(normal);
-        }
-        else if (strcmp(lineHeader, "f") == 0) {
-            std::string vertex1, vertex2, vertex3;
-            unsigned int vertexIndex[4], uvIndex[4], normalIndex[4];
-            int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d\n",
-                &vertexIndex[0], &uvIndex[0], &normalIndex[0],
-                &vertexIndex[1], &uvIndex[1], &normalIndex[1],
-                &vertexIndex[2], &uvIndex[2], &normalIndex[2],
-                &vertexIndex[3], &uvIndex[3], &normalIndex[3]);
-            out_faces2.push_back(glm::ivec4(vertexIndex[0] - 1, vertexIndex[1] - 1, vertexIndex[2] - 1, vertexIndex[3] - 1));
-        }
-    }
-}
-
-
-
 bool Model::LoadPly(const char* path,
     std::vector < glm::vec3 >& out_vertices,
     std::vector < glm::ivec3 >& out_faces,

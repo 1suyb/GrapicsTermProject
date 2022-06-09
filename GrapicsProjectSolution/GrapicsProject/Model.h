@@ -40,19 +40,12 @@ public:
 		std::vector < glm::vec3 >& out_normals,
 		std::vector < glm::ivec3 >& normalindices);	
 
-	static bool TrackObj(const char* path,
-		std::vector < glm::vec3 >& out_vertices,
-		std::vector < glm::ivec4 >& out_faces2,
-		std::vector < glm::vec3 >& out_uvs2,
-		std::vector < glm::vec3 >& out_normals);
-
 	static bool LoadPly(const char* path,
 		std::vector < glm::vec3 >& out_vertices,
 		std::vector < glm::ivec3 >& out_faces,
 		std::vector < glm::vec3 >& out_normals);	// ply���� import
 
 	void Model::DrawSurface();
-	void Model::DrawTrack();
 	
 	void Texturing();
 
