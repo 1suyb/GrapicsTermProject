@@ -94,7 +94,57 @@ bool Model::LoadObj(const char* path,
     }
 }
 
+bool Model::TrackObj(const char* path,
+    std::vector < glm::vec3 >& out_vertices,
+    std::vector < glm::ivec4 >& out_faces2,
+    std::vector < glm::vec3 >& out_uvs2,
+    std::vector < glm::vec3 >& out_normals)
+{
+    out_vertices.clear();
+    out_faces2.clear();
+    out_uvs2.clear();
+    out_normals.clear();
 
+    FILE* file = fopen(path, "r");
+    if (file == NULL) {
+        printf("Impossible to open the file !\n");
+        return false;
+    }
+
+    while (1) {
+        char lineHeader[128];
+        // read the first word of the line
+        int res = fscanf(file, "%s", lineHeader);
+        if (res == -1)
+            break;
+
+        if (strcmp(lineHeader, "v") == 0) {
+            glm::vec3 vertex;
+            fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
+            out_vertices.push_back(vertex);
+        }
+        else if (strcmp(lineHeader, "vt") == 0) {
+            glm::vec3 uv2;
+            fscanf(file, "&f &f &f\n", &uv2.x, &uv2.y, &uv2.z);
+            out_uvs2.push_back(uv2);
+        }
+        else if (strcmp(lineHeader, "vn") == 0) {
+            glm::vec3 normal;
+            fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
+            out_normals.push_back(normal);
+        }
+        else if (strcmp(lineHeader, "f") == 0) {
+            std::string vertex1, vertex2, vertex3;
+            unsigned int vertexIndex[4], uvIndex[4], normalIndex[4];
+            int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d\n",
+                &vertexIndex[0], &uvIndex[0], &normalIndex[0],
+                &vertexIndex[1], &uvIndex[1], &normalIndex[1],
+                &vertexIndex[2], &uvIndex[2], &normalIndex[2],
+                &vertexIndex[3], &uvIndex[3], &normalIndex[3]);
+            out_faces2.push_back(glm::ivec4(vertexIndex[0] - 1, vertexIndex[1] - 1, vertexIndex[2] - 1, vertexIndex[3] - 1));
+        }
+    }
+}
 
 bool Model::LoadPly(const char* path,
     std::vector < glm::vec3 >& out_vertices,
@@ -151,6 +201,71 @@ bool Model::LoadPly(const char* path,
         out_faces.push_back(glm::ivec3(vertexIndex[0], vertexIndex[1], vertexIndex[2]));
     }
     return true;
+}
+
+void Model:: DrawTrack(std::vector < glm::vec3 >& vectices,
+    std::vector < glm::vec3 >& normals,
+    std::vector < glm::ivec4 >& faces)
+{
+    glBegin(GL_LINES);
+    for (int i = 0; i < faces.size(); i++) {
+        glm::ivec4 tempFace = faces[i];
+
+        int idx = 0;
+        idx = tempFace[0];
+        glm::vec3 p1 = vertices[idx];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p1[0], p1[1], p1[2]);
+
+        int idx1 = 0;
+        idx1 = tempFace[1];
+        glm::vec3 p2 = vertices[idx1];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx1];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p2[0], p2[1], p2[2]);
+
+        int idx2 = 0;
+        idx2 = tempFace[2];
+        glm::vec3 p3 = vertices[idx2];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx2];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p3[0], p3[1], p3[2]);
+
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p1[0], p1[1], p1[2]);
+
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx2];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p3[0], p3[1], p3[2]);
+
+        int idx3 = 0;
+        idx3 = tempFace[3];
+        glm::vec3 p4 = vertices[idx3];
+        if (normals.size() == vertices.size())
+        {
+            glm::vec3 n = normals[idx3];
+            glNormal3f(n[0], n[1], n[2]);
+        }
+        glVertex3f(p4[0], p4[1], p4[2]);
+    }
+    glEnd();
 }
 
 void Model::DrawSurface() {
