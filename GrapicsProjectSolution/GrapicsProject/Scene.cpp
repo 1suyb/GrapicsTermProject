@@ -41,7 +41,7 @@ void modelinit() {
     Car.SetCollider();
 
     Track = Model();
-    Track.TrackObj("Data/race-track/race-track.obj", Track.vertices, Track.faces2, Track.uvs2, Track.normals);
+    Track.LoadObj("Data/Track/Track.obj", Track.vertices, Track.faces, Track.uvs, Track.uvindices, Track.normals, Track.normalindices);
 }
 
 void render() {
@@ -68,7 +68,7 @@ void render() {
 
     //Track
     glPushMatrix();
-    Track.DrawTrack(Track.vertices, Track.normals, Track.faces2);
+    Track.DrawSurface();
     glPopMatrix();
 
 
