@@ -41,7 +41,7 @@ void modelinit() {
     Car.SetCollider();
 
     Track = Model();
-    Track.LoadObj("Data/Track/Track.obj", Track.vertices, Track.faces, Track.uvs, Track.uvindices, Track.normals, Track.normalindices);
+    Track.TrackObj("Data/Track/Track.obj", Track.vertices, Track.faces2, Track.uvs2, Track.normals);
 }
 
 void render() {
@@ -64,6 +64,13 @@ void render() {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, g_textureID[2]);  
     Car.DrawSurface();
+    glPopMatrix();
+
+    //Track
+    glPushMatrix();
+    Track.Translate();
+    Track.RotateAngle();
+    Track.DrawTrack();
     glPopMatrix();
 
     system("cls");
