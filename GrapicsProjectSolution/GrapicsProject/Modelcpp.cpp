@@ -94,8 +94,6 @@ bool Model::LoadObj(const char* path,
     }
 }
 
-
-
 bool Model::LoadPly(const char* path,
     std::vector < glm::vec3 >& out_vertices,
     std::vector < glm::ivec3 >& out_faces,

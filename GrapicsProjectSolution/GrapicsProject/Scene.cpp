@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "Skybox.h"
 #include <glaux.h>
 #include <windows.h>
 
@@ -13,15 +14,15 @@ GLfloat Car_mat_specular[] = { 0, 0, 0, 1 }; // 경면 반사
 Camera Cam;
 #pragma region �𵨼����
 Model Car;
-Model Bunny;
 Model Track;
-Box box;
 #pragma endregion
+
+float r = 1000.0f;
 
 
 void init() {
     loadTexture();
-    box.InitGL();
+
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glShadeModel(GL_SMOOTH);    //���� ���̵�
     glEnable(GL_DEPTH_TEST); // ���̹���
@@ -30,7 +31,7 @@ void init() {
     Speed = 0;
     modelinit();
     Cam.Init(glm::vec3(0.5, 1.5, 0));
-    //addBox(glm::vec3(-10, -10, -5), glm::vec3(10, 10, 20));
+    addBox(glm::vec3(-10, -10, -5), glm::vec3(10, 10, 20));
 
 }
 void modelinit() {
@@ -63,73 +64,91 @@ void render() {
     glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
     glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
     glEnable(GL_TEXTURE_2D);
-    /*glMaterialfv(GL_FRONT, GL_AMBIENT, Car_mat_amb);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, Car_mat_diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, Car_mat_specular);*/
     glBindTexture(GL_TEXTURE_2D, g_textureID[2]);  
     Car.DrawSurface();
+    glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
 
-    
-    /* If no explosion, draw cube */
-    if (box.fuel == 0) {
-        //glBindTexture(GL_TEXTURE_2D, g_textureID[1]);
-        glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
-        // 박스 작게하면 1인칭 때 안보여요
-        box.texturedCube(1);
-    }
+    //Track
+    glPushMatrix();
+    Track.DrawSurface();
+    glPopMatrix();
 
-    if (box.fuel > 0) {
-        glPushMatrix();
-        glBegin(GL_POINTS);
-        for (int i = 0; i < NUM_PARTICLES; i++) {
-            glColor3fv(box.particles[i].color);
-            glVertex3fv(box.particles[i].position);
-        }
-        glEnd();
-        glPopMatrix();
+    //Skybox
+    // Skybox의 앞면을 Rendering 한다.
+    //glPushMatrix();
+    glBindTexture(GL_TEXTURE_2D, tex[0]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(-r, -r / 2, -r);
+    glTexCoord2f(1, 0); glVertex3f(r, -r / 2, -r);
+    glTexCoord2f(1, 1); glVertex3f(r, r, -r);
+    glTexCoord2f(0, 1); glVertex3f(-r, r, -r);
+    glEnd();
 
-        glEnable(GL_LIGHTING);
-        glEnable(GL_LIGHT0);
-        glEnable(GL_DEPTH_TEST);
+    // Skybox의 뒷면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[1]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(r, -r / 2, r);
+    glTexCoord2f(1, 0); glVertex3f(-r, -r / 2, r);
+    glTexCoord2f(1, 1); glVertex3f(-r, r, r);
+    glTexCoord2f(0, 1); glVertex3f(r, r, r);
+    glEnd();
 
+    // Skybox의 오른쪽 면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[2]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(r, -r / 2, -r);
+    glTexCoord2f(1, 0); glVertex3f(r, -r / 2, r);
+    glTexCoord2f(1, 1); glVertex3f(r, r, r);
+    glTexCoord2f(0, 1); glVertex3f(r, r, -r);
+    glEnd();
 
-        for (int i = 0; i < NUM_DEBRIS; i++) {
-            glColor3fv(box.debris[i].color);
-            
-            glPushMatrix();
-            glTranslatef(box.debris[i].position[0],
-                box.debris[i].position[1],
-                box.debris[i].position[2]);
+    // Skybox의 왼쪽 면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[3]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(-r, -r / 2, r);
+    glTexCoord2f(1, 0); glVertex3f(-r, -r / 2, -r);
+    glTexCoord2f(1, 1); glVertex3f(-r, r, -r);
+    glTexCoord2f(0, 1); glVertex3f(-r, r, r);
+    glEnd();
 
-            glRotatef(box.debris[i].orientation[0], 1.0, 0.0, 0.0);
-            glRotatef(box.debris[i].orientation[1], 0.0, 1.0, 0.0);
-            glRotatef(box.debris[i].orientation[2], 0.0, 0.0, 1.0);
+    // Skybox의 윗면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[4]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(-r, r, -r);
+    glTexCoord2f(1, 0); glVertex3f(r, r, -r);
+    glTexCoord2f(1, 1); glVertex3f(r, r, r);
+    glTexCoord2f(0, 1); glVertex3f(-r, r, r);
+    glEnd();
 
-            glScalef(box.debris[i].scale[0], box.debris[i].scale[1], box.debris[i].scale[2]);
+    // Skybox의 아랫면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[5]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(-r, -r / 2, r);
+    glTexCoord2f(1, 0); glVertex3f(r, -r / 2, r);
+    glTexCoord2f(1, 1); glVertex3f(r, -r / 2, -r);
+    glTexCoord2f(0, 1); glVertex3f(-r, -r / 2, -r);
+    glEnd();
 
-            glBegin(GL_TRIANGLES);
-            glNormal3f(0.0, 0.0, 1.0);
-            glVertex3f(0.0, 0.5, 0.0);
-            glVertex3f(-0.25, 0.0, 0.0);
-            glVertex3f(0.25, 0.0, 0.0);
-            glEnd();
-            glPopMatrix();
-        }
-    }
+    // Skybox의 지표면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[6]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(-r, 0.1f, r);
+    glTexCoord2f(1, 0); glVertex3f(r, 0.1f, r);
+    glTexCoord2f(1, 1); glVertex3f(r, 0.1f, -r);
+    glTexCoord2f(0, 1); glVertex3f(-r, 0.1f, -r);
+    glEnd();
+    //glPopMatrix();
 
     system("cls");
     glutSwapBuffers();
 }
 
-void MyIdle(void) {
-    box.MyIdle();
-}
 
 void PerspectiveSetting() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60.0f, 1000.0f / 600.0f, 0.1f, 100.0f);
+    gluPerspective(60.0f, 1000.0f / 600.0f, 1.0f, 2000.0f);
 }
 
 void CameraSetting() {
@@ -148,7 +167,7 @@ void loadTexture() {
     //경로로 부터 이미지 파일 불러오기
     AUX_RGBImageRec* pBoxImage = auxDIBImageLoad("Data/woodBox.bmp");
     AUX_RGBImageRec* pBoosterImage = auxDIBImageLoad("Data/booster.bmp");
-    AUX_RGBImageRec* pCarImage = auxDIBImageLoad("Data/Porsche/skin03/0000.bmp");
+    AUX_RGBImageRec* pCarImage = auxDIBImageLoad("Data/Porsche/skin00/0000.bmp");
 
     if (pBoxImage != NULL && pBoosterImage != NULL && pCarImage != NULL) {
         //박스 장애물
@@ -211,4 +230,50 @@ void loadTexture() {
         free(pBoosterImage);
         free(pCarImage);
     }
+}
+
+AUX_RGBImageRec* LoadBMP(char* Filename) {  // Bitmap 이미지를 호출한다.
+    FILE* File = NULL;
+
+    if (!Filename) return NULL;
+    File = fopen(Filename, "r");
+    if (File) {
+        fclose(File);
+        return auxDIBImageLoad(Filename);
+    }
+
+    return NULL;
+}
+
+void LoadGLTextures() {  // Bitmap 이미지 7개를 호출하여 Texture 이미지로 변환한다.
+    AUX_RGBImageRec* texRec[7];
+    memset(texRec, 0, sizeof(void*) * 7);
+
+    if ((texRec[0] = LoadBMP("Data/skybox1_posz.bmp")) &&
+        (texRec[1] = LoadBMP("Data/skybox1_negz.bmp")) &&
+        (texRec[2] = LoadBMP("Data/skybox1_posx.bmp")) &&
+        (texRec[3] = LoadBMP("Data/skybox1_negx.bmp")) &&
+        (texRec[4] = LoadBMP("Data/skybox1_posy.bmp")) &&
+        (texRec[5] = LoadBMP("Data/skybox1_negy.bmp")) &&
+        (texRec[6] = LoadBMP("Data/Lawn2.bmp"))) {
+
+        for (int i = 0; i < 7; i++) {
+            glGenTextures(1, &tex[i]);
+            glBindTexture(GL_TEXTURE_2D, tex[i]);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexImage2D(GL_TEXTURE_2D, 0, 3, texRec[i]->sizeX, texRec[i]->sizeY, 0,
+                GL_RGB, GL_UNSIGNED_BYTE, texRec[i]->data);
+        }
+    }
+
+    for (int i = 0; i < 7; i++) {
+        if (texRec[i]) {
+            if (texRec[i]->data) free(texRec[i]->data);
+            free(texRec[i]);
+        }
+    }
+
+    glEnable(GL_TEXTURE_2D);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }

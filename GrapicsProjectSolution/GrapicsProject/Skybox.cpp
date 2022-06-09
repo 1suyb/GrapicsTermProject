@@ -1,9 +1,8 @@
-/*#include "Includes.h"
+/*
+#include "Includes.h"
+#include "Skybox.h"
 #include "Scene.h"
 #include <glaux.h>
-
-
-GLuint tex[7];   // Texture Mapping을 하기 위한 Texture 이미지의 개수를 위한 배열 변수
 
 AUX_RGBImageRec* LoadBMP(char* Filename) {  // Bitmap 이미지를 호출한다.
     FILE* File = NULL;
@@ -49,4 +48,85 @@ void LoadGLTextures() {  // Bitmap 이미지 7개를 호출하여 Texture 이미지로 변환한
 
     glEnable(GL_TEXTURE_2D);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+}
+
+
+void Sky_Display() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    float r = 1000.0f;
+
+    // Skybox의 앞면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[0]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(-r, -r / 2, -r);
+    glTexCoord2f(1, 0); glVertex3f(r, -r / 2, -r);
+    glTexCoord2f(1, 1); glVertex3f(r, r, -r);
+    glTexCoord2f(0, 1); glVertex3f(-r, r, -r);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glEnd();
+
+    // Skybox의 뒷면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[1]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(r, -r / 2, r);
+    glTexCoord2f(1, 0); glVertex3f(-r, -r / 2, r);
+    glTexCoord2f(1, 1); glVertex3f(-r, r, r);
+    glTexCoord2f(0, 1); glVertex3f(r, r, r);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glEnd();
+
+    // Skybox의 오른쪽 면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[2]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(r, -r / 2, -r);
+    glTexCoord2f(1, 0); glVertex3f(r, -r / 2, r);
+    glTexCoord2f(1, 1); glVertex3f(r, r, r);
+    glTexCoord2f(0, 1); glVertex3f(r, r, -r);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glEnd();
+
+    // Skybox의 왼쪽 면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[3]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(-r, -r / 2, r);
+    glTexCoord2f(1, 0); glVertex3f(-r, -r / 2, -r);
+    glTexCoord2f(1, 1); glVertex3f(-r, r, -r);
+    glTexCoord2f(0, 1); glVertex3f(-r, r, r);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glEnd();
+
+    // Skybox의 윗면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[4]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(-r, r, -r);
+    glTexCoord2f(1, 0); glVertex3f(r, r, -r);
+    glTexCoord2f(1, 1); glVertex3f(r, r, r);
+    glTexCoord2f(0, 1); glVertex3f(-r, r, r);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glEnd();
+
+    // Skybox의 아랫면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[5]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(-r, -r / 2, r);
+    glTexCoord2f(1, 0); glVertex3f(r, -r / 2, r);
+    glTexCoord2f(1, 1); glVertex3f(r, -r / 2, -r);
+    glTexCoord2f(0, 1); glVertex3f(-r, -r / 2, -r);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glEnd();
+
+    // Skybox의 지표면을 Rendering 한다.
+    glBindTexture(GL_TEXTURE_2D, tex[6]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex3f(-r, 0.1f, r);
+    glTexCoord2f(1, 0); glVertex3f(r, 0.1f, r);
+    glTexCoord2f(1, 1); glVertex3f(r, 0.1f, -r);
+    glTexCoord2f(0, 1); glVertex3f(-r, 0.1f, -r);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glEnd();
+
+    glutSwapBuffers();
 }*/
