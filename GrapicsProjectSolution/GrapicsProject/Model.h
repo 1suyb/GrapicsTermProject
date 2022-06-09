@@ -6,7 +6,8 @@
 #define __MODEL_INCLUDED__
 
 #include "Includes.h"
-
+#define NUM_PARTICLES    10000          /* Number of particles  */
+#define NUM_DEBRIS       1000           /* Number of debris     */
 
 class Model {
 public:
@@ -70,6 +71,7 @@ public:
 	// �浹�� �൹
 	void OnEnterCollider();
 
+
 };
 
 class Car : Model {
@@ -79,18 +81,53 @@ public :
 	void OnEnterCollider();
 };
 
-struct Box {
-	glm::vec3 p; //position
-	glm::vec3 v; //velocity
-	glm::vec3 force; //force
-	float r; //radius
-	float m; //mass
+
+
+class Box : Model {
+	Box() :Model() {};
+
+	struct box {
+		glm::vec3 p; //position
+		glm::vec3 v; //velocity
+		glm::vec3 force; //force
+		float r; //radius
+		float m; //mass
+
+	};
+
+	struct particleData {
+		float   position[3];
+		float   speed[3];
+		float   color[3];
+	};
+	typedef struct particleData    particleData;
+
+	struct debrisData {
+		float   position[3];
+		float   speed[3];
+		float   orientation[3];        /* Rotation angles around x, y, and z axes */
+		float   orientationSpeed[3];
+		float   color[3];
+		float   scale[3];
+	};
+	typedef struct debrisData    debrisData;
+
+	particleData	particles[NUM_PARTICLES];
+	debrisData		debris[NUM_DEBRIS];
+	int             fuel = 0;                /* "fuel" of the explosion */
+	int				wantNormalize = 0;   /* Speed vector normalization flag */
+
+	void newSpeed(float dest[3]);
+	void newExplosion(void); //폭발시 파티클 및 파편 생성
+	void MyIdle(void); //파티클 및 파편 업데이트
+	void addBox(glm::vec3 leftBottom, glm::vec3 rightTop);
+	void Contact(float stiff);
+	void texturedCube(float size);
 
 };
 
-void addBox(glm::vec3 leftBottom, glm::vec3 rightTop);
-void Contact(float stiff);
-void texturedCube(float size);
+
+
 void loadTexture();
 
 extern GLuint g_textureID[4];

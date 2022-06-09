@@ -16,6 +16,9 @@ void Keyboard(unsigned char key, int x, int y) {
 	
 	switch(key)
 	{
+	case GLUT_RIGHT_BUTTON:
+		
+		break;
 	case 'a':
 	case 'A' :
 		Car.Rotate(angle, r);

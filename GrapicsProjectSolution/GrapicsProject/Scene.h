@@ -12,6 +12,7 @@
 
 extern Camera Cam;
 extern Model Car;
+extern Model Box;
 
 
 void init();					// √ ±‚»≠

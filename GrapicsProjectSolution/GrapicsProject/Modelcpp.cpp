@@ -287,12 +287,11 @@ void Model::OnEnterCollider() {
 void Car::OnEnterCollider() {
 }
 
-void addBox(glm::vec3 leftBottom, glm::vec3 rightTop)
+void Box::addBox(glm::vec3 leftBottom, glm::vec3 rightTop)
 {
     int random = 0;
     int randRange = 100;
     Box newBox;
-
 
     glm::vec3 _pos(0, 0, 0);
     glm::vec3 _vel(0, 0, 0);
@@ -318,7 +317,7 @@ void addBox(glm::vec3 leftBottom, glm::vec3 rightTop)
 }
 
 // 박스 겹치면 밀어내게
-void Contact(float stiff) {
+void Box::Contact(float stiff) {
     std::vector<Box> boxes;
     for (int i = 0; i < boxes.size(); i++)
     {
@@ -337,7 +336,7 @@ void Contact(float stiff) {
     }
 }
 
-void texturedCube(float size) {
+void Box::texturedCube(float size) {
     //glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
     //glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
     //glEnable(GL_TEXTURE_GEN_S);
@@ -384,4 +383,104 @@ void texturedCube(float size) {
 
     glEnd();
 
+}
+
+void Box::newSpeed(float dest[3]) {
+    float x, y, z, len;
+
+    x = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
+    y = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
+    z = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
+
+    if (wantNormalize) {
+        len = sqrt(x * x + y * y + z * z);
+
+        if (len) {
+            x = x / len;
+            y = y / len;
+            z = z / len;
+        }
+    }
+
+    dest[0] = x;
+    dest[1] = y;
+    dest[2] = z;
+}
+
+//폭발시 파티클 및 파편 생성
+void Box::newExplosion(void) {
+    for (int i = 0; i < NUM_PARTICLES; i++) {
+        particles[i].position[0] = 0.0;
+        particles[i].position[1] = 0.0;
+        particles[i].position[2] = 0.0;
+
+        particles[i].color[0] = 1.0;
+        particles[i].color[1] = 1.0;
+        particles[i].color[2] = 0.5;
+
+        newSpeed(particles[i].speed);
+    }
+
+    for (int i = 0; i < NUM_DEBRIS; i++) {
+        debris[i].position[0] = 0.0;
+        debris[i].position[1] = 0.0;
+        debris[i].position[2] = 0.0;
+
+        debris[i].orientation[0] = 0.0;
+        debris[i].orientation[1] = 0.0;
+        debris[i].orientation[2] = 0.0;
+
+        debris[i].color[0] = 0.7;
+        debris[i].color[1] = 0.7;
+        debris[i].color[2] = 0.7;
+
+        debris[i].scale[0] = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
+        debris[i].scale[1] = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
+        debris[i].scale[2] = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
+
+        newSpeed(debris[i].speed);
+        newSpeed(debris[i].orientationSpeed);
+    }
+
+    fuel = 1000;
+}
+
+//파티클 및 파편 업데이트
+void Box::MyIdle(void) {
+    if (fuel > 0) {
+        for (int i = 0; i < NUM_PARTICLES; i++) {
+            particles[i].position[0] += particles[i].speed[0] * 0.2;
+            particles[i].position[1] += particles[i].speed[1] * 0.2;
+            particles[i].position[2] += particles[i].speed[2] * 0.2;
+
+            particles[i].color[0] -= 1.0 / 500.0;
+            if (particles[i].color[0] < 0.0) {
+                particles[i].color[0] = 0.0;
+            }
+
+            particles[i].color[1] -= 1.0 / 100.0;
+            if (particles[i].color[1] < 0.0) {
+                particles[i].color[1] = 0.0;
+            }
+
+            particles[i].color[2] -= 1.0 / 50.0;
+            if (particles[i].color[2] < 0.0) {
+                particles[i].color[2] = 0.0;
+            }
+        }
+
+        for (int i = 0; i < NUM_DEBRIS; i++) {
+            debris[i].position[0] += debris[i].speed[0] * 0.1;
+            debris[i].position[1] += debris[i].speed[1] * 0.1;
+            debris[i].position[2] += debris[i].speed[2] * 0.1;
+
+            debris[i].orientation[0] += debris[i].orientationSpeed[0] * 10;
+            debris[i].orientation[1] += debris[i].orientationSpeed[1] * 10;
+            debris[i].orientation[2] += debris[i].orientationSpeed[2] * 10;
+        }
+
+        --fuel;
+    }
+
+    glutPostRedisplay();
 }

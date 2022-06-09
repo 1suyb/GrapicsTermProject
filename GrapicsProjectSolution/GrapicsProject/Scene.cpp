@@ -15,6 +15,7 @@ Camera Cam;
 Model Car;
 Model Bunny;
 Model Track;
+Model Box;
 #pragma endregion
 
 
