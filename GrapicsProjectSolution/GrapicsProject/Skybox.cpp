@@ -1,9 +1,5 @@
-/*
-#include "Includes.h"
 #include "Skybox.h"
-#include "Scene.h"
-#include <glaux.h>
-
+float r = 1000.0f;
 AUX_RGBImageRec* LoadBMP(char* Filename) {  // Bitmap 이미지를 호출한다.
     FILE* File = NULL;
 
@@ -50,15 +46,8 @@ void LoadGLTextures() {  // Bitmap 이미지 7개를 호출하여 Texture 이미지로 변환한
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
 
-
-void Sky_Display() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    float r = 1000.0f;
-
-    // Skybox의 앞면을 Rendering 한다.
+void DrawSkyBox() {
+    //glPushMatrix();
     glBindTexture(GL_TEXTURE_2D, tex[0]);
     glBegin(GL_QUADS);
     glTexCoord2f(0, 0); glVertex3f(-r, -r / 2, -r);
@@ -121,12 +110,11 @@ void Sky_Display() {
     // Skybox의 지표면을 Rendering 한다.
     glBindTexture(GL_TEXTURE_2D, tex[6]);
     glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f(-r, 0.1f, r);
-    glTexCoord2f(1, 0); glVertex3f(r, 0.1f, r);
-    glTexCoord2f(1, 1); glVertex3f(r, 0.1f, -r);
-    glTexCoord2f(0, 1); glVertex3f(-r, 0.1f, -r);
+    glTexCoord2f(0, 0); glVertex3f(-r, -1.f, r);
+    glTexCoord2f(1, 0); glVertex3f(r, -1.f, r);
+    glTexCoord2f(1, 1); glVertex3f(r, -1.f, -r);
+    glTexCoord2f(0, 1); glVertex3f(-r, -1.f, -r);
     glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
-
-    glutSwapBuffers();
-}*/
+    //glPopMatrix();
+}

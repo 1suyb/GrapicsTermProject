@@ -19,8 +19,8 @@ void Keyboard(unsigned char key, int x, int y) {
 	{
 	case 'e':
 	case 'E':
-		//newExplosion();
-		box.newExplosion();		
+		////newExplosion();
+		Boxes[0].newExplosion();
 		break;
 	case 'a':
 	case 'A' :
@@ -54,7 +54,7 @@ void Timer(int value) {
 	CarMoveEvent();
 	glutPostRedisplay();
 	glutTimerFunc(50, Timer, 1);
-
+	// x +- 20 , z+- 60
 }
 void UpKeyboard(unsigned char key, int x, int y) {
 	if (key == 'w' || key == 'W') {

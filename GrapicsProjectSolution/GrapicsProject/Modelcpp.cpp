@@ -2,7 +2,7 @@
 #include<math.h>
 
 
-GLuint g_textureID[4];
+
 //std::vector<Box> boxes;
 
 Model::Model() {
@@ -171,46 +171,13 @@ void Model::DrawSurface() {
     glEnd();
 }
 
-//void Model::DrawSurface(std::vector < glm::vec3 >& vertices,
-//    std::vector < glm::vec3 >& normals,
-//    std::vector < glm::vec2 >& uvs,
-//    std::vector < glm::ivec3 >& uvindicies,
-//    std::vector < glm::ivec3 >& normalindices,
-//    std::vector < glm::ivec3 >& faces)
-//{
-//    glBegin(GL_TRIANGLES);
-//    for (int i = 0; i < faces.size(); i++) {
-//        for (int j = 0; j < 2; j++) {
-//            glm::vec2 vt = uvs[uvindices[i][j]];
-//            glTexCoord2f(vt[0], vt[1]);
-//        }
-//        for (int j = 0; j < 3; j++) {
-//
-//            glm::vec3 n = normals[normalindices[i][j]];
-//            glNormal3f(n[0], n[1], n[2]);
-//        }
-//        for (int j = 0; j < 3; j++) {
-//            glm::vec3 p = vertices[faces[i][j]];
-//            /*p.x = vertices[faces[i][j]].x;
-//            p.y = vertices[faces[i][j]].y;
-//            p.z = vertices[faces[i][j]].z;*/
-//            glVertex3f(p[0], p[1], p[2]);
-//        }
-//    }
-//
-//    glEnd();
-//}
-
-// ���� Ʈ������ ����� �����մϴ�.
 void Model::Translate() {
     glTranslatef(this->position.x, this->position.y, this->position.z);
 }
-// ���� ȸ�� ����� �����մϴ�.
 void Model::RotateAngle() {
     printf("Car Angle : %f\n", this->angle);
     glRotatef(this->angle, this->axis.x, this->axis.y, this->axis.z);
 }
-// ���� Ʈ������ ����� �����մϴ�.
 void Model::SetPosition(glm::vec3 translate) {
     this->position = translate;
     glm::mat4 rot = glm::rotate(glm::mat4(1), glm::radians(angle), axis);
@@ -218,12 +185,10 @@ void Model::SetPosition(glm::vec3 translate) {
     atdir = rot * glm::normalize(glm::vec4(atdir, 0));
     this->front = atdir + this->position;
 }
-// ���� ȸ�� ����� �����մϴ�.
 void Model::SetRotation(GLfloat angle, glm::vec3 axis) {
     this->angle = angle;
     this->axis = axis;
 }
-// ���� �̵�
 void Model::Move(glm::vec3 move) {
     this->position += move;
     this->front += move;
@@ -231,7 +196,7 @@ void Model::Move(glm::vec3 move) {
     printf("Car at : %f %f %f \n", this->front.x, this->front.y, this->front.z);
 }
 void Model::Rotate(GLfloat angle, glm::vec3 axis) {
-    this->angle += angle;
+    this->angle = (GLfloat)((int)(this->angle + angle)%360);
     this->axis = axis;
     glm::mat4 rot = glm::rotate(glm::mat4(1), glm::radians(angle), axis);
     glm::vec3 atdir = this->front - this->position;
@@ -246,11 +211,6 @@ void Model::Scale(glm::vec3 scale) {
         vertices[i].x *= scale.x;
         vertices[i].y *= scale.y;
         vertices[i].z *= scale.z;
-        /*uvs[i].x *= scale.x;
-        uvs[i].y *= scale.y;
-        normals[i].x *= scale.x;
-        normals[i].y *= scale.y;
-        normals[i].z *= scale.z;*/
     }
     SetCollider();
 }
@@ -334,13 +294,7 @@ void Car::OnEnterCollider() {
 //    }
 //}
 
-void Box::texturedCube(float size) {
-    //glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
-    //glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
-    //glEnable(GL_TEXTURE_GEN_S);
-    //glEnable(GL_TEXTURE_GEN_T);
-    //glutSolidCube(1);
-
+void Box::DrawCube(float size) {
     glBegin(GL_QUADS);
 
     //앞면;
@@ -407,6 +361,7 @@ void Box::newSpeed(float dest[3]) {
 
 //폭발시 파티클 및 파편 생성
 void Box::newExplosion(void) {
+    printf("Boom");
     for (int i = 0; i < NUM_PARTICLES; i++) {
         particles[i].position[0] = 0.0;
         particles[i].position[1] = 0.0;
@@ -444,7 +399,7 @@ void Box::newExplosion(void) {
 }
 
 //파티클 및 파편 업데이트
-void Box::MyIdle(void) {
+void Box::ParticleUpdate(void) {
     if (fuel > 0) {
         for (int i = 0; i < NUM_PARTICLES; i++) {
             particles[i].position[0] += particles[i].speed[0] * 0.2;
@@ -479,8 +434,6 @@ void Box::MyIdle(void) {
 
         --fuel;
     }
-
-    glutPostRedisplay();
 }
 
 void Box::InitGL(void) {

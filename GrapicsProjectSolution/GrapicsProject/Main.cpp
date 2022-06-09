@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 	glutCreateWindow("CarRacingGame");
 
 	init();
-	glutIdleFunc(MyIdle); //파티클 및 파편 업데이트
+	//glutIdleFunc(MyIdle); //파티클 및 파편 업데이트
 	glutDisplayFunc(render);	
 	glutKeyboardFunc(Keyboard);
 	glutTimerFunc(30, Timer, 1);

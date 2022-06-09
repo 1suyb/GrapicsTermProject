@@ -9,10 +9,11 @@
 #include "Model.h"
 #include "Camera.h"
 #include "Event.h"
+#include "Skybox.h"
 
 extern Camera Cam;
 extern Model Car;
-extern Box box;
+extern Box* Boxes;
 
 
 void init();					// √ ±‚»≠

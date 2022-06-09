@@ -17,8 +17,6 @@ public:
 	std::vector < glm::ivec3 > uvindices;
 	std::vector < glm::vec3 > normals;
 	std::vector < glm::ivec3 > normalindices; 
-	std::vector < glm::vec3> uvs2;
-	std::vector < glm::ivec4 > faces2;
 
 	glm::vec3 position;
 	GLfloat angle;
@@ -47,8 +45,6 @@ public:
 		std::vector < glm::vec3 >& out_normals);	// ply���� import
 
 	void Model::DrawSurface();
-	
-	void Texturing();
 
 	void Translate();
 	// ���� ȸ�� ����� �����մϴ�.
@@ -86,8 +82,10 @@ public :
 
 class Box : Model {
 public:
+
+	glm::vec3 position;
 	struct boxData {
-		glm::vec3 p; //position
+		
 		glm::vec3 v; //velocity
 		glm::vec3 force; //force
 		float r; //radius
@@ -117,16 +115,12 @@ public:
 	int             fuel = 0;                /* "fuel" of the explosion */
 	int				wantNormalize = 0;   /* Speed vector normalization flag */
 	
-	void texturedCube(float size);
+	void DrawCube(float size);
 	void newSpeed(float dest[3]);
 	void newExplosion(void); //폭발시 파티클 및 파편 생성
-	void MyIdle(void); //파티클 및 파편 업데이트
+	void ParticleUpdate(void); //파티클 및 파편 업데이트
 	void InitGL();
 };
-
-
-void addBox(glm::vec3 leftBottom, glm::vec3 rightTop);
-void Contact(float stiff);
 void loadTexture();
 
 

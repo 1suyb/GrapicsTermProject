@@ -1,6 +1,4 @@
 #include "Scene.h"
-#include "Skybox.h"
-#include <glaux.h>
 #include <windows.h>
 
 GLfloat light_amb[] = { 0.5, 0.5, 0.5, 1.0 };
@@ -11,13 +9,18 @@ GLfloat Car_mat_amb[] = { 0.2, 0 , 0, 1.0 }; // /주변 반사
 GLfloat Car_mat_diffuse[] = { 1, 0.5, 0.5, 1.0 }; // 확산 반사 
 GLfloat Car_mat_specular[] = { 0, 0, 0, 1 }; // 경면 반사
 
+
+GLuint g_textureID[4];
+
 Camera Cam;
 #pragma region �𵨼����
 Model Car;
 Model Track;
+Box* Boxes;
 #pragma endregion
 
-float r = 1000.0f;
+
+
 
 
 void init() {
@@ -32,7 +35,6 @@ void init() {
     Speed = 0;
     modelinit();
     Cam.Init(glm::vec3(0.5, 1.5, 0));
-    addBox(glm::vec3(-10, -10, -5), glm::vec3(10, 10, 20));
 
 }
 void modelinit() {
@@ -40,11 +42,14 @@ void modelinit() {
     Car.SetPosition(glm::vec3(0, 0, 0));
     Car.LoadObj("Data/Porsche/Porsche_911_GT2.obj", Car.vertices, Car.faces, Car.uvs, Car.uvindices, Car.normals, Car.normalindices);
     Car.Scale(glm::vec3(0.1, 0.1, 0.1)); 
-    Car.SetRotation(180.f, glm::vec3(0, 1, 0));
+    Car.SetRotation(-90.f, glm::vec3(0, 1, 0));
     Car.SetCollider();
 
     Track = Model();
     Track.LoadObj("Data/Track/Track.obj", Track.vertices, Track.faces, Track.uvs, Track.uvindices, Track.normals, Track.normalindices);
+    Track.SetPosition(glm::vec3(0, -2.f, 0));
+
+    Boxes = new Box[10];
 }
 
 void render() {
@@ -72,82 +77,17 @@ void render() {
 
     //Track
     glPushMatrix();
+    glColor3f(0.f, 0.f, 0.f);
+    Track.Translate();
     Track.DrawSurface();
+    glColor3f(1,1,1);
     glPopMatrix();
 
-    //Skybox
-    // Skybox의 앞면을 Rendering 한다.
-    //glPushMatrix();
-    glBindTexture(GL_TEXTURE_2D, tex[0]);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f(-r, -r / 2, -r);
-    glTexCoord2f(1, 0); glVertex3f(r, -r / 2, -r);
-    glTexCoord2f(1, 1); glVertex3f(r, r, -r);
-    glTexCoord2f(0, 1); glVertex3f(-r, r, -r);
+    DrawSkyBox();
+    
+    glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
+    Boxes[0].DrawCube(1);
     glBindTexture(GL_TEXTURE_2D, 0);
-    glEnd();
-
-    // Skybox의 뒷면을 Rendering 한다.
-    glBindTexture(GL_TEXTURE_2D, tex[1]);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f(r, -r / 2, r);
-    glTexCoord2f(1, 0); glVertex3f(-r, -r / 2, r);
-    glTexCoord2f(1, 1); glVertex3f(-r, r, r);
-    glTexCoord2f(0, 1); glVertex3f(r, r, r);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glEnd();
-
-    // Skybox의 오른쪽 면을 Rendering 한다.
-    glBindTexture(GL_TEXTURE_2D, tex[2]);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f(r, -r / 2, -r);
-    glTexCoord2f(1, 0); glVertex3f(r, -r / 2, r);
-    glTexCoord2f(1, 1); glVertex3f(r, r, r);
-    glTexCoord2f(0, 1); glVertex3f(r, r, -r);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glEnd();
-
-    // Skybox의 왼쪽 면을 Rendering 한다.
-    glBindTexture(GL_TEXTURE_2D, tex[3]);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f(-r, -r / 2, r);
-    glTexCoord2f(1, 0); glVertex3f(-r, -r / 2, -r);
-    glTexCoord2f(1, 1); glVertex3f(-r, r, -r);
-    glTexCoord2f(0, 1); glVertex3f(-r, r, r);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glEnd();
-
-    // Skybox의 윗면을 Rendering 한다.
-    glBindTexture(GL_TEXTURE_2D, tex[4]);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f(-r, r, -r);
-    glTexCoord2f(1, 0); glVertex3f(r, r, -r);
-    glTexCoord2f(1, 1); glVertex3f(r, r, r);
-    glTexCoord2f(0, 1); glVertex3f(-r, r, r);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glEnd();
-
-    // Skybox의 아랫면을 Rendering 한다.
-    glBindTexture(GL_TEXTURE_2D, tex[5]);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f(-r, -r / 2, r);
-    glTexCoord2f(1, 0); glVertex3f(r, -r / 2, r);
-    glTexCoord2f(1, 1); glVertex3f(r, -r / 2, -r);
-    glTexCoord2f(0, 1); glVertex3f(-r, -r / 2, -r);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glEnd();
-
-    // Skybox의 지표면을 Rendering 한다.
-    glBindTexture(GL_TEXTURE_2D, tex[6]);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f(-r, 0.1f, r);
-    glTexCoord2f(1, 0); glVertex3f(r, 0.1f, r);
-    glTexCoord2f(1, 1); glVertex3f(r, 0.1f, -r);
-    glTexCoord2f(0, 1); glVertex3f(-r, 0.1f, -r);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glEnd();
-    //glPopMatrix();
-
     system("cls");
     glutSwapBuffers();
 }
@@ -238,50 +178,4 @@ void loadTexture() {
         free(pBoosterImage);
         free(pCarImage);
     }
-}
-
-AUX_RGBImageRec* LoadBMP(char* Filename) {  // Bitmap 이미지를 호출한다.
-    FILE* File = NULL;
-
-    if (!Filename) return NULL;
-    File = fopen(Filename, "r");
-    if (File) {
-        fclose(File);
-        return auxDIBImageLoad(Filename);
-    }
-
-    return NULL;
-}
-
-void LoadGLTextures() {  // Bitmap 이미지 7개를 호출하여 Texture 이미지로 변환한다.
-    AUX_RGBImageRec* texRec[7];
-    memset(texRec, 0, sizeof(void*) * 7);
-
-    if ((texRec[0] = LoadBMP("Data/skybox1_posz.bmp")) &&
-        (texRec[1] = LoadBMP("Data/skybox1_negz.bmp")) &&
-        (texRec[2] = LoadBMP("Data/skybox1_posx.bmp")) &&
-        (texRec[3] = LoadBMP("Data/skybox1_negx.bmp")) &&
-        (texRec[4] = LoadBMP("Data/skybox1_posy.bmp")) &&
-        (texRec[5] = LoadBMP("Data/skybox1_negy.bmp")) &&
-        (texRec[6] = LoadBMP("Data/Lawn2.bmp"))) {
-
-        for (int i = 0; i < 7; i++) {
-            glGenTextures(1, &tex[i]);
-            glBindTexture(GL_TEXTURE_2D, tex[i]);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexImage2D(GL_TEXTURE_2D, 0, 3, texRec[i]->sizeX, texRec[i]->sizeY, 0,
-                GL_RGB, GL_UNSIGNED_BYTE, texRec[i]->data);
-        }
-    }
-
-    for (int i = 0; i < 7; i++) {
-        if (texRec[i]) {
-            if (texRec[i]->data) free(texRec[i]->data);
-            free(texRec[i]);
-        }
-    }
-
-    glEnable(GL_TEXTURE_2D);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
