@@ -207,7 +207,7 @@ void Model:: DrawTrack(std::vector < glm::vec3 >& vectices,
     std::vector < glm::vec3 >& normals,
     std::vector < glm::ivec4 >& faces)
 {
-    glBegin(GL_LINES);
+    glBegin(GL_TRIANGLES);
     for (int i = 0; i < faces.size(); i++) {
         glm::ivec4 tempFace = faces[i];
 
