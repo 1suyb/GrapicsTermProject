@@ -22,6 +22,7 @@ float r = 1000.0f;
 
 void init() {
     loadTexture();
+    LoadGLTextures();
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glShadeModel(GL_SMOOTH);    //���� ���̵�
@@ -83,6 +84,7 @@ void render() {
     glTexCoord2f(1, 0); glVertex3f(r, -r / 2, -r);
     glTexCoord2f(1, 1); glVertex3f(r, r, -r);
     glTexCoord2f(0, 1); glVertex3f(-r, r, -r);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
 
     // Skybox의 뒷면을 Rendering 한다.
@@ -92,6 +94,7 @@ void render() {
     glTexCoord2f(1, 0); glVertex3f(-r, -r / 2, r);
     glTexCoord2f(1, 1); glVertex3f(-r, r, r);
     glTexCoord2f(0, 1); glVertex3f(r, r, r);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
 
     // Skybox의 오른쪽 면을 Rendering 한다.
@@ -101,6 +104,7 @@ void render() {
     glTexCoord2f(1, 0); glVertex3f(r, -r / 2, r);
     glTexCoord2f(1, 1); glVertex3f(r, r, r);
     glTexCoord2f(0, 1); glVertex3f(r, r, -r);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
 
     // Skybox의 왼쪽 면을 Rendering 한다.
@@ -110,6 +114,7 @@ void render() {
     glTexCoord2f(1, 0); glVertex3f(-r, -r / 2, -r);
     glTexCoord2f(1, 1); glVertex3f(-r, r, -r);
     glTexCoord2f(0, 1); glVertex3f(-r, r, r);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
 
     // Skybox의 윗면을 Rendering 한다.
@@ -119,6 +124,7 @@ void render() {
     glTexCoord2f(1, 0); glVertex3f(r, r, -r);
     glTexCoord2f(1, 1); glVertex3f(r, r, r);
     glTexCoord2f(0, 1); glVertex3f(-r, r, r);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
 
     // Skybox의 아랫면을 Rendering 한다.
@@ -128,6 +134,7 @@ void render() {
     glTexCoord2f(1, 0); glVertex3f(r, -r / 2, r);
     glTexCoord2f(1, 1); glVertex3f(r, -r / 2, -r);
     glTexCoord2f(0, 1); glVertex3f(-r, -r / 2, -r);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
 
     // Skybox의 지표면을 Rendering 한다.
@@ -137,6 +144,7 @@ void render() {
     glTexCoord2f(1, 0); glVertex3f(r, 0.1f, r);
     glTexCoord2f(1, 1); glVertex3f(r, 0.1f, -r);
     glTexCoord2f(0, 1); glVertex3f(-r, 0.1f, -r);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
     //glPopMatrix();
 
