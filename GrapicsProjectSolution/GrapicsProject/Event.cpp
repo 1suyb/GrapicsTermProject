@@ -29,7 +29,6 @@ void Keyboard(unsigned char key, int x, int y) {
 	case'F' :
 		Cam.is_CarView = !Cam.is_CarView;
 		break;
-
 	default:
 		
 		break;
@@ -48,7 +47,7 @@ void Reshape(int w, int h) {
 void Timer(int value) {
 	CarMoveEvent();
 	glutPostRedisplay();
-	glutTimerFunc(30, Timer, 1);
+	glutTimerFunc(50, Timer, 1);
 
 }
 void UpKeyboard(unsigned char key, int x, int y) {
