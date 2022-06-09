@@ -15,13 +15,13 @@ Camera Cam;
 Model Car;
 Model Bunny;
 Model Track;
-Model Box;
+Box box;
 #pragma endregion
 
 
 void init() {
     loadTexture();
-
+    box.InitGL();
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glShadeModel(GL_SMOOTH);    //���� ���̵�
     glEnable(GL_DEPTH_TEST); // ���̹���
@@ -67,13 +67,61 @@ void render() {
     Car.DrawSurface();
     glPopMatrix();
 
-    glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
-    Box.texturedCube(0.01);
+    
+    /* If no explosion, draw cube */
+    if (box.fuel == 0) {
+        //glBindTexture(GL_TEXTURE_2D, g_textureID[1]);
+        glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
+        // 박스 작게하면 1인칭 때 안보여요
+        box.texturedCube(1);
+    }
+
+    if (box.fuel > 0) {
+        glPushMatrix();
+        glBegin(GL_POINTS);
+        for (int i = 0; i < NUM_PARTICLES; i++) {
+            glColor3fv(box.particles[i].color);
+            glVertex3fv(box.particles[i].position);
+        }
+        glEnd();
+        glPopMatrix();
+
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_DEPTH_TEST);
+
+
+        for (int i = 0; i < NUM_DEBRIS; i++) {
+            glColor3fv(box.debris[i].color);
+
+            glPushMatrix();
+            glTranslatef(box.debris[i].position[0],
+                box.debris[i].position[1],
+                box.debris[i].position[2]);
+
+            glRotatef(box.debris[i].orientation[0], 1.0, 0.0, 0.0);
+            glRotatef(box.debris[i].orientation[1], 0.0, 1.0, 0.0);
+            glRotatef(box.debris[i].orientation[2], 0.0, 0.0, 1.0);
+
+            glScalef(box.debris[i].scale[0], box.debris[i].scale[1], box.debris[i].scale[2]);
+
+            glBegin(GL_TRIANGLES);
+            glNormal3f(0.0, 0.0, 1.0);
+            glVertex3f(0.0, 0.5, 0.0);
+            glVertex3f(-0.25, 0.0, 0.0);
+            glVertex3f(0.25, 0.0, 0.0);
+            glEnd();
+            glPopMatrix();
+        }
+    }
 
     system("cls");
     glutSwapBuffers();
 }
 
+void MyIdle(void) {
+    box.MyIdle();
+}
 
 void PerspectiveSetting() {
     glMatrixMode(GL_PROJECTION);

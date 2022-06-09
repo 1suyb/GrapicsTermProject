@@ -71,8 +71,6 @@ public:
 	// �浹�� �൹
 	void OnEnterCollider();
 
-	void texturedCube(float size);
-	
 	
 };
 
@@ -86,9 +84,8 @@ public :
 
 
 class Box : Model {
-	Box() :Model() {};
-
-	struct box {
+public:
+	struct boxData {
 		glm::vec3 p; //position
 		glm::vec3 v; //velocity
 		glm::vec3 force; //force
@@ -118,17 +115,19 @@ class Box : Model {
 	debrisData		debris[NUM_DEBRIS];
 	int             fuel = 0;                /* "fuel" of the explosion */
 	int				wantNormalize = 0;   /* Speed vector normalization flag */
-
+	
+	void texturedCube(float size);
 	void newSpeed(float dest[3]);
 	void newExplosion(void); //폭발시 파티클 및 파편 생성
 	void MyIdle(void); //파티클 및 파편 업데이트
-
+	void InitGL();
 };
 
 
 void addBox(glm::vec3 leftBottom, glm::vec3 rightTop);
 void Contact(float stiff);
 void loadTexture();
+
 
 extern GLuint g_textureID[4];
 //extern std::vector<Box> boxes;

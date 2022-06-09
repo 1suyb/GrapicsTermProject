@@ -9,6 +9,7 @@ bool InCarView;
 static bool Accelerate = false;
 static bool Decelerate = false;
 
+
 void Keyboard(unsigned char key, int x, int y) {
 
 	GLfloat angle = 10.f;
@@ -18,8 +19,8 @@ void Keyboard(unsigned char key, int x, int y) {
 	{
 	case 'e':
 	case 'E':
-		
-		Box.newExplosion();
+		//newExplosion();
+		box.newExplosion();		
 		break;
 	case 'a':
 	case 'A' :

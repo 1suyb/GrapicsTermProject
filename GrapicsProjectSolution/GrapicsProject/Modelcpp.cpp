@@ -3,7 +3,7 @@
 
 
 GLuint g_textureID[4];
-std::vector<Box> boxes;
+//std::vector<Box> boxes;
 
 Model::Model() {
     position = glm::vec3(0, 0, 0);
@@ -336,7 +336,7 @@ void Car::OnEnterCollider() {
 //    }
 //}
 
-void Model::texturedCube(float size) {
+void Box::texturedCube(float size) {
     //glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
     //glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
     //glEnable(GL_TEXTURE_GEN_S);
@@ -346,40 +346,40 @@ void Model::texturedCube(float size) {
     glBegin(GL_QUADS);
 
     //앞면;
-    glTexCoord2f(0, 0); glVertex3f(-1, -1, 1);
-    glTexCoord2f(1, 0); glVertex3f(1, -1, 1);
-    glTexCoord2f(1, 1); glVertex3f(1, 1, 1);
-    glTexCoord2f(0, 1); glVertex3f(-1, 1, 1);
+    glTexCoord2f(0, 0); glVertex3f(-1 * size, -1 * size, 1 * size);
+    glTexCoord2f(1, 0); glVertex3f(1 * size, -1 * size, 1 * size);
+    glTexCoord2f(1, 1); glVertex3f(1 * size, 1 * size, 1 * size);
+    glTexCoord2f(0, 1); glVertex3f(-1 * size, 1 * size, 1 * size);
 
     //뒷면
-    glTexCoord2f(1, 0); glVertex3f(-1, -1, -1);
-    glTexCoord2f(1, 1); glVertex3f(-1, 1, -1);
-    glTexCoord2f(0, 1); glVertex3f(1, 1, -1);
-    glTexCoord2f(0, 0); glVertex3f(1, -1, -1);
+    glTexCoord2f(1, 0); glVertex3f(-1 * size, -1 * size, -1* size);
+    glTexCoord2f(1, 1); glVertex3f(-1 * size, 1 * size, -1 * size);
+    glTexCoord2f(0, 1); glVertex3f(1 * size, 1 * size, -1 * size);
+    glTexCoord2f(0, 0); glVertex3f(1 * size, -1 * size, -1 * size);
 
     //윗면
-    glTexCoord2f(0, 1); glVertex3f(-1, 1, -1);
-    glTexCoord2f(0, 0); glVertex3f(-1, 1, 1);
-    glTexCoord2f(1, 0); glVertex3f(1, 1, 1);
-    glTexCoord2f(1, 1); glVertex3f(1, 1, -1);
+    glTexCoord2f(0, 1); glVertex3f(-1 * size, 1 * size, -1 * size);
+    glTexCoord2f(0, 0); glVertex3f(-1 * size, 1 * size, 1 * size);
+    glTexCoord2f(1, 0); glVertex3f(1 * size, 1 * size, 1 * size);
+    glTexCoord2f(1, 1); glVertex3f(1 * size, 1 * size, -1 * size);
 
     //오른쪽 옆면
-    glTexCoord2f(1, 1); glVertex3f(-1, -1, -1);
-    glTexCoord2f(0, 1); glVertex3f(1, -1, -1);
-    glTexCoord2f(0, 0); glVertex3f(1, -1, 1);
+    glTexCoord2f(1, 1); glVertex3f(-1 * size, -1 * size, -1 * size);
+    glTexCoord2f(0, 1); glVertex3f(1 * size, -1 * size, -1 * size);
+    glTexCoord2f(0, 0); glVertex3f(1 * size, -1 * size, 1 * size);
     glTexCoord2f(1, 0); glVertex3f(-1, -1, 1);
 
     //
-    glTexCoord2f(1, 0); glVertex3f(1, -1, -1);
-    glTexCoord2f(1, 1); glVertex3f(1, 1, -1);
-    glTexCoord2f(0, 1); glVertex3f(1, 1, 1);
-    glTexCoord2f(0, 0); glVertex3f(1, -1, 1);
+    glTexCoord2f(1, 0); glVertex3f(1 * size, -1 * size, -1 * size);
+    glTexCoord2f(1, 1); glVertex3f(1 * size, 1 * size, -1 * size);
+    glTexCoord2f(0, 1); glVertex3f(1 * size, 1 * size, 1 * size);
+    glTexCoord2f(0, 0); glVertex3f(1 * size, -1 * size, 1 * size);
 
     //
-    glTexCoord2f(0, 0); glVertex3f(-1, -1, -1);
-    glTexCoord2f(1, 0); glVertex3f(-1, -1, 1);
-    glTexCoord2f(1, 1); glVertex3f(-1, 1, 1);
-    glTexCoord2f(0, 1); glVertex3f(-1, 1, -1);
+    glTexCoord2f(0, 0); glVertex3f(-1 * size, -1 * size, -1 * size);
+    glTexCoord2f(1, 0); glVertex3f(-1 * size, -1 * size, 1 * size);
+    glTexCoord2f(1, 1); glVertex3f(-1 * size, 1 * size, 1 * size);
+    glTexCoord2f(0, 1); glVertex3f(-1 * size, 1 * size, -1 * size);
 
     glEnd();
 
@@ -430,9 +430,9 @@ void Box::newExplosion(void) {
         debris[i].orientation[1] = 0.0;
         debris[i].orientation[2] = 0.0;
 
-        debris[i].color[0] = 0.7;
-        debris[i].color[1] = 0.7;
-        debris[i].color[2] = 0.7;
+        debris[i].color[0] = 0.2;
+        debris[i].color[1] = 0.2;
+        debris[i].color[2] = 0.1;
 
         debris[i].scale[0] = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
         debris[i].scale[1] = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
@@ -483,4 +483,40 @@ void Box::MyIdle(void) {
     }
 
     glutPostRedisplay();
+}
+
+void Box::InitGL(void) {
+    GLfloat  light0Amb[4] = { 1.0, 0.6, 0.2, 1.0 };
+    GLfloat  light0Dif[4] = { 1.0, 0.6, 0.2, 1.0 };
+    GLfloat  light0Spec[4] = { 0.0, 0.0, 0.0, 1.0 };
+    GLfloat  light0Pos[4] = { 0.0, 0.0, 0.0, 1.0 };
+
+    GLfloat  light1Amb[4] = { 0.0, 0.0, 0.0, 1.0 };
+    GLfloat  light1Dif[4] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat  light1Spec[4] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat  light1Pos[4] = { 0.0, 5.0, 5.0, 0.0 };
+
+    GLfloat  materialAmb[4] = { 0.25, 0.22, 0.26, 1.0 };
+    GLfloat  materialDif[4] = { 0.63, 0.57, 0.60, 1.0 };
+    GLfloat  materialSpec[4] = { 0.99, 0.91, 0.81, 1.0 };
+    GLfloat  materialShininess = 27.8;
+
+    glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light0Amb);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0Dif);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light0Spec);
+    glLightfv(GL_LIGHT0, GL_POSITION, light0Pos);
+    glLightfv(GL_LIGHT1, GL_AMBIENT, light1Amb);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, light1Dif);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, light1Spec);
+    glLightfv(GL_LIGHT1, GL_POSITION, light1Pos);
+    glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmb);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDif);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpec);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, materialShininess);
+    glEnable(GL_NORMALIZE);
+
+    srand(time(NULL));
 }
