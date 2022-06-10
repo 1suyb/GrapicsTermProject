@@ -18,7 +18,8 @@ extern Box* Boxes;
 
 void init();					// 초기화
 void render();			// Scene Render
-void InitLight();			/** Test를 위한 조명입니다. 따로 조명 헤더파일 파서 만들어주시면 될 것 같아요 **/
+void nightLight();
+void afternoonLight();
 void modelinit();
 void LoadGLTextures();
 void MyIdle(void);

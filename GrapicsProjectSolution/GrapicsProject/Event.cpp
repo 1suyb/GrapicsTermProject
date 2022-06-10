@@ -35,6 +35,13 @@ void Keyboard(unsigned char key, int x, int y) {
 	case'F' :
 		Cam.is_CarView = !Cam.is_CarView;
 		break;
+	case 'l' :
+	case 'L' :
+		nightLight();
+		break;
+	case ';' :
+		afternoonLight();
+		break;
 	default:
 		
 		break;

@@ -1,14 +1,31 @@
 #include "Scene.h"
 #include <windows.h>
 
-GLfloat light_amb[] = { 0.5, 0.5, 0.5, 1.0 };
-GLfloat light_diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
-GLfloat light_specular[] = { 1, 1, 1, 1.0 };
 
-GLfloat Car_mat_amb[] = { 0.2, 0 , 0, 1.0 }; // /주변 반사
-GLfloat Car_mat_diffuse[] = { 1, 0.5, 0.5, 1.0 }; // 확산 반사 
-GLfloat Car_mat_specular[] = { 0, 0, 0, 1 }; // 경면 반사
+void nightLight() {
+    GLfloat light_amb[] = { 0, 0, 0, 1.0 };
+    GLfloat light_diffuse[] = { 1, 1, 1, 1.0 };
+    GLfloat light_specular[] = { 1, 1, 1, 1.0 };
 
+    glEnable(GL_LIGHTING); //조명 활성화
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_AMBIENT,light_amb); //주변광 설정
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse); //확산광 설정
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular); //정반사광 설정
+}
+
+void afternoonLight()
+{
+    GLfloat light_amb[] = { 1, 1, 1, 1.0 };
+    GLfloat light_diffuse[] = { 1, 1, 1, 1.0 };
+    GLfloat light_specular[] = { 1, 1, 1, 1.0 };
+
+    glEnable(GL_LIGHTING); //조명 활성화
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_amb); //주변광 설정
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse); //확산광 설정
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular); //정반사광 설정
+}
 
 GLuint g_textureID[4];
 
@@ -26,7 +43,7 @@ Box* Boxes;
 void init() {
     loadTexture();
     LoadGLTextures();
-
+    afternoonLight();
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glShadeModel(GL_SMOOTH);    //���� ���̵�
     glEnable(GL_DEPTH_TEST); // ���̹���
@@ -53,6 +70,12 @@ void modelinit() {
 }
 
 void render() {
+
+    GLfloat Car_mat_amb[] = { 1, 1 , 1, 1.0 };
+    GLfloat Car_mat_diffuse[] = { 0.8, 0.8, 0.8, 1.0 };
+    GLfloat Car_mat_specular[] = { 0, 0, 0, 1 };
+    GLfloat LightPosition[] = { 0.0, 0.0, 0.0, 1.0 };
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     PerspectiveSetting();
     glMatrixMode(GL_MODELVIEW);
@@ -63,6 +86,17 @@ void render() {
     glPushMatrix();
     Car.Translate();
     Car.RotateAngle();
+    glLightfv(GL_LIGHT0, GL_POSITION,
+        LightPosition);
+    glDisable(GL_LIGHTING);
+    glEnable(GL_LIGHTING);
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT,
+        Car_mat_amb);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,
+        Car_mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR,
+        Car_mat_specular);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
