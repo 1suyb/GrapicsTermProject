@@ -54,12 +54,18 @@ void Keyboard(unsigned char key, int x, int y) {
 	}
 	glutPostRedisplay();
 }
-void Reshape(int w, int h) {
-
-}
+void Reshape(int w, int h) {}
 void Timer(int value) {
 	if (Car.position.x > 30||Car.position.x <-30 || Car.position.z >60||Car.position.z<-60) {
-		Speed = -1*Speed;
+		if (Speed < 1 && Speed >0) {
+			Speed = -1;
+		}
+		else if (Speed > -1 && Speed < 0) {
+			Speed = 1;
+		}
+		else{
+			Speed = -1 * Speed;
+		}
 	}
 	
 	CarMoveEvent();

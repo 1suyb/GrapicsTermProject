@@ -104,7 +104,7 @@ void Box::newExplosion(void) {
         newSpeed(debris[i].orientationSpeed);
     }
 
-    fuel = 1000;
+    fuel = 500;
 }
 
 //파티클 및 파편 업데이트

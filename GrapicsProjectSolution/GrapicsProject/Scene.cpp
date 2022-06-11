@@ -121,12 +121,13 @@ void render() {
 
     glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
     BoxSpawn();
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-
     for (int i = 0; i < BOX_SIZE; i++) {
         Boxes[i].ShowParticles();
     }
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+
+
 
     system("cls");
     glutSwapBuffers();
