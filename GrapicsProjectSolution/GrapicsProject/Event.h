@@ -15,6 +15,7 @@ void Reshape(int w, int h);
 void Timer(int value);
 void UpKeyboard(unsigned char key, int x, int y);
 
+void BoxSpawn();
 void CollisionDetection();
 void CarMoveEvent();
 

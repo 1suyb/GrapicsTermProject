@@ -1,255 +1,229 @@
+#pragma once
 #include"Box.h"
 
-using namespace std;
-using namespace glm;
-
-int windowHeight, windowWidth;
-GLuint g_textureID = -1;
-
-camera myCamera;
-
-vector<Box> boxes;
-
-
-void addBox(vec3 leftBottom, vec3 rightTop)
-{
-    int random = 0;
-    int randRange = 100;
-    Box newBox;
-
-    vec3 _pos(0, 0, 0);
-    vec3 _vel(0, 0, 0);
-    float m = 1;
-
-    for (int i = 0; i < 3; i++)
-    {
-        float value = (float)(rand() % randRange) / (float)randRange;
-        _pos[i] = leftBottom[i] + (rightTop[i] - leftBottom[i]) * value;
-        _vel[i] = value * 2.f - 1.f;
-
-        m = 1 + value;
-    }
-    /*_pos[2] = -10;*/
-    newBox.p = _pos;
-    newBox.v = _vel;
-
-    newBox.force = vec3(0, 0, 0);
-    newBox.m = m;
-    newBox.r = m / 2.f;
-
-    boxes.push_back(newBox);
-}
-
-// 박스 겹치면 밀어내게
-void Contact(float stiff) {
-    for (int i = 0; i < boxes.size(); i++)
-    {
-        for (int j = i + 1; j < boxes.size(); j++) {
-            vec3 dis = boxes[i].p - boxes[j].p;
-
-            float L = length(dis);
-            dis = normalize(dis);
-
-            if (L < boxes[i].r + boxes[j].r) {
-                vec3 force = stiff * ((boxes[i].r + boxes[j].r) - L) * dis;
-                boxes[i].force += force;
-                boxes[j].force -= force;
-            }
-        }
-    }
-}
-
-void loadTexture(void) {
-    // 박스 장애물
-    AUX_RGBImageRec* pTextureImage = auxDIBImageLoad("Data/woodBox.bmp");
-    // 부스터 아이템
-    /*AUX_RGBImageRec* pTextureImage = auxDIBImageLoad("Data/booster.bmp");*/
-
-
-    if (pTextureImage != NULL) {
-        glGenTextures(1, &g_textureID);
-
-        glBindTexture(GL_TEXTURE_2D, g_textureID);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        glTexImage2D(GL_TEXTURE_2D, 0, 3, pTextureImage->sizeX, pTextureImage->sizeY, 0,
-            GL_RGB, GL_UNSIGNED_BYTE, pTextureImage->data);
-    }
-
-    if (pTextureImage) {
-        if (pTextureImage->data)
-            free(pTextureImage->data);
-
-        free(pTextureImage);
-    }
-}
-
-
-void texturedCube(float size) {
-    //glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
-    //glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
-    //glEnable(GL_TEXTURE_GEN_S);
-    //glEnable(GL_TEXTURE_GEN_T);
-    //glutSolidCube(1);
-
+void Box::DrawCube(float size) {
+    is_spawned = true;
     glBegin(GL_QUADS);
 
     //앞면;
-    glTexCoord2f(0, 0); glVertex3f(-1, -1, 1);
-    glTexCoord2f(1, 0); glVertex3f(1, -1, 1);
-    glTexCoord2f(1, 1); glVertex3f(1, 1, 1);
-    glTexCoord2f(0, 1); glVertex3f(-1, 1, 1);
+    glTexCoord2f(0, 0); glVertex3f(-1 * size, -1 * size, 1 * size);
+    glTexCoord2f(1, 0); glVertex3f(1 * size, -1 * size, 1 * size);
+    glTexCoord2f(1, 1); glVertex3f(1 * size, 1 * size, 1 * size);
+    glTexCoord2f(0, 1); glVertex3f(-1 * size, 1 * size, 1 * size);
 
     //뒷면
-    glTexCoord2f(1, 0); glVertex3f(-1, -1, -1);
-    glTexCoord2f(1, 1); glVertex3f(-1, 1, -1);
-    glTexCoord2f(0, 1); glVertex3f(1, 1, -1);
-    glTexCoord2f(0, 0); glVertex3f(1, -1, -1);
+    glTexCoord2f(1, 0); glVertex3f(-1 * size, -1 * size, -1 * size);
+    glTexCoord2f(1, 1); glVertex3f(-1 * size, 1 * size, -1 * size);
+    glTexCoord2f(0, 1); glVertex3f(1 * size, 1 * size, -1 * size);
+    glTexCoord2f(0, 0); glVertex3f(1 * size, -1 * size, -1 * size);
 
     //윗면
-    glTexCoord2f(0, 1); glVertex3f(-1, 1, -1);
-    glTexCoord2f(0, 0); glVertex3f(-1, 1, 1);
-    glTexCoord2f(1, 0); glVertex3f(1, 1, 1);
-    glTexCoord2f(1, 1); glVertex3f(1, 1, -1);
+    glTexCoord2f(0, 1); glVertex3f(-1 * size, 1 * size, -1 * size);
+    glTexCoord2f(0, 0); glVertex3f(-1 * size, 1 * size, 1 * size);
+    glTexCoord2f(1, 0); glVertex3f(1 * size, 1 * size, 1 * size);
+    glTexCoord2f(1, 1); glVertex3f(1 * size, 1 * size, -1 * size);
 
     //오른쪽 옆면
-    glTexCoord2f(1, 1); glVertex3f(-1, -1, -1);
-    glTexCoord2f(0, 1); glVertex3f(1, -1, -1);
-    glTexCoord2f(0, 0); glVertex3f(1, -1, 1);
+    glTexCoord2f(1, 1); glVertex3f(-1 * size, -1 * size, -1 * size);
+    glTexCoord2f(0, 1); glVertex3f(1 * size, -1 * size, -1 * size);
+    glTexCoord2f(0, 0); glVertex3f(1 * size, -1 * size, 1 * size);
     glTexCoord2f(1, 0); glVertex3f(-1, -1, 1);
 
     //
-    glTexCoord2f(1, 0); glVertex3f(1, -1, -1);
-    glTexCoord2f(1, 1); glVertex3f(1, 1, -1);
-    glTexCoord2f(0, 1); glVertex3f(1, 1, 1);
-    glTexCoord2f(0, 0); glVertex3f(1, -1, 1);
+    glTexCoord2f(1, 0); glVertex3f(1 * size, -1 * size, -1 * size);
+    glTexCoord2f(1, 1); glVertex3f(1 * size, 1 * size, -1 * size);
+    glTexCoord2f(0, 1); glVertex3f(1 * size, 1 * size, 1 * size);
+    glTexCoord2f(0, 0); glVertex3f(1 * size, -1 * size, 1 * size);
 
     //
-    glTexCoord2f(0, 0); glVertex3f(-1, -1, -1);
-    glTexCoord2f(1, 0); glVertex3f(-1, -1, 1);
-    glTexCoord2f(1, 1); glVertex3f(-1, 1, 1);
-    glTexCoord2f(0, 1); glVertex3f(-1, 1, -1);
+    glTexCoord2f(0, 0); glVertex3f(-1 * size, -1 * size, -1 * size);
+    glTexCoord2f(1, 0); glVertex3f(-1 * size, -1 * size, 1 * size);
+    glTexCoord2f(1, 1); glVertex3f(-1 * size, 1 * size, 1 * size);
+    glTexCoord2f(0, 1); glVertex3f(-1 * size, 1 * size, -1 * size);
 
     glEnd();
 
 }
 
-void init2() {
-    loadTexture();
+void Box::newSpeed(float dest[3]) {
+    float x, y, z, len;
 
-    srand(time(NULL));
+    x = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
+    y = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
+    z = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
 
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_DEPTH_TEST);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45.0f, 800 / 600, -0.1f, 100.0f);
+    if (wantNormalize) {
+        len = sqrt(x * x + y * y + z * z);
 
-    //get window size
-    windowWidth = glutGet(GLUT_WINDOW_WIDTH);
-    windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
-
-    //Init camera
-    vec3 center(0, 40, -5);
-    vec3 at(0, 0, -5);
-    vec3 up = vec3(0, 0, 1);
-    myCamera.InitCamera(center, at, up);
-
-    //Init variables
-    addBox(vec3(-10, -10, -5), vec3(10, 10, 20));
-    
-}
-
-
-
-void Render(void) {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    //get camera variables from camera class
-    vec3 eye = myCamera.eye;
-    vec3 at = myCamera.at;
-    vec3 up = myCamera.up;
-
-    //set view transform matrix
-    gluLookAt(eye[0], eye[1], eye[2], at[0], at[1], at[2], up[0], up[1], up[2]);
-
-    for (int i = 0; i < boxes.size(); i++)
-    {
-        glPushMatrix();
-        glTranslatef(boxes[i].p[0], boxes[i].p[1], boxes[i].p[2]);
-        glBindTexture(GL_TEXTURE_2D, g_textureID);
-        texturedCube(boxes[i].r);
-        glPopMatrix();
+        if (len) {
+            x = x / len;
+            y = y / len;
+            z = z / len;
+        }
     }
 
-    //Swap buffers
-    glutSwapBuffers();
+    dest[0] = x;
+    dest[1] = y;
+    dest[2] = z;
 }
 
-void MyReshape(int w, int h) {
-    windowWidth = w;
-    windowHeight = h;
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45.0, (GLfloat)w / (GLfloat)h, 1.0, 100.0);
+//폭발시 파티클 및 파편 생성
+void Box::newExplosion(void) {
+    printf("Boom");
+    is_spawned = false;
+    for (int i = 0; i < NUM_PARTICLES; i++) {
+        particles[i].position[0] = this->position.x;
+        particles[i].position[1] = this->position.y;
+        particles[i].position[2] = this->position.z;
+
+        particles[i].color[0] = 1.0;
+        particles[i].color[1] = 1.0;
+        particles[i].color[2] = 0.5;
+
+        newSpeed(particles[i].speed);
+    }
+
+    for (int i = 0; i < NUM_DEBRIS; i++) {
+        debris[i].position[0] = this->position.x;
+        debris[i].position[1] = this->position.y;
+        debris[i].position[2] = this->position.z;
+
+        debris[i].orientation[0] = 0.0;
+        debris[i].orientation[1] = 0.0;
+        debris[i].orientation[2] = 0.0;
+
+        debris[i].color[0] = 0.2;
+        debris[i].color[1] = 0.2;
+        debris[i].color[2] = 0.7;
+
+        debris[i].scale[0] = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
+        debris[i].scale[1] = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
+        debris[i].scale[2] = (2.0 * ((GLfloat)rand()) / ((GLfloat)RAND_MAX)) - 1.0;
+
+        newSpeed(debris[i].speed);
+        newSpeed(debris[i].orientationSpeed);
+    }
+
+    fuel = 1000;
 }
 
-void MyTimer(int Value) {
+//파티클 및 파편 업데이트
+void Box::ParticleUpdate(void) {
+    if (fuel > 0) {
+        for (int i = 0; i < NUM_PARTICLES; i++) {
+            particles[i].position[0] += particles[i].speed[0] * 0.2;
+            particles[i].position[1] += particles[i].speed[1] * 0.2;
+            particles[i].position[2] += particles[i].speed[2] * 0.2;
 
-    float dt = 0.1;
+            particles[i].color[0] -= 1.0 / 500.0;
+            if (particles[i].color[0] < 0.0) {
+                particles[i].color[0] = 0.0;
+            }
 
-    for (int i = 0; i < boxes.size(); i++) {
+            particles[i].color[1] -= 1.0 / 100.0;
+            if (particles[i].color[1] < 0.0) {
+                particles[i].color[1] = 0.0;
+            }
 
-        //add gradient force
-        vec3 gravity(0, 0, -9.8);
-        boxes[i].force += gravity * boxes[i].m;
-
-        //update velocity
-        boxes[i].v += boxes[i].force / boxes[i].m * dt;
-
-        //update position
-        boxes[i].p += boxes[i].v * dt;
-
-        //바닥에서 안 튀어오르게
-        //modify position and velocity according to constraints
-        if (boxes[i].p[2] - boxes[i].r < -10) {
-            boxes[i].p[2] = -10; // + boxes[i].r;
-            /*boxes[i].v *= 0.9;
-            boxes[i].v[2] *= -1;*/
+            particles[i].color[2] -= 1.0 / 50.0;
+            if (particles[i].color[2] < 0.0) {
+                particles[i].color[2] = 0.0;
+            }
         }
 
-        Contact(10.0);
+        for (int i = 0; i < NUM_DEBRIS; i++) {
+            debris[i].position[0] += debris[i].speed[0] * 0.1;
+            debris[i].position[1] += debris[i].speed[1] * 0.1;
+            debris[i].position[2] += debris[i].speed[2] * 0.1;
 
-        //clear force
-        boxes[i].force = vec3(0, 0, 0);
+            debris[i].orientation[0] += debris[i].orientationSpeed[0] * 10;
+            debris[i].orientation[1] += debris[i].orientationSpeed[1] * 10;
+            debris[i].orientation[2] += debris[i].orientationSpeed[2] * 10;
+        }
 
+        --fuel;
+        if (fuel == 0) {
+            is_spawned = false;
+        }
     }
-    addBox(vec3(-10, -10, -5), vec3(10, 10, 20));
 
-    glutPostRedisplay();
-    glutTimerFunc(500, MyTimer, 1);
 }
 
-//void main(int argc, char** argv) {
-//    glutInit(&argc, argv);
-//    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-//    glutInitWindowPosition(100, 100);
-//    glutInitWindowSize(800, 600);
-//    glutCreateWindow("Bouncing ball");
-//    init();
-//    //InitLight();
-//    glutDisplayFunc(Render);
-//    glutReshapeFunc(MyReshape);
-//    //glutMouseFunc(MyMouse);
-//    //glutMotionFunc(MyMouseMove);
-//    //glutKeyboardFunc(MyKeyboard);
-//    glutTimerFunc(500, MyTimer, 1);
-//
-//    glutMainLoop();
-//}
+void Box::InitGL(void) {
+    GLfloat  light0Amb[4] = { 1.0, 0.6, 0.2, 1.0 };
+    GLfloat  light0Dif[4] = { 1.0, 0.6, 0.2, 1.0 };
+    GLfloat  light0Spec[4] = { 0.0, 0.0, 0.0, 1.0 };
+    GLfloat  light0Pos[4] = { 0.0, 0.0, 0.0, 1.0 };
+
+    GLfloat  light1Amb[4] = { 0.0, 0.0, 0.0, 1.0 };
+    GLfloat  light1Dif[4] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat  light1Spec[4] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat  light1Pos[4] = { 0.0, 5.0, 5.0, 0.0 };
+
+    GLfloat  materialAmb[4] = { 0.25, 0.22, 0.26, 1.0 };
+    GLfloat  materialDif[4] = { 0.63, 0.57, 0.60, 1.0 };
+    GLfloat  materialSpec[4] = { 0.99, 0.91, 0.81, 1.0 };
+    GLfloat  materialShininess = 27.8;
+
+    glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light0Amb);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0Dif);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light0Spec);
+    glLightfv(GL_LIGHT0, GL_POSITION, light0Pos);
+    glLightfv(GL_LIGHT1, GL_AMBIENT, light1Amb);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, light1Dif);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, light1Spec);
+    glLightfv(GL_LIGHT1, GL_POSITION, light1Pos);
+    glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmb);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDif);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpec);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, materialShininess);
+    glEnable(GL_NORMALIZE);
+
+    srand(time(NULL));
+}
+
+void Box::ShowParticles() {
+    if (fuel > 0) {
+        glPushMatrix();
+        glDisable(GL_LIGHTING);
+        glDisable(GL_DEPTH_TEST);
+        glBegin(GL_POINTS);
+        for (int i = 0; i < NUM_PARTICLES; i++) {
+            glColor3fv(particles[i].color);
+            glVertex3fv(particles[i].position);
+        }
+        glEnd();
+        glPopMatrix();
+
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_DEPTH_TEST);
+
+
+        for (int i = 0; i < NUM_DEBRIS; i++) {
+            glColor3fv(debris[i].color);
+
+            glPushMatrix();
+            glTranslatef(debris[i].position[0],
+                debris[i].position[1],
+                debris[i].position[2]);
+
+            glRotatef(debris[i].orientation[0], 1.0, 0.0, 0.0);
+            glRotatef(debris[i].orientation[1], 0.0, 1.0, 0.0);
+            glRotatef(debris[i].orientation[2], 0.0, 0.0, 1.0);
+
+            glScalef(debris[i].scale[0], debris[i].scale[1], debris[i].scale[2]);
+
+            glBegin(GL_TRIANGLES);
+            glNormal3f(0.0, 0.0, 1.0);
+            glVertex3f(0.0, 0.5, 0.0);
+            glVertex3f(-0.25, 0.0, 0.0);
+            glVertex3f(0.25, 0.0, 0.0);
+            glEnd();
+            glPopMatrix();
+        }
+    }
+}

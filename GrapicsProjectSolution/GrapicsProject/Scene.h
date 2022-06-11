@@ -10,11 +10,14 @@
 #include "Camera.h"
 #include "Event.h"
 #include "Skybox.h"
+#include"Box.h"
+
+#define BOX_SIZE 10
+
 
 extern Camera Cam;
 extern Model Car;
 extern Box* Boxes;
-
 
 void init();					// √ ±‚»≠
 void render();			// Scene Render

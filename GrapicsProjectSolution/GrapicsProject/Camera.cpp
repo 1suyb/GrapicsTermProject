@@ -20,9 +20,9 @@ void Camera::Rotate(float angle, glm::vec3 axis) {
 	up = glm::normalize(rot * glm::vec4(up,0));
 }
 
-void Camera::OutCar(glm::vec3 carpositon) {
-	this->eye = carpositon + glm::vec3(-distance, distance, 0);
-	this->at = carpositon;
+void Camera::OutCar(glm::vec3 carpositon,glm::vec3 carfront) {
+	this->eye = carpositon + (carpositon - carfront) + (carpositon - carfront) + (carpositon - carfront) + glm::vec3(0, 3, 0);
+	this->at = carpositon + glm::vec3(0,1,0);
 	glm::mat4 rot = glm::rotate(glm::mat4(1), glm::radians(-45.f), glm::vec3(0, 1, 0));
 	this->up = glm::normalize(rot * glm::vec4(up, 0));
 }

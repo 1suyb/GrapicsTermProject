@@ -38,8 +38,6 @@ Box* Boxes;
 
 
 
-
-
 void init() {
     loadTexture();
     LoadGLTextures();
@@ -51,22 +49,23 @@ void init() {
     glFrontFace(GL_FRONT);
     Speed = 0;
     modelinit();
-    Cam.Init(glm::vec3(0.5, 1.5, 0));
+    Cam.Init(glm::vec3(0.0, 1.5, 0));
 
 }
 void modelinit() {
     Car = Model();
-    Car.SetPosition(glm::vec3(0, 0, 0));
+    Car.SetPosition(glm::vec3(15, 0, 0));
     Car.LoadObj("Data/Porsche/Porsche_911_GT2.obj", Car.vertices, Car.faces, Car.uvs, Car.uvindices, Car.normals, Car.normalindices);
-    Car.Scale(glm::vec3(0.1, 0.1, 0.1)); 
-    Car.SetRotation(-90.f, glm::vec3(0, 1, 0));
+    Car.Scale(glm::vec3(1, 1, 1)); 
+    Car.SetRotation(180, glm::vec3(0, 1, 0));
+    Car.SetFront(glm::vec3(0, 0, 1));
     Car.SetCollider();
 
     Track = Model();
     Track.LoadObj("Data/Track/Track.obj", Track.vertices, Track.faces, Track.uvs, Track.uvindices, Track.normals, Track.normalindices);
     Track.SetPosition(glm::vec3(0, -2.f, 0));
 
-    Boxes = new Box[10];
+    Boxes = new Box[BOX_SIZE];
 }
 
 void render() {
@@ -119,9 +118,16 @@ void render() {
 
     DrawSkyBox();
     
+
     glBindTexture(GL_TEXTURE_2D, g_textureID[0]);
-    Boxes[0].DrawCube(1);
+    BoxSpawn();
     glBindTexture(GL_TEXTURE_2D, 0);
+
+
+    for (int i = 0; i < BOX_SIZE; i++) {
+        Boxes[i].ShowParticles();
+    }
+
     system("cls");
     glutSwapBuffers();
 }
@@ -130,15 +136,14 @@ void render() {
 void PerspectiveSetting() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60.0f, 1000.0f / 600.0f, 1.0f, 2000.0f);
+    gluPerspective(60.0f, 1000.0f / 600.0f, 0.1f, 2000.0f);
 }
-
 void CameraSetting() {
     if (Cam.is_CarView) {
         Cam.InCar(Car.position, Car.front);
     }
     else {
-        Cam.OutCar(Car.position);
+        Cam.OutCar(Car.position,Car.front);
     }
     gluLookAt(Cam.eye.x, Cam.eye.y, Cam.eye.z,
         Cam.at.x, Cam.at.y, Cam.at.z,
@@ -213,3 +218,29 @@ void loadTexture() {
         free(pCarImage);
     }
 }
+
+void BoxSpawn() {
+    float xposition;
+    float yposition;
+
+    for (int i = 0; i < BOX_SIZE; i++) {
+        printf("box");
+        if (!Boxes[i].is_spawned) {
+            xposition = rand() % 20 + 11;
+            yposition = rand() % 20 + 41;
+            if (rand() % 2 == 0) {
+                xposition *= -1;
+            }
+            if (rand() % 2 == 0) {
+                yposition *= -1;
+            }
+            Boxes[i].SetPosition(glm::vec3(xposition, 0, yposition));
+        }
+        glPushMatrix();
+        Boxes[i].Translate();
+        Boxes[i].DrawCube(1);
+        glPopMatrix();
+
+    }
+}
+
