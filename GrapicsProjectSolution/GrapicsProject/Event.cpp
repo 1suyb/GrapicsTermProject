@@ -110,13 +110,13 @@ void CollisionDetection() {
 	for (int i = 0; i < BOX_SIZE; i++) {
 		glm::vec3 vec = Car.position - Boxes[i].position;
 		float mag = glm::length(vec);
-		if (mag < Car.coliider.x || mag<Car.coliider.z) {
+		if (mag < Car.coliider.x + 1 || mag<Car.coliider.z + 1) {
 			glm::mat4 rot = glm::rotate(glm::mat4(1), glm::radians(Car.angle), Car.axis);
 			glm::vec3 vecx = glm::normalize(rot * glm::vec4(1, 0, 0, 0));
 			glm::vec3 vecz = glm::normalize(rot * glm::vec4(0, 0, 1, 0));
 			float x = glm::dot(vec, vecx);
 			float z = glm::dot(vec, vecz);
-			if (x < Car.coliider.x && z < Car.coliider.z) {
+			if (x < Car.coliider.x +1 && z < Car.coliider.z + 1) {
 				printf("%d", i);
 				Boxes[i].newExplosion();
 			}
